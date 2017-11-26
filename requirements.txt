@@ -1,0 +1,8 @@
+scikit_image
+numpy
+imageio
+pandas
+matplotlib
+skimage
+py-heat
+snakeviz
