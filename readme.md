@@ -3,7 +3,9 @@
 
 [yllab](https://github.com/DIYer22/yllab)是我自己积累的Python代码库，里面有Debug，图像，机器学习等方面的实用工具
 
-**Demo** : use `Jupyter notebook` run `./Tutorial_of_yllab.ipynb`
+**Demo** : 
+ * [Tutorial_of_yllab.ipynb](https://gist.github.com/DIYer22/200addc9775487f4d7f154b3c4004fa2) 
+ * also could use `Jupyter notebook` run `./Tutorial_of_yllab.ipynb`
 
 **安装所需依赖库** : `pip install -r requirements.txt`
 
