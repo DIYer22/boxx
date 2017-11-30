@@ -35,7 +35,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-#TEST_ALL = False
+TEST_ALL = False
 
 testFun = None
 tests = [testFun]
@@ -91,10 +91,30 @@ if ifTest(shows):
 #    shows(jpg,png,rec,gtc)
     shows(jpg,png,rec,gtc,rem*5,gtm*5)
     
-tests = getShapes
+#tests = getShapes
 if ifTest(getShapes) and imgGlob:
     with timeit():
         shapes = getShapes(imgGlob)
+        
+#tests = autoSegmentWholeImg
+if ifTest(autoSegmentWholeImg):
+    img = da.astronaut()
+    hh,ww = 256,256
+    hh,ww = 128,128
+    resoult = autoSegmentWholeImg(img,(hh,ww),lambda x:x.mean(2)*getWeightCore(hh,ww),
+                                  step=100,weightCore='gauss')
+    show(resoult)
+
+tests = plot3dSurface
+if ifTest(plot3dSurface):
+    with timeit():
+        hh,ww = 256,256
+        print(u'seta=2高斯分布')
+        core = getWeightCore(hh,ww,seta=2)
+        plot3dSurface(core)
+        print(u'距离分布')
+        core = getWeightCore(hh,ww,lambda i,j:((i*1./hh-.5)**2+(j*1./ww-.5)**2)**.5)
+        plot3dSurface(core)
 if __name__ == '__main__':
     pass
 

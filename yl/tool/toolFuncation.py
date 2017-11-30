@@ -18,10 +18,11 @@ def dynamicWraps(func):
     cache={}
     from functools import wraps
     @wraps(func)
-    def wrap(*args):
-        if args not in cache:
-            cache[args]=func(*args)
-        return cache[args]
+    def wrap(*args,**kv):
+        key = args+tuple(sorted(kv.items())) if len(kv) else args
+        if key not in cache:
+            cache[key]=func(*args, **kv)
+        return cache[key]
     return wrap
 
     

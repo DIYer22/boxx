@@ -35,6 +35,7 @@ class colorFormat:
     red = '\x1b['+str(frontColorDic['red'])+'m%s\x1b[0m'
     cyan= '\x1b['+str(frontColorDic['cyan'])+'m%s\x1b[0m'
     purple = '\x1b['+str(frontColorDic['purple'])+'m%s\x1b[0m'
+    black = '\x1b['+str(frontColorDic['black'])+'m%s\x1b[0m'
     blue = cyan
     info = blue
     danger = red
@@ -53,8 +54,9 @@ def tounicode(strr):
     '''
     if isinstance(strr,unicode):
         return strr
+    strr = str(strr)
     if isinstance(strr,str):
-        return strr.decode('utf-8')
+        return strr.decode('utf-8','replace')
     return unicode(strr)
 
 

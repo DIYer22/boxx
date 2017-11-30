@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from tool.toolStructObj import FunAddMagicMethod
-from tool.toolLog import colorFormat
+from tool.toolLog import colorFormat, tounicode
 from tool.toolFuncation import mapmp
 
 import os
@@ -201,33 +201,68 @@ def loga(array):
 
 loga = FunAddMagicMethod(loga)
 
-
-    
+__torchShape = lambda x:'%s %s'%(str(x.shape),x.type())
 __logFuns = {
- list:lambda x:colorFormat.b%('list  %d'%len(x)),
- tuple:lambda x:colorFormat.b%('tuple %d'%len(x)),
- dict:lambda x:colorFormat.b%('dict  %s'%len(x)),
- np.ndarray:lambda x:colorFormat.r%('%s%s'%
+    'list':lambda x:colorFormat.b%('list  %d'%len(x)),
+    'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
+    'dict':lambda x:colorFormat.b%('dict  %s'%len(x)),
+    'dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
+    'tool.toolLog.SuperG':lambda x:colorFormat.b%('SuperG  %s'%len(x)),
+    'numpy.ndarray':lambda x:colorFormat.r%('%s%s'%
                                     (unicode(x.shape).replace('L,','').replace('L',''),x.dtype)),
- }
 
-def tree(seq,le=None,k=u'/',islast=None):
+
+    'torch.FloatTensor':__torchShape,
+    'torch.DoubleTensor':__torchShape,
+    'torch.IntTensor':__torchShape,
+    'torch.LongTensor':__torchShape,
+    'torch.ShortTensor':__torchShape,
+    'torch.ByteTensor':__torchShape,
+    'torch.HalfTensor':__torchShape,
+    'torch.CharTensor':__torchShape,
+    
+    'mxnet.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
+    }
+
+def typeNameOf(classOrType):
+    ss = str(classOrType).split("'")
+    if len(ss)>=3:
+        return ss[-2]
+    return str(classOrType)
+
+def __discribOfInstance(instance,leafColor=None,MAX_LEN=45):
+    typee = type(instance)
+    typen = typeNameOf(typee)
+#    print typen,typen in __logFuns
+    if typen in __logFuns:
+        return __logFuns[typen](instance)
+    s = tounicode(instance)
+    if len(s) > MAX_LEN:
+        s = s[:MAX_LEN-3]+'...'
+    return (leafColor or '%s')%s
+
+
+def tree(seq,le=None,k=u'/',islast=None,leafColor=u'\x1b[31m%s\x1b[0m'):
     '''
     类似bash中的tree命令 简单查看list, tuple, dict, numpy组成的树的每一层结构
-    可迭代部分用蓝色 叶子用红色打印
+    可迭代部分用蓝色 叶子用红色打印 
     >>>tree(seq) 
     
     Parameters
     ----------
     seq : list or tuple or dict or numpy or any Object
         打印出 以树结构展开所有可迭代部分
+    
+    ps.可在__logFuns中 新增类别
     '''
     if le is None:
         le = [] 
         islast = 1
-    s = __logFuns.get(type(seq),lambda x:colorFormat.r%unicode(x)[:60])(seq)
-#    print ''.join(le)+u'├── '+unicode(k)+': '+s
-    print u'%s%s %s: %s'%(u''.join(le), u'└──' if islast else u'├──',unicode(k),s)
+#    s = __logFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
+    s = __discribOfInstance(seq,leafColor=leafColor)
+    s = s.replace('\n',u'↳')
+#    print ''.join(le)+u'├── '+tounicode(k)+': '+s
+    print u'%s%s %s: %s'%(u''.join(le), u'└──' if islast else u'├──',tounicode(k),s)
     if isinstance(seq,(list,tuple)):
         seq = list(enumerate(seq))
     elif isinstance(seq,(dict)):
@@ -237,17 +272,17 @@ def tree(seq,le=None,k=u'/',islast=None):
     le.append(u'    'if islast else u'│   ')
     for i,kv in enumerate(seq):
         k,v = kv
-        tree(v,le,k,islast=(i==len(seq)-1))
+        tree(v,le,k,islast=(i==len(seq)-1), leafColor=leafColor)
     le.pop()
 tree = FunAddMagicMethod(tree)
 
 def __typee__(x):
-    return unicode(type(x)).split("'")[1]
+    return tounicode(type(x)).split("'")[1]
 
 logModFuns = {
  type(os):lambda x:colorFormat.r%(__typee__(x)),
  }
-logMod = lambda mod:logModFuns.get(type(mod),lambda x:colorFormat.b%unicode(__typee__(x))[:60])(mod)
+logMod = lambda mod:logModFuns.get(type(mod),lambda x:colorFormat.b%tounicode(__typee__(x))[:60])(mod)
 def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',islast=None,deepNow=0,rootDir=None,sets=None):
     '''
     类似bash中的tree命令 查看module及子module的每一层结构
@@ -273,7 +308,7 @@ def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',islast=None,deepN
         __leftStrs = [] 
         islast = 1
         if '__file__' not in dir(mod): 
-            print 'type(%s: %s) is not module!'%(logMod(mod),unicode(mod))
+            print 'type(%s: %s) is not module!'%(logMod(mod),tounicode(mod))
             return 
         rootDir = os.path.dirname(mod.__file__)
         sets = set()
@@ -289,7 +324,7 @@ def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',islast=None,deepN
             modKind = 3 
         elif '__file__' not in dir(mod) or rootDir not in mod.__file__:
             modKind = 2
-    names = (unicode(__name)+('   ' if modKind<2 else u'  ·' )*20)[:40]+modKinds[modKind]
+    names = (tounicode(__name)+('   ' if modKind<2 else u'  ·' )*20)[:40]+modKinds[modKind]
     
     print u'%s%s %s: %s'%(u''.join(__leftStrs), u'└──' if islast else u'├──',typeStr,names)
     
@@ -305,6 +340,106 @@ def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',islast=None,deepN
         treem(e,types,deep,__leftStrs,name,islast=(i==len(dirMod)-1),deepNow=deepNow+1,rootDir=rootDir,sets=sets)
     __leftStrs.pop()
 treem = FunAddMagicMethod(treem)
+
+
+def __dira(seq,le=None,k=u'/',islast=None,instance=None, maxDocLen=50):
+    '''
+    类似bash中的tree命令 简单查看instance的 __attrs__ 组成的树的结构
+    attr name用红色；str(instance.attr)用蓝色；
+    如果attr 为instancemethod，builtin_function_or_method，method-wrapper之一
+    instance.attr.__doc__用黑色 
+    
+    ps.可在__attrLogFuns中 新增常见类别
+    '''
+    s = __discribOfInstance(seq,colorFormat.b,MAX_LEN=maxDocLen)
+    s = s.replace('\n','↳')
+    if le is None:
+        le = [] 
+        islast = 1
+        doc = '' if instance is None else getFunDoc(instance)
+        if len(doc) > maxDocLen:
+            doc = doc[:maxDocLen-3]+'...'
+        s=colorFormat.b%('%d attrs%s'%(len(seq), doc.replace('\n','↳').replace(' :',',',1)))
+#    print ''.join(le)+u'├── '+tounicode(k)+': '+s
+    print u'%s%s %s: %s'%(u''.join(le), u'└──' if islast else u'├──',colorFormat.r%tounicode(k),s)
+    if isinstance(seq,(list,tuple)):
+        seq = list(enumerate(seq))
+    elif isinstance(seq,(dict)):
+        seq = list(seq.items())
+        seq.sort(key=lambda x:x[0])
+    else:
+        return 
+    le.append(u'    'if islast else u'│   ')
+    for i,kv in enumerate(seq):
+        k,v = kv
+        __dira(v,le,k,islast=(i==len(seq)-1),maxDocLen=maxDocLen)#leafColor=colorFormat.black)
+    le.pop()
+
+def getFunDoc(f):
+    if '__doc__' in dir(f) and f.__doc__:
+        return ' : %s'%(colorFormat.black%f.__doc__)
+    return ''
+
+__attrLogFun__ = {
+'method-wrapper': lambda x:'method-wrapper%s'%getFunDoc(x),
+'builtin_function_or_method':lambda x:'builtin-method%s'%getFunDoc(x),
+'instancemethod':lambda x:'instancemethod%s'%getFunDoc(x),
+'buffer':lambda x:'buffer : %s'%(colorFormat.b%(x)),
+}
+
+def dira(instance, pattern=None, maxDocLen=50):
+    '''
+    以树的结构 分析instance的所有 attrs 
+    attr name用红色；str(instance.attr)用蓝色；
+    如果attr 为instancemethod，builtin_function_or_method，method-wrapper之一
+    instance.attr.__doc__用黑色 
+    
+    Parameters
+    ----------
+    instance : Anything
+        Anything, Instance better
+    pattern : re.pattern
+        用于匹配re.search参数 进行filter
+    maxDocLen : int, default 50
+        若有文档显示文档的字数长度
+        
+    ps.可在__attrLogFuns中 新增常见类别
+    pps.不展开 ('__globals__', 'func_globals')
+    '''
+    dirs = dir(instance)
+    if pattern is not None:
+        import re
+        dirs = filter(lambda name:re.search(pattern,name), dirs)
+        print 'Filter by pattern: "%s"'%(colorFormat.r%pattern)
+    def getAttr(attr):
+        try:
+#            if '__getattribute__' in dirs or 1:
+            return instance.__getattribute__(attr)
+        except (AttributeError, TypeError):
+            pass
+        except KeyError:
+            pass
+        try:
+            if '__getattr__' in dirs:
+                return instance.__getattr__(attr)
+        except (AttributeError, TypeError):
+            return colorFormat.red % 'Both "getattr" and "getattribute" are not work'
+        return 'No "getattr" or "getattribute"'
+    l = map(getAttr,dirs)
+    def filterMethodName(attrName, attr):
+        typee = type(attr)
+        typn = typeNameOf(typee)
+        if typn in __attrLogFun__:
+            return __attrLogFun__[typn](attr)
+        if attrName in ('__globals__', 'func_globals'):
+            return colorFormat.b%('globals-dict %d'%len(attr))
+        return attr
+    l = map(filterMethodName,dirs,l)
+    dic = dict(zip(dirs,l))    
+    __dira(dic,k=typeNameOf(type(instance)), instance=instance, maxDocLen=maxDocLen)
+
+dira = FunAddMagicMethod(dira)
+treea = dira
 
 def __readShape(n):
     return imread(n).shape

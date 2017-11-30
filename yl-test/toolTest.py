@@ -16,7 +16,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-#TEST_ALL = False
+TEST_ALL = False
 
 
 testFun = None
@@ -111,7 +111,13 @@ if ifTest(mapmp):
         with timeit():
             mapp(npt,rrs)
             print name,
-            
+
+tests = dira
+if ifTest(dira): 
+    import tool, pandas
+    dira(tool, pattern="^[A-Z]")
+    dira(pandas.DataFrame(), pattern="^[A-Z]")
+    dira(dicto(a=5,b=6), pattern="^va")
 if __name__ == '__main__':
     pass
 
