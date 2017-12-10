@@ -25,6 +25,16 @@ def dynamicWraps(func):
         return cache[key]
     return wrap
 
+def pipe(funList):
+    '''
+    将一组函数组成一个管道函数
+    
+    Parameters
+    ----------
+    funList : list of Funcation
+        函数list
+    '''
+    return reduce(lambda f1,f2:(lambda x:f2(f1(x))), funList, lambda x:x)
     
 def setTimeOut(fun, t=0):
     '''

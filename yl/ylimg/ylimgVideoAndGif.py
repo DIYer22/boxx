@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 
 
 from ylimgTool import cv2, sk, sio, np, plt, da
-from ylimgTool import show, loga, mapp, normalizing, imsave, imread
+from ylimgTool import (show, loga, mapp, normalizing, imsave, imread,
+                       standImg, resize)
 
 
 def base64Img(arr):
@@ -55,6 +56,40 @@ def videoToImgs(videoPath,begin=0,end=0):
             break
     return frames
     
+def generateBigImgForPaper(imgMa,lengh=1980,border=20,saveName='bigImgForPaper.png'):
+    '''
+    生成科研写作用的样本对比图
+    imgMa: 图片行程的二维列表
+    lengh: 大图片的宽度, 长度根据imgMa矩阵的高自动算出
+    border: 图片与图片间的间隔
+    '''
+    big = None
+    for rr in imgMa:
+        rr = map(standImg,rr)
+        nn = len(rr)
+        a = int((lengh-nn*border)/nn)
+        m,n = rr[0].shape[:2]
+        b = int(a*m/n)
+        row = None
+        rr = [resize(r,(b,a)) for r in rr]
+        for r in rr:
+
+            if row is None:
+                row = r
+            else:
+                row = np.append(row,np.ones((b,border,3)),1)
+                row = np.append(row,r,1)
+        if big is None:
+            big = row
+        else:
+            big = np.append(big,np.ones((border,big.shape[1],3)),0)
+            big = np.append(big,row,0)
+
+    show(big)
+    if saveName:
+        imsave(saveName,big)
+    return big
+
 if __name__ == '__main__':
 
     import pandas as pd

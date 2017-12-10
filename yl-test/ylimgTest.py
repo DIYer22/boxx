@@ -5,7 +5,7 @@ u'''
 使用`ifTest([funName]) or 0:`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
 '''
-imgGlob = u'/home/dl/experiment/salDataset/SalBenchmark-master/Data/HKU-IS/Imgs/*.jpg'
+imgGlob = u'/media/dl/60B49345B4931D1A1/IMPORTANT_dataForHome/salDataset/SalBenchmark-master/Data/HKU-IS/Imgs/*.jpg'
 #imgGlob = ''
 jpg,png='imgForTest/0004.jpg','imgForTest/0004.png'
 img,gt = imread(jpg),imread(png)
@@ -35,7 +35,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-TEST_ALL = False
+#TEST_ALL = False
 
 testFun = None
 tests = [testFun]
@@ -92,7 +92,7 @@ if ifTest(shows):
     shows(jpg,png,rec,gtc,rem*5,gtm*5)
     
 #tests = getShapes
-if ifTest(getShapes) and imgGlob:
+if ifTest(getShapes) and len(glob(imgGlob)):
     with timeit():
         shapes = getShapes(imgGlob)
         
@@ -105,7 +105,7 @@ if ifTest(autoSegmentWholeImg):
                                   step=100,weightCore='gauss')
     show(resoult)
 
-tests = plot3dSurface
+#tests = plot3dSurface
 if ifTest(plot3dSurface):
     with timeit():
         hh,ww = 256,256
@@ -115,6 +115,19 @@ if ifTest(plot3dSurface):
         print(u'距离分布')
         core = getWeightCore(hh,ww,lambda i,j:((i*1./hh-.5)**2+(j*1./ww-.5)**2)**.5)
         plot3dSurface(core)
+        
+#tests = labelToColor
+if ifTest(labelToColor):
+    show(rem,labelToColor(rem,includeBackGround=1))
+    
+#tests = getDefaultColorList
+if ifTest(getDefaultColorList):
+    toi = lambda(p):(npa([[p]*4]*4))*1.
+    colorNum=3
+    includeBackGround=-1
+    colors = getDefaultColorList(colorNum,includeBackGround)
+    print colorNum,len(colors)
+    show -map(toi,colors)
 if __name__ == '__main__':
     pass
 

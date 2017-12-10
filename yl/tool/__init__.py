@@ -9,7 +9,7 @@ from toolLog import (stdout, log, tounicode, ignoreWarning,
 from toolLog import colorFormat, pblue, pred, pdanger, perr, pinfo
 from toolLog import localTimeStr, gmtTimeStr
 
-from toolStructObj import (dicToObj, dicto, 
+from toolStructObj import (dicToObj, dicto, typeNameOf, typestr,
                                         listToBatch, FunAddMagicMethod)
 
 from toolIo import (listdir, filename, openread, openwrite, replaceTabInPy, save_data, 

@@ -2,9 +2,9 @@
 
 from __future__ import unicode_literals
 
-from tool.toolStructObj import FunAddMagicMethod
+from tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr
 from tool.toolLog import colorFormat, tounicode
-from tool.toolFuncation import mapmp
+from tool.toolFuncation import mapmp, pipe
 
 import os
 import glob
@@ -29,6 +29,9 @@ def normalizing(arr):
     a = arr.astype(float)
     minn = a.min()
     return (a-minn)/(a.max() - minn)
+normalizing = FunAddMagicMethod(normalizing)
+norma = normalizing
+
 def uint8(img):
     '''将0～1的float或bool值的图片转换为uint8格式'''
     return ((img)*255.999).astype(np.uint8)
@@ -37,7 +40,17 @@ greyToRgb = lambda grey:grey.repeat(3).reshape(grey.shape+(3,))
 
 npa = FunAddMagicMethod(np.array)
 
-
+def tprgb(ndarray):
+    '''
+    transpose to RGB, 将3*h*w的ndarray化为 h*w*3的RGB图
+    即shape为 (...,3 , h, w)的ndarray转化为(..., h, w, 3)
+    '''
+    shape = ndarray.shape
+    ndim = ndarray.ndim
+    if ndim >= 3 and shape[-3] == 3:
+        axes = list(range(ndim))[:-3]+[ndim-2,ndim-1,ndim-3]
+        return ndarray.transpose(*axes)
+    return ndarray
 def mapp(f, matrix, need_i_j=False):
     '''
     for each item of a 2-D matrix
@@ -54,7 +67,6 @@ def mapp(f, matrix, need_i_j=False):
 
 
 from operator import add
-
 def ndarrayToImgLists(arr):
     '''
     将所有ndarray转换为imgList
@@ -64,26 +76,47 @@ def ndarrayToImgLists(arr):
     if arr.ndim==2 or (arr.ndim ==3 and arr.shape[-1] in [3,4]):
          return [arr]
     if arr.shape[-1] == 2: # 二分类情况下自动转换
-        arr = arr.transpose(range(ndim)[:-3]+[ndim-1,ndim-3,ndim-2])
+        arr = arr.transpose(list(range(ndim))[:-3]+[ndim-1,ndim-3,ndim-2])
     imgdim = 3 if arr.shape[-1] in [3,4] else 2
     ls = list(arr)
     while ndim-1>imgdim:
         ls = reduce(add,map(list,ls),[])
         ndim -=1
     return ls
-def listToImgLists(l, res=None):
+
+__torchToNumpy = lambda x:x.numpy()
+
+__typesToNumpy = {
+    'PIL.Image.Image':lambda x:np.array(x),
+    'mxnet.ndarray.NDArray':lambda x:x.asnumpy(),
+    
+    'torch.FloatTensor':__torchToNumpy,
+    'torch.DoubleTensor':__torchToNumpy,
+    'torch.IntTensor':__torchToNumpy,
+    'torch.LongTensor':__torchToNumpy,
+    'torch.ShortTensor':__torchToNumpy,
+    'torch.ByteTensor':__torchToNumpy,
+    'torch.HalfTensor':__torchToNumpy,
+    'torch.CharTensor':__torchToNumpy,
+    }
+
+def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
     '''
     将 ndarray和list的混合结果树转换为 一维 img list
     '''
     if res is None:
         res = []
     for x in l:
-        if isinstance(x,(list,tuple)):
-            listToImgLists(x,res)
-        if isinstance(x,dict):
-            listToImgLists(x.values(),res)
-        if isinstance(x,np.ndarray):
-            res.extend(ndarrayToImgLists(x))
+        typeName = typestr(x)
+        if typeName in __typesToNumpy:
+            ndarray = __typesToNumpy[typeName](x)
+            res.extend(doNumpy(ndarray))
+        elif isinstance(x,(list,tuple)):
+            listToImgLists(x,res=res,doNumpy=doNumpy)
+        elif isinstance(x,dict):
+            listToImgLists(x.values(),res=res,doNumpy=doNumpy)
+        elif isinstance(x,np.ndarray):
+            res.extend(doNumpy(x))
     return res
 def showImgLists(imgs,**kv):
     n = len(imgs)
@@ -102,14 +135,19 @@ def showImgLists(imgs,**kv):
         axes[count].imshow(img,**kv)
         count += 1
     plt.show()
-def show(*imgs,**kv):
+def show(*imgsAndFuns,**kv):
     '''
-    do plt.imshow to a list of imgs or one img or img in dict or img in np.ndarray
-    **kv: args for plt.imshow
+    找出一个复杂结构中的所有numpy 转换为对应的图片并plt.show()出来
+    
+    Parameters
+    ----------
+    imgsAndFuns : list/tuple/dict 
     '''
     if 'cmap' not in kv:
         kv['cmap'] = 'gray'
-    imgls = listToImgLists(imgs)
+    funs = [arg for arg in imgsAndFuns[1:] if callable(arg)]
+    doNumpy = pipe(funs+[ndarrayToImgLists])
+    imgls = listToImgLists(imgsAndFuns,doNumpy=doNumpy)
     assert len(imgls)!=0,"funcation `show`'s args `imgs`  has no any np.ndarray! "
     showImgLists(imgls,**kv)
 show = FunAddMagicMethod(show)
@@ -168,6 +206,9 @@ def loga(array):
     '''
     Analysis np.array with a graph. include shape, max, min, distribute
     '''
+    typeName = typestr(array)
+    if typeName in __typesToNumpy:
+        array = __typesToNumpy[typeName](array)
     if isinstance(array,str) or isinstance(array,unicode):
         print 'info and histogram of',array
         l=[]
@@ -207,6 +248,7 @@ __logFuns = {
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
     'dict':lambda x:colorFormat.b%('dict  %s'%len(x)),
     'dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
+    'tool.toolStructObj.dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
     'tool.toolLog.SuperG':lambda x:colorFormat.b%('SuperG  %s'%len(x)),
     'numpy.ndarray':lambda x:colorFormat.r%('%s%s'%
                                     (unicode(x.shape).replace('L,','').replace('L',''),x.dtype)),
@@ -224,11 +266,6 @@ __logFuns = {
     'mxnet.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
     }
 
-def typeNameOf(classOrType):
-    ss = str(classOrType).split("'")
-    if len(ss)>=3:
-        return ss[-2]
-    return str(classOrType)
 
 def __discribOfInstance(instance,leafColor=None,MAX_LEN=45):
     typee = type(instance)
@@ -242,7 +279,7 @@ def __discribOfInstance(instance,leafColor=None,MAX_LEN=45):
     return (leafColor or '%s')%s
 
 
-def tree(seq,le=None,k=u'/',islast=None,leafColor=u'\x1b[31m%s\x1b[0m'):
+def tree(seq,deep=None,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 简单查看list, tuple, dict, numpy组成的树的每一层结构
     可迭代部分用蓝色 叶子用红色打印 
@@ -252,28 +289,39 @@ def tree(seq,le=None,k=u'/',islast=None,leafColor=u'\x1b[31m%s\x1b[0m'):
     ----------
     seq : list or tuple or dict or numpy or any Object
         打印出 以树结构展开所有可迭代部分
+    deep : int, default None
+        能显示的最深深度, 默认不限制
     
     ps.可在__logFuns中 新增类别
     '''
-    if le is None:
-        le = [] 
-        islast = 1
+    if deep and __deepNow > deep:
+        return
+    if __leftStr is None:
+        __leftStr = [] 
+        __islast = 1
+        __sets = set()
 #    s = __logFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
     s = __discribOfInstance(seq,leafColor=leafColor)
     s = s.replace('\n',u'↳')
-#    print ''.join(le)+u'├── '+tounicode(k)+': '+s
-    print u'%s%s %s: %s'%(u''.join(le), u'└──' if islast else u'├──',tounicode(k),s)
-    if isinstance(seq,(list,tuple)):
-        seq = list(enumerate(seq))
-    elif isinstance(seq,(dict)):
-        seq = list(seq.items())
+#    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
+    print u'%s%s %s: %s'%(u''.join(__leftStr), u'└──' if __islast else u'├──',tounicode(__key),s)
+    if isinstance(seq,(list,tuple,dict)) :
+        if id(seq) in __sets:
+            seq=[(colorFormat.r%u'【printed befor】','')]
+        else:
+            __sets.add(id(seq))
+            if isinstance(seq,(list,tuple)):
+                seq = list(enumerate(seq))
+            elif isinstance(seq,(dict)):
+                seq = list(seq.items())
     else:
         return 
-    le.append(u'    'if islast else u'│   ')
+    __leftStr.append(u'    'if __islast else u'│   ')
     for i,kv in enumerate(seq):
-        k,v = kv
-        tree(v,le,k,islast=(i==len(seq)-1), leafColor=leafColor)
-    le.pop()
+        __key,v = kv
+        tree(v,deep=deep, leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
+             __islast=(i==len(seq)-1),__deepNow=__deepNow+1,__sets=__sets)
+    __leftStr.pop()
 tree = FunAddMagicMethod(tree)
 
 def __typee__(x):
@@ -283,7 +331,7 @@ logModFuns = {
  type(os):lambda x:colorFormat.r%(__typee__(x)),
  }
 logMod = lambda mod:logModFuns.get(type(mod),lambda x:colorFormat.b%tounicode(__typee__(x))[:60])(mod)
-def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',islast=None,deepNow=0,rootDir=None,sets=None):
+def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',__islast=None,__deepNow=0,__rootDir=None,__sets=None):
     '''
     类似bash中的tree命令 查看module及子module的每一层结构
     一目了然module的结构和api
@@ -302,16 +350,16 @@ def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',islast=None,deepN
         能显示的最深深度
         默认不限制
     '''
-    if deep and deepNow > deep:
+    if deep and __deepNow > deep:
         return
     if __leftStrs is None:
         __leftStrs = [] 
-        islast = 1
+        __islast = 1
         if '__file__' not in dir(mod): 
             print 'type(%s: %s) is not module!'%(logMod(mod),tounicode(mod))
             return 
-        rootDir = os.path.dirname(mod.__file__)
-        sets = set()
+        __rootDir = os.path.dirname(mod.__file__)
+        __sets = set()
     typeStr = logMod(mod)
     modKinds = ['','','(not sub-module)','(printed befor)']
     modKind = 0
@@ -320,29 +368,29 @@ def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',islast=None,deepN
             __name = mod.__name__
         modKind = 1
         dirMod = dir(mod)
-        if  mod in sets:
+        if  mod in __sets:
             modKind = 3 
-        elif '__file__' not in dir(mod) or rootDir not in mod.__file__:
+        elif '__file__' not in dir(mod) or __rootDir not in mod.__file__:
             modKind = 2
     names = (tounicode(__name)+('   ' if modKind<2 else u'  ·' )*20)[:40]+modKinds[modKind]
     
-    print u'%s%s %s: %s'%(u''.join(__leftStrs), u'└──' if islast else u'├──',typeStr,names)
+    print u'%s%s %s: %s'%(u''.join(__leftStrs), u'└──' if __islast else u'├──',typeStr,names)
     
     if modKind !=1:
         return
-    sets.add(mod)
+    __sets.add(mod)
     dirMod = [i for i in dirMod if i not in ['__name__','__file__','unicode_literals']]
     if types is not None:
         dirMod=[i for i in dirMod if type(mod.__getattribute__(i)) in  list(types)+[type(os)]] 
-    __leftStrs.append(u'    'if islast else u'│   ')
+    __leftStrs.append(u'    'if __islast else u'│   ')
     for i,name in enumerate(dirMod):
         e = mod.__getattribute__(name)
-        treem(e,types,deep,__leftStrs,name,islast=(i==len(dirMod)-1),deepNow=deepNow+1,rootDir=rootDir,sets=sets)
+        treem(e,types,deep,__leftStrs,name,__islast=(i==len(dirMod)-1),__deepNow=__deepNow+1,__rootDir=__rootDir,__sets=__sets)
     __leftStrs.pop()
 treem = FunAddMagicMethod(treem)
 
 
-def __dira(seq,le=None,k=u'/',islast=None,instance=None, maxDocLen=50):
+def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key=u'/',__islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 简单查看instance的 __attrs__ 组成的树的结构
     attr name用红色；str(instance.attr)用蓝色；
@@ -351,29 +399,39 @@ def __dira(seq,le=None,k=u'/',islast=None,instance=None, maxDocLen=50):
     
     ps.可在__attrLogFuns中 新增常见类别
     '''
+    if deep and __deepNow > deep:
+        return
     s = __discribOfInstance(seq,colorFormat.b,MAX_LEN=maxDocLen)
-    s = s.replace('\n','↳')
-    if le is None:
-        le = [] 
-        islast = 1
+    if maxDocLen < 100:
+        s = s.replace('\n','↳')
+    if __leftStr is None:
+        __leftStr = [] 
+        __islast = 1
+        __sets = set()
         doc = '' if instance is None else getFunDoc(instance)
         if len(doc) > maxDocLen:
             doc = doc[:maxDocLen-3]+'...'
         s=colorFormat.b%('%d attrs%s'%(len(seq), doc.replace('\n','↳').replace(' :',',',1)))
-#    print ''.join(le)+u'├── '+tounicode(k)+': '+s
-    print u'%s%s %s: %s'%(u''.join(le), u'└──' if islast else u'├──',colorFormat.r%tounicode(k),s)
-    if isinstance(seq,(list,tuple)):
-        seq = list(enumerate(seq))
-    elif isinstance(seq,(dict)):
-        seq = list(seq.items())
-        seq.sort(key=lambda x:x[0])
+#    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
+    print u'%s%s %s: %s'%(u''.join(__leftStr), u'└──' if __islast else u'├──',colorFormat.r%tounicode(__key),s)
+    if isinstance(seq,(list,tuple,dict)) :
+        if id(seq) in __sets:
+            seq=[(colorFormat.r%u'【printed befor】','')]
+        else:
+            __sets.add(id(seq))
+            if isinstance(seq,(list,tuple)):
+                seq = list(enumerate(seq))
+            elif isinstance(seq,(dict)):
+                seq = list(seq.items())
+                seq.sort(key=lambda x:x[0])
     else:
         return 
-    le.append(u'    'if islast else u'│   ')
+    __leftStr.append(u'    'if __islast else u'│   ')
     for i,kv in enumerate(seq):
-        k,v = kv
-        __dira(v,le,k,islast=(i==len(seq)-1),maxDocLen=maxDocLen)#leafColor=colorFormat.black)
-    le.pop()
+        __key,v = kv
+        __dira(v,maxDocLen=maxDocLen,deep=deep,__leftStr=__leftStr,__key=__key,
+               __islast=(i==len(seq)-1), __deepNow=__deepNow+1,__sets=__sets)#leafColor=colorFormat.black)
+    __leftStr.pop()
 
 def getFunDoc(f):
     if '__doc__' in dir(f) and f.__doc__:
@@ -387,7 +445,7 @@ __attrLogFun__ = {
 'buffer':lambda x:'buffer : %s'%(colorFormat.b%(x)),
 }
 
-def dira(instance, pattern=None, maxDocLen=50):
+def dira(instance, pattern=None, maxDocLen=50, deep=None):
     '''
     以树的结构 分析instance的所有 attrs 
     attr name用红色；str(instance.attr)用蓝色；
@@ -402,6 +460,8 @@ def dira(instance, pattern=None, maxDocLen=50):
         用于匹配re.search参数 进行filter
     maxDocLen : int, default 50
         若有文档显示文档的字数长度
+    deep : int, default None
+        能显示的最深深度, 默认不限制
         
     ps.可在__attrLogFuns中 新增常见类别
     pps.不展开 ('__globals__', 'func_globals')
@@ -436,7 +496,7 @@ def dira(instance, pattern=None, maxDocLen=50):
         return attr
     l = map(filterMethodName,dirs,l)
     dic = dict(zip(dirs,l))    
-    __dira(dic,k=typeNameOf(type(instance)), instance=instance, maxDocLen=maxDocLen)
+    __dira(dic,instance=instance, maxDocLen=maxDocLen, deep=deep,__key=typeNameOf(type(instance)), )
 
 dira = FunAddMagicMethod(dira)
 treea = dira
@@ -479,10 +539,110 @@ def getShapes(imgGlob, returnn=False):
     if returnn:
         return shapes
 
-def labelToColor(label,colors):
+__color10 = [
+ (1.0, 1.0, 1.0),
+ (0.8666666666666667, 1.0, 1.0),
+ (0.8, 1.0, 1.0),
+ (0.6666666666666667, 1.0, 1.0),
+ (0.5333333333333333, 1.0, 1.0),
+ (0.4666666666666667, 1.0, 1.0),
+ (0.33333333333333337, 1.0, 1.0),
+ (0.19999999999999996, 1.0, 1.0),
+ (0.1333333333333333, 1.0, 1.0),
+ (0.06666666666666665, 1.0, 1.0)]
+
+def getHsvColors(hn,sn,vn):
     '''
-    将颜色映射到label上
+    在hsv空间产生尽可能不同的颜色集
+    hn,sn,vn 分别表示 h，s，v对应每个通道的可选值的数目
+    return `hn*sn*vn`个 以float三元组为HSV颜色形式的list
     '''
+    def toNcolor(n,incloud0=False):
+        if incloud0:
+            n -= 1
+        l = [1.-i*1./n for i in range(n)]
+        if incloud0:
+            return l+[0.]
+        return l
+    
+    hs,ss,vs = map(toNcolor,[hn,sn,vn])
+    cs = []
+    for s in ss:
+        for v in vs:
+            for h in hs:
+                c = (h,s,v)
+                cs += [c]
+    return cs
+
+def getDefaultColorList(colorNum=None, includeBackGround=None,uint8=False):
+    '''
+    产生尽可能不同的颜色集，用于多label上色
+    
+    Parameters
+    ----------
+    colorNum : int, default None
+        颜色数目,default 21
+    includeBackGround : bool or int, default None
+        None: 没有背景色 即不包含黑色
+        1 : 第一类为背景即黑色 
+        -1: 最后一类为背景即黑色
+    uint8 : bool, default False
+        是否返还 np.uint8 格式的颜色
+        
+    Return
+    ----------
+    以float三元组为RGB颜色形式的list
+    '''
+    if colorNum is None:
+        colorNum=21
+        includeBackGround=1
+    if includeBackGround is not None:
+        colorNum -= 1
+    
+    if colorNum <= 12:
+        colors = getHsvColors(6, 1, 2)
+        
+    elif colorNum <= 20:
+        colors = __color10+[(c[0],1.0,.5) for c in __color10]
+    elif colorNum <= 30:
+        colors = __color10+[(c[0],1.0,.66666) for c in __color10]+[(c[0],1.0,.333333) for c in __color10]
+        
+    elif colorNum <= 60:
+        colors = getHsvColors(colorNum//3+1 if colorNum%3 else colorNum//3,1,3)
+    else :
+        colors = getHsvColors(colorNum//6+1,2,3)
+    
+    if includeBackGround == -1:
+        colors = colors[:colorNum] + [(0.,0.,0.)]
+    elif includeBackGround is not None:
+        colors = [(0.,0.,0.)] + colors[:colorNum]
+    else:
+        colors = colors[:colorNum] 
+    if uint8 :
+        return list((np.array(colors)*255).astype(np.uint8))
+    
+    from colorsys import hsv_to_rgb
+    toRgb = lambda hsv:hsv_to_rgb(*hsv)
+    return list(map(toRgb,colors))
+
+def labelToColor(label, colors=None, includeBackGround=None):
+    '''
+    将颜色集colors映射到label上 返回彩色的label图
+
+    Parameters
+    ----------
+    label : W*H of int
+        W*H的labelMap
+    colors : list of RGB color, default None
+        对应k类的RGB颜色集，若为None 则会自动生成尽可能不同的颜色集
+    includeBackGround : bool or int, default None
+        若colors为None 情况下才生效:
+            None: 生成的颜色集没有背景色 即不包含黑色
+            1   : 第一类为背景即黑色 
+            -1  : 最后一类为背景即黑色
+    '''
+    if colors is None:
+        colors = getDefaultColorList(label.max()+1, includeBackGround=includeBackGround)
     colors = np.array(colors)
     if 1.1>(colors).max()>0:
         colors = uint8(colors)
@@ -505,39 +665,6 @@ def standImg(img):
     if isNumpyType(img, float):
         return img
     
-def generateBigImgForPaper(imgMa,lengh=1980,border=20,saveName='bigImgForPaper.png'):
-    '''
-    生成科研写作用的样本对比图
-    imgMa: 图片行程的二维列表
-    lengh: 大图片的宽度, 长度根据imgMa矩阵的高自动算出
-    border: 图片与图片间的间隔
-    '''
-    big = None
-    for rr in imgMa:
-        rr = map(standImg,rr)
-        nn = len(rr)
-        a = int((lengh-nn*border)/nn)
-        m,n = rr[0].shape[:2]
-        b = int(a*m/n)
-        row = None
-        rr = [resize(r,(b,a)) for r in rr]
-        for r in rr:
-
-            if row is None:
-                row = r
-            else:
-                row = np.append(row,np.ones((b,border,3)),1)
-                row = np.append(row,r,1)
-        if big is None:
-            big = row
-        else:
-            big = np.append(big,np.ones((border,big.shape[1],3)),0)
-            big = np.append(big,row,0)
-
-    show(big)
-    if saveName:
-        imsave(saveName,big)
-    return big
 if __name__ == '__main__':
 
     pass

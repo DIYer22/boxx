@@ -21,7 +21,7 @@ def listToBatch(listt, batch):
 CALL_CLASS_CACHE={}
 def addCall(instance):
     '''
-    给可以被自己init 的 instance增加__call__ 返回自己
+    instance增加__call__ 返回自己
     '''
     t = type(instance)
     if t not in CALL_CLASS_CACHE:
@@ -113,18 +113,28 @@ def dicToObj(dic):
             setattr(top, i, j)  
     return top  
     
-def addCall(x):
-    '''
-    对一个可用自己进行初始化的对象增加__call__属性
-    如: int, str, dict, list
-    '''
-    class AddCall(type(x)):
-        def __call__(self,*l,**kv):
-            if len(l)+len(kv):
-                return type(x).__call__(self,*l,**kv)
-            return self
-    return AddCall(x)
 
+def typeNameOf(classOrType):
+    '''
+    以str 返回classOrType的所属类别  
+    
+    >>> typeNameOf(dict) 
+    u'dict'
+    '''
+    ss = str(classOrType).split("'")
+    if len(ss)>=3:
+        return ss[-2]
+    return str(classOrType)
+
+def typestr(instance):
+    '''
+    以str 返回instance的所属类别  
+    
+    >>> typestr({}) 
+    u'dict'
+    '''
+    return typeNameOf(type(instance))
+typestr = FunAddMagicMethod(typestr)
 if __name__ == "__main__":
 
     pass
