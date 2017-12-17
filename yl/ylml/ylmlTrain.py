@@ -129,7 +129,8 @@ class GenSimg(Iterator):
             self.count,self._times*self.maxPerCache,
             self.count*1./(self._times*self.maxPerCache),
             n, (n*self.bytes/2**20))
-        
+    def __len__(self):
+        return self.willn
     __repr__ = __str__
 
 if __name__ == '__main__':

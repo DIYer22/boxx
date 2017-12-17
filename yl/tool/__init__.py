@@ -7,7 +7,7 @@ import os, sys, time
 from toolLog import (stdout, log, tounicode, ignoreWarning,
                      LogException, LogLoopTime, SuperG, g, cf)
 from toolLog import colorFormat, pblue, pred, pdanger, perr, pinfo
-from toolLog import localTimeStr, gmtTimeStr
+from toolLog import localTimeStr, gmtTimeStr, timeGap
 
 from toolStructObj import (dicToObj, dicto, typeNameOf, typestr,
                                         listToBatch, FunAddMagicMethod)
@@ -18,7 +18,7 @@ from toolIo import (listdir, filename, openread, openwrite, replaceTabInPy, save
 from toolSystem import (importAllFunCode, crun, frun, timeit, heatMap, 
                         getArgvDic, softInPath, addPathToSys)
 
-from toolFuncation import (getFunName, dynamicWraps, setTimeOut,
+from toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt)
 
 from toolTools import (filterList, findints, randint, randfloat, randchoice,

@@ -112,12 +112,18 @@ if ifTest(mapmp):
             mapp(npt,rrs)
             print name,
 
-tests = dira
+#tests = dira
 if ifTest(dira): 
     import tool, pandas
     dira(tool, pattern="^[A-Z]")
     dira(pandas.DataFrame(), pattern="^[A-Z]")
     dira(dicto(a=5,b=6), pattern="^va")
+
+tests = pipe
+if ifTest(pipe):
+    funList = [lambda x:x+'[f1]',lambda x:x+'[f2]',lambda x:x+'[f3]']
+    do = pipe(funList)
+    print(do('start'))
 if __name__ == '__main__':
     pass
 

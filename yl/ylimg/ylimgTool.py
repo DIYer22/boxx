@@ -10,6 +10,7 @@ import os
 import glob
 import numpy as np
 import matplotlib.pyplot as plt
+import abc
 import cv2
 import skimage as sk
 from skimage import io as sio
@@ -38,7 +39,7 @@ def uint8(img):
 
 greyToRgb = lambda grey:grey.repeat(3).reshape(grey.shape+(3,)) 
 
-npa = FunAddMagicMethod(np.array)
+histEqualize = FunAddMagicMethod(sk.exposure.equalize_hist)
 
 def tprgb(ndarray):
     '''
@@ -51,6 +52,8 @@ def tprgb(ndarray):
         axes = list(range(ndim))[:-3]+[ndim-2,ndim-1,ndim-3]
         return ndarray.transpose(*axes)
     return ndarray
+tprgb = FunAddMagicMethod(tprgb)
+
 def mapp(f, matrix, need_i_j=False):
     '''
     for each item of a 2-D matrix
@@ -64,6 +67,52 @@ def mapp(f, matrix, need_i_j=False):
             it = matrix[i][j]
             listt[i][j] = f(it,i,j) if need_i_j else f(it)
     return np.array(listt)
+
+
+__torchToNumpy = lambda x:x.numpy()
+__torchCudaToNumpy = lambda x:x.cpu().numpy()
+
+__typesToNumpy = {
+    'PIL.Image.Image':lambda x:np.array(x),
+    'mxnet.ndarray.NDArray':lambda x:x.asnumpy(),
+    
+    'torch.FloatTensor':__torchToNumpy,
+    'torch.DoubleTensor':__torchToNumpy,
+    'torch.IntTensor':__torchToNumpy,
+    'torch.LongTensor':__torchToNumpy,
+    'torch.ShortTensor':__torchToNumpy,
+    'torch.ByteTensor':__torchToNumpy,
+    'torch.HalfTensor':__torchToNumpy,
+    'torch.CharTensor':__torchToNumpy,
+    
+    "torch.cuda.LongTensor":__torchCudaToNumpy,
+    "torch.cuda.DoubleTensor":__torchCudaToNumpy,
+    "torch.cuda.IntTensor":__torchCudaToNumpy,
+    "torch.cuda.ShortTensor":__torchCudaToNumpy,
+    "torch.cuda.ByteTensor":__torchCudaToNumpy,
+    "torch.cuda.HalfTensor":__torchCudaToNumpy,
+    "torch.cuda.CharTensor":__torchCudaToNumpy,
+    "torch.cuda.FloatTensor":__torchCudaToNumpy,
+    
+    "torch.autograd.variable.Variable":lambda x:__torchCudaToNumpy(x.data),
+    "torch.nn.parameter.Parameter":lambda x:__torchCudaToNumpy(x.data),
+    }
+def npa(array):
+    '''
+    根据`./__typesToNumpy` 将array转换为 np.ndarray
+    
+    Parameters
+    ----------
+    array : list/tuple, torch.Tensor, mxnet.NDArray 
+        在 字典 __typesToNumpy 的中的类型
+    '''
+    typeName = typestr(array)
+    if typeName in __typesToNumpy:
+        ndarray = __typesToNumpy[typeName](array)
+    else:
+        ndarray = np.array(array)
+    return ndarray
+npa = FunAddMagicMethod(npa)
 
 
 from operator import add
@@ -83,22 +132,6 @@ def ndarrayToImgLists(arr):
         ls = reduce(add,map(list,ls),[])
         ndim -=1
     return ls
-
-__torchToNumpy = lambda x:x.numpy()
-
-__typesToNumpy = {
-    'PIL.Image.Image':lambda x:np.array(x),
-    'mxnet.ndarray.NDArray':lambda x:x.asnumpy(),
-    
-    'torch.FloatTensor':__torchToNumpy,
-    'torch.DoubleTensor':__torchToNumpy,
-    'torch.IntTensor':__torchToNumpy,
-    'torch.LongTensor':__torchToNumpy,
-    'torch.ShortTensor':__torchToNumpy,
-    'torch.ByteTensor':__torchToNumpy,
-    'torch.HalfTensor':__torchToNumpy,
-    'torch.CharTensor':__torchToNumpy,
-    }
 
 def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
     '''
@@ -169,7 +202,7 @@ def showb(*arr,**__kv):
         path = '/tmp/tmp-%s.png'%len(glob.glob('/tmp/tmp-*.png'))
         imsave(path,arr)
         arr = path
-    cmd = 'shotwell "%s" &'%arr
+    cmd = u'shotwell "%s" &'%arr
     os.system(cmd)
 showb = FunAddMagicMethod(showb)
 
@@ -216,7 +249,9 @@ def loga(array):
         array = l[0]
     if isinstance(array,list):
         array = np.array(array)
-    print 'shape:%s ,type:%s ,max: %s, min: %s'%(str(array.shape),array.dtype.type, str(array.max()),str(array.min()))
+    
+    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type), len(array) and (array.max()), len(array) and (array.min()))]
+    print ('shape:%s ,type:%s ,max: %s, min: %s'%tuple(strr))
     
     unique = np.unique(array)
     if len(unique)<10:
@@ -231,6 +266,18 @@ def loga(array):
             return
         width = (x[0]-x[1])*0.7
         x -=  (x[0]-x[1])*0.35
+    elif not (np.isfinite(array)).all():
+        finiteInd = np.isfinite(array)
+        finite = array[finiteInd]
+        data, x = np.histogram(finite,8)
+        size = array.size
+        nan = np.isnan(array).sum()
+        nans = '"nan":%s (%.2f%%), '%(nan,100.*nan/size) if nan else ''
+        inf = np.isinf(array).sum()
+        infs = '"inf":%s (%.2f%%), '%(inf,100.*inf/size) if inf else ''
+        print '\n%s%s max: %s, min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min()))
+        x=x[1:]
+        width = (x[0]-x[1])
     else:
         data, x = np.histogram(array.ravel(),8)
         x=x[1:]
@@ -242,7 +289,7 @@ def loga(array):
 
 loga = FunAddMagicMethod(loga)
 
-__torchShape = lambda x:'%s %s'%(str(x.shape),x.type())
+__torchShape = lambda x:colorFormat.r%'%s %s'%(str(x.shape),x.type())
 __logFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
@@ -250,6 +297,7 @@ __logFuns = {
     'dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
     'tool.toolStructObj.dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
     'tool.toolLog.SuperG':lambda x:colorFormat.b%('SuperG  %s'%len(x)),
+    'collections.OrderedDict':lambda x:colorFormat.b%('OrderedDict  %s'%len(x)),
     'numpy.ndarray':lambda x:colorFormat.r%('%s%s'%
                                     (unicode(x.shape).replace('L,','').replace('L',''),x.dtype)),
 
@@ -262,6 +310,17 @@ __logFuns = {
     'torch.ByteTensor':__torchShape,
     'torch.HalfTensor':__torchShape,
     'torch.CharTensor':__torchShape,
+    
+    "torch.cuda.LongTensor":__torchShape,
+    "torch.cuda.DoubleTensor":__torchShape,
+    "torch.cuda.IntTensor":__torchShape,
+    "torch.cuda.ShortTensor":__torchShape,
+    "torch.cuda.ByteTensor":__torchShape,
+    "torch.cuda.HalfTensor":__torchShape,
+    "torch.cuda.CharTensor":__torchShape,
+    "torch.cuda.FloatTensor":__torchShape,
+    "torch.autograd.variable.Variable":lambda x:__torchShape(x.data),
+    "torch.nn.parameter.Parameter":lambda x:__torchShape(x.data),
     
     'mxnet.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
     }
@@ -314,6 +373,7 @@ def tree(seq,deep=None,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None,
                 seq = list(enumerate(seq))
             elif isinstance(seq,(dict)):
                 seq = list(seq.items())
+#            elif isinstance(seq, abc.types.GeneratorType)
     else:
         return 
     __leftStr.append(u'    'if __islast else u'│   ')
@@ -435,14 +495,14 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key=u'/'
 
 def getFunDoc(f):
     if '__doc__' in dir(f) and f.__doc__:
-        return ' : %s'%(colorFormat.black%f.__doc__)
+        return ' : %s'%(colorFormat.black%tounicode(f.__doc__))
     return ''
 
 __attrLogFun__ = {
 'method-wrapper': lambda x:'method-wrapper%s'%getFunDoc(x),
 'builtin_function_or_method':lambda x:'builtin-method%s'%getFunDoc(x),
 'instancemethod':lambda x:'instancemethod%s'%getFunDoc(x),
-'buffer':lambda x:'buffer : %s'%(colorFormat.b%(x)),
+'buffer':lambda x:'buffer : %s'%(colorFormat.b%tounicode(x)),
 }
 
 def dira(instance, pattern=None, maxDocLen=50, deep=None):

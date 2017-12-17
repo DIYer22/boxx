@@ -15,6 +15,46 @@ def gmtTimeStr():
     获得gmt时间(GM0 格林威治时间)
     '''
     return time.asctime(time.gmtime(time.time()))
+
+
+class timeGap:
+    '''
+    定时log器 隔固定的一段时间 返回 当前轮数(True)
+    
+    Init Parameters
+    ----------
+    gap : float
+        隔多少秒返回一个 True
+    fun : funcation, default None
+        每一次要执行fun()
+        
+    Attribute
+    ----------
+    __call__ : 
+        返还 当前轮数(True)
+    time : @property
+        is @property 返回已记录的时长
+    '''
+    def __init__(self, gap=1,fun=False):
+        self.n = 0
+        self.gap = gap
+        self.begin = self.last = time.time()
+        self.fun = fun
+    def __call__(self,):
+        t = time.time()
+        if t - self.last >= self.gap:
+            self.last = t
+            self.n += 1
+            if self.fun:
+                self.fun()
+            return self.n
+        return False
+    @property
+    def time(self):
+        return time.time() - self.begin
+    
+            
+    
 frontColorDic = {   # 前景色
         'black'    : 30,   #  黑色
         'red'      : 31,   #  红色

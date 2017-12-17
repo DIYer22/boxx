@@ -2,7 +2,7 @@
 from ylimgTool import cv2, sk, sio, np, plt, da
 from ylimgTool import (show, showb, shows, loga, tree, treem, treea, tprgb,
                        dira, mapp, normalizing, norma, imsave, imread, npa, 
-                       getShapes, greyToRgb, resize)
+                       getShapes, greyToRgb, resize, histEqualize)
 from ylimgTool import (uint8, randomm , r, labelToColor,getDefaultColorList,
                        standImg)
 
