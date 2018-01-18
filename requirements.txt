@@ -3,6 +3,6 @@ numpy
 imageio
 pandas
 matplotlib
-skimage
 py-heat
 snakeviz
+opencv-python
