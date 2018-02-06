@@ -250,8 +250,8 @@ def loga(array):
     if isinstance(array,list):
         array = np.array(array)
     
-    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type), len(array) and (array.max()), len(array) and (array.min()))]
-    print ('shape:%s ,type:%s ,max: %s, min: %s'%tuple(strr))
+    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type)[6:], '->%s'%typeName, len(array) and (array.max()), len(array) and (array.min()))]
+    print ('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr))
     
     unique = np.unique(array)
     if len(unique)<10:
