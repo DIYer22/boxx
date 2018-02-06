@@ -725,6 +725,28 @@ def standImg(img):
     if isNumpyType(img, float):
         return img
     
+def getMeanStd(imgPaths):
+    '''
+    map reduce的方式 获取 所有uint8图片的 mean 和 std
+    '''
+    paths = imgPaths
+    reduceDim = lambda img,axis=0:reduce(lambda x,y:np.append(x,y,axis),img)
+    logg = LogLoopTime(paths)
+    n = 0
+    squre = np.float128([0,0,0])
+    summ = np.float128([0,0,0])
+    for p in paths:
+        pixs = reduceDim(imread(p))/255.
+        n += len(pixs)
+        squre += (pixs**2).sum(0)
+        summ += pixs.sum(0)
+        logg(p)
+    mean = summ/float(n)
+    var = (squre/float(n) - mean**2)
+    std = var**.5
+    return mean, std
+
+    
 if __name__ == '__main__':
 
     pass

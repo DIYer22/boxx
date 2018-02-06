@@ -99,7 +99,7 @@ class Evalu(pd.DataFrame):
 
 Examples
 --------
-names = glob("/home/[to val path]/*.jpg")
+>>> names = glob("/home/[to val path]/*.jpg")
 e = Evalu(binaryEvalu,
           evaluName='try-example',
           valNames=names,

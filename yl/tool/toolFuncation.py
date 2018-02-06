@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 import time
 
+from toolStructObj import typestr
+
 def getFunName(fun):
     '''
     获得函数的名称
@@ -154,6 +156,47 @@ class multiThread():
         while self.left!=self.pool:
             time.sleep(self.TIME_GAP)
 #        print('pool',self.pool)
+
+def retry(fun, times=None, exception=Exception, timeGap=0, log=True):
+    '''
+    重试一个容易raise Exception的无参数函数fun times次数，被捕获的exception 保存在 retry.e 中
+    最后返回 fun() 
+    
+    Parameters
+    ----------
+    fun : funcation
+        没有参数的过程函数
+    times : int, default None
+        try 的次数 默认为无限次
+    exception : Exception Class, default builtins.Exception
+        需要被捕获的异常， 默认捕获所有异常 
+    timeGap : float, default 0
+        retry 需要等待多少秒时间
+    log : bool, default True
+        是否打印错误信息    
+    Returns
+    -------
+    fun() : anything
+    '''
+    count = 0
+    while (True if times is None else times - 1):
+        try:
+            r = fun()
+            return r
+        except exception as e:
+            retry.e = e
+            if log:
+                fname = fun.func_name if 'func_name' in dir(fun) else str(fun)
+                print((u'\x1b[31m%s\x1b[0m'%"%dth's Exception: %s of %s")%(count, typestr(e), fname))
+                print(e)
+                print('')
+        if timeGap:
+            time.sleep(timeGap)
+        if times is not None:
+            times -= 1    
+        count += 1
+    return fun()
+
 if __name__ == "__main__":
     
     def fun():

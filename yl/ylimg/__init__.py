@@ -4,7 +4,7 @@ from ylimgTool import (show, showb, shows, loga, tree, treem, treea, tprgb,
                        dira, mapp, normalizing, norma, imsave, imread, npa, 
                        getShapes, greyToRgb, resize, histEqualize)
 from ylimgTool import (uint8, randomm , r, labelToColor,getDefaultColorList,
-                       standImg)
+                       standImg, getMeanStd)
 
 from ylimgVideoAndGif import gifSave, videoToImgs, base64Img, generateBigImgForPaper
 

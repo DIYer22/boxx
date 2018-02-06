@@ -19,7 +19,7 @@ from toolSystem import (importAllFunCode, crun, frun, timeit, heatMap,
                         getArgvDic, softInPath, addPathToSys)
 
 from toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
-                           setInterval, multiThread, mapmp, mapmt)
+                           setInterval, multiThread, mapmp, mapmt, retry)
 
 from toolTools import (filterList, findints, randint, randfloat, randchoice,
                        listdirWithFun, replaceAllInRoot)
