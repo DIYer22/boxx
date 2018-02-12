@@ -55,7 +55,7 @@ class timeGap:
     
             
     
-frontColorDic = {   # 前景色
+frontColorDic = dicto({   # 前景色
         'black'    : 30,   #  黑色
         'red'      : 31,   #  红色
         'green'    : 32,   #  绿色
@@ -64,7 +64,7 @@ frontColorDic = {   # 前景色
         'purple'   : 35,   #  紫红色
         'cyan'     : 36,   #  青蓝色
         'white'    : 37,   #  白色
-    }
+    })
 class colorFormat:
     '''
     同时兼容windows和Linux及各类明暗色调的颜色str temple
@@ -405,11 +405,11 @@ class SuperG(Gs):
             False: 都不打印
         '''
         Gs.__init__(self,name, log, *l, **kv)
-    def __getattribute__(self, name=None):
+    def __getattribute__(self, name=None, *l):
         if name in self:
             return self[name]
         if name in dir(Gs):
-            return Gs.__getattribute__(self,name)
+            return Gs.__getattribute__(self,name, *l)
         def keyError(x):
             self[name] = x
             return x
@@ -427,25 +427,89 @@ class SuperG(Gs):
     @property
     def items(self):
         return addCall(dict.items(self))
+
 GlobalG = SuperG
 g = SuperG()
 config = dicto()
 cf = config
+
+
+
+p = dicto()
+class LocalAndGlobal(object):
+    def __call__(self, depth=0, printt=True):
+        '''
+        在函数内运行`lc()`  
+        则此函数的global和local 变量会载入全局变量 p 中
+        函数的 frame等其他信息 则放入全局变量 lc
+        
+        Parameters
+        ----------
+        depth : int, default 0
+            相对于`lc() `所在frame的深度
+        printt : bool, default True
+            是否打印
+            
+        Effect
+        ----------
+        p : dicto
+            运行 `lc()`, 等价于 p.update(globals());p.update(locals())
+        lc : callabel dicto
+            lc 的 items：
+                self.c = self.code = frame.f_code
+                self.l = self.local = locals()
+                self.f = self.frame = frame
+                self.fs = __getFatherFrames__(frame) 
+        '''
+        frame = sys._getframe(depth+1)
+        code = frame.f_code
+        p.clear()
+        glob = frame.f_globals
+        local = frame.f_locals
+        p.update(glob)
+        p.update(local)
+        self.c = self.code = code
+        self.f = self.frame = frame
+        self.l = self.local = local
+        if printt:
+            print('')
+            c = code
+            print( (colorFormat.b%'File: "%s", line %s, in %s')%(u'\x1b[32m%s\x1b[0m'% c.co_filename, u'\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name))
+            fs = __getFatherFrames__(frame)
+            self.fs = fs
+            ns = map(lambda f:__getNameFromCodeObj__(f.f_code), fs)
+            if 'execfile' in ns:
+                ns = ns[:ns.index('execfile')]
+            MAX_PRINT_LEN = 100
+            s = '-> '.join(ns)
+            s = s if len(s) <= MAX_PRINT_LEN else (s[:MAX_PRINT_LEN-3]+'...')
+            print(colorFormat.b%'Stacks: '+colorFormat.r%s)
+            print(colorFormat.b%'Locals: ')
+            from yllab import tree
+            tree(local, 1)
+def __getFatherFrames__(frame):
+    fs = []
+    while frame:
+        fs.append(frame)
+        frame = frame.f_back
+    return fs
+
+def __getNameFromCodeObj__(code):
+    name = code.co_name
+    filee = code.co_filename
+    
+    if name == '<module>':
+        if filee.startswith('<ipython-input-'):
+            name = 'ipython-input'
+        else:
+            name = '%s'%os.path.basename(filee)
+        name = u'\x1b[36m%s\x1b[0m'%name
+    if name == '<lambda>':
+        return 'lambda'
+    return name
+    
+lc = LocalAndGlobal()
+
 if __name__ == "__main__":
     colorFormat.pall()
-    def frameInfo(frame):
-         return frame.f_code.co_filename, frame.f_code.co_name, frame.f_lineno 
-    gf = sys._getframe
-    gfl = lambda :gf().f_lineno
-    
-    def f():
-        g.c=2,g
-#        print gf().f_lineno,gfl()
-        g.f = sys._current_frames(),g
-        
-    ff = lambda x:f()
-    def fff():
-        ff(1)
-#    fff()
-#    print map(frameInfo,g.f.values())
     pass

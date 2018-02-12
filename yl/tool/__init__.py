@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 
 import os, sys, time
 
-from toolLog import (stdout, log, tounicode, ignoreWarning,
-                     LogException, LogLoopTime, SuperG, g, cf)
+from toolLog import (stdout, log, tounicode, ignoreWarning, LogException, 
+                     LogLoopTime, SuperG, g, cf, p, lc)
 from toolLog import colorFormat, pblue, pred, pdanger, perr, pinfo
 from toolLog import localTimeStr, gmtTimeStr, timeGap
 
@@ -25,8 +25,8 @@ from toolTools import (filterList, findints, randint, randfloat, randchoice,
                        listdirWithFun, replaceAllInRoot)
 
 from glob import glob
-from collections import namedtuple
-from collections import defaultdict as dictd
+from collections import namedtuple, defaultdict, Counter
+dictd = defaultdict
 from functools import reduce
 from os.path import join as pathjoin
 from os.path import basename, isfile, isdir, dirname
