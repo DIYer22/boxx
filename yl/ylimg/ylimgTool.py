@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-from tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr
+from tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto
 from tool.toolLog import colorFormat, tounicode
 from tool.toolFuncation import mapmp, pipe
 
@@ -298,9 +298,10 @@ __logFuns = {
     'tool.toolStructObj.dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
     'tool.toolLog.SuperG':lambda x:colorFormat.b%('SuperG  %s'%len(x)),
     'collections.OrderedDict':lambda x:colorFormat.b%('OrderedDict  %s'%len(x)),
+    'dictoSub':lambda x:colorFormat.b%('dictoSub  %s'%len(x)),
+    
     'numpy.ndarray':lambda x:colorFormat.r%('%s%s'%
                                     (unicode(x.shape).replace('L,','').replace('L',''),x.dtype)),
-
 
     'torch.FloatTensor':__torchShape,
     'torch.DoubleTensor':__torchShape,
@@ -330,6 +331,8 @@ def __discribOfInstance(instance,leafColor=None,MAX_LEN=45):
     typee = type(instance)
     typen = typeNameOf(typee)
 #    print typen,typen in __logFuns
+    if isinstance(instance,dicto) and typen not in __logFuns:
+        typen = 'dictoSub'
     if typen in __logFuns:
         return __logFuns[typen](instance)
     s = tounicode(instance)

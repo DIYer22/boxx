@@ -435,32 +435,33 @@ cf = config
 
 
 
-p = dicto()
-class LocalAndGlobal(object):
-    def __call__(self, depth=0, printt=True):
-        '''
-        在函数内运行`lc()`  
-        则此函数的global和local 变量会载入全局变量 p 中
-        函数的 frame等其他信息 则放入全局变量 lc
+class LocalAndGlobal(dicto):
+    '''
+    在函数内运行`p()` or `lc()`  
+    则此函数的global和local 变量会载入全局变量 p 中
+    函数的 frame等其他信息 则放入全局变量 lc
+    
+    Parameters
+    ----------
+    depth : int, default 0
+        相对于`p()`所在frame的深度
+    printt : bool, default True
+        是否打印
         
-        Parameters
-        ----------
-        depth : int, default 0
-            相对于`lc() `所在frame的深度
-        printt : bool, default True
-            是否打印
-            
-        Effect
-        ----------
-        p : dicto
-            运行 `lc()`, 等价于 p.update(globals());p.update(locals())
-        lc : callabel dicto
-            lc 的 items：
-                self.c = self.code = frame.f_code
-                self.l = self.local = locals()
-                self.f = self.frame = frame
-                self.fs = __getFatherFrames__(frame) 
-        '''
+    Effect
+    ----------
+    p : dicto
+        将当前frame的locals()和globals()存入p
+        运行 `p()`, 等价于 p.update(globals());p.update(locals())
+    lc : callabel dicto
+        lc则存储更多、更细致的信息 包含code, frame, frames栈
+        lc 的 items：
+            self.c = self.code = frame.f_code
+            self.l = self.local = locals()
+            self.f = self.frame = frame
+            self.fs = __getFatherFrames__(frame) 
+    '''
+    def __call__(self, depth=0, printt=True):
         frame = sys._getframe(depth+1)
         code = frame.f_code
         p.clear()
@@ -474,14 +475,14 @@ class LocalAndGlobal(object):
         if printt:
             print('')
             c = code
-            print( (colorFormat.b%'File: "%s", line %s, in %s')%(u'\x1b[32m%s\x1b[0m'% c.co_filename, u'\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name))
+            print((colorFormat.b%'File: "%s", line %s, in %s')%(u'\x1b[32m%s\x1b[0m'% c.co_filename, u'\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name))
             fs = __getFatherFrames__(frame)
             self.fs = fs
             ns = map(lambda f:__getNameFromCodeObj__(f.f_code), fs)
             if 'execfile' in ns:
                 ns = ns[:ns.index('execfile')]
             MAX_PRINT_LEN = 100
-            s = '-> '.join(ns)
+            s = ' <-'.join(ns)
             s = s if len(s) <= MAX_PRINT_LEN else (s[:MAX_PRINT_LEN-3]+'...')
             print(colorFormat.b%'Stacks: '+colorFormat.r%s)
             print(colorFormat.b%'Locals: ')
@@ -507,7 +508,11 @@ def __getNameFromCodeObj__(code):
     if name == '<lambda>':
         return 'lambda'
     return name
-    
+
+class __P__(dicto):
+    def __call__(self, depth=0, printt=True):
+        lc(depth+1, printt)
+p = __P__()
 lc = LocalAndGlobal()
 
 if __name__ == "__main__":

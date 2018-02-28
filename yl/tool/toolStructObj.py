@@ -64,7 +64,7 @@ class FunAddMagicMethod(FunAddMagicMethodCore):
     self - arg = fun(arg)
     self / arg = fun(arg) return arg
     '''
-    def __getattribute__(self, name=None):
+    def __getattribute__(self, name=None, *l):
         if name in dir(self[0]):
             return self[0].__getattribute__(name)
         return FunAddMagicMethodCore.__getattribute__(self,name)
