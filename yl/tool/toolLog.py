@@ -443,8 +443,9 @@ class LocalAndGlobal(dicto):
     
     Parameters
     ----------
-    depth : int, default 0
+    depth : int or bool, default 0
         相对于`p()`所在frame的深度
+        ps.为了使关闭printt简便 若`p(False)` 自动转换为`p(0, False)`
     printt : bool, default True
         是否打印
         
@@ -462,6 +463,9 @@ class LocalAndGlobal(dicto):
             self.fs = __getFatherFrames__(frame) 
     '''
     def __call__(self, depth=0, printt=True):
+        if depth is False:
+            printt = depth
+            depth = 0
         frame = sys._getframe(depth+1)
         code = frame.f_code
         p.clear()
@@ -511,6 +515,9 @@ def __getNameFromCodeObj__(code):
 
 class __P__(dicto):
     def __call__(self, depth=0, printt=True):
+        if depth is False:
+            printt = depth
+            depth = 0
         lc(depth+1, printt)
 p = __P__()
 lc = LocalAndGlobal()

@@ -394,7 +394,8 @@ logModFuns = {
  type(os):lambda x:colorFormat.r%(__typee__(x)),
  }
 logMod = lambda mod:logModFuns.get(type(mod),lambda x:colorFormat.b%tounicode(__typee__(x))[:60])(mod)
-def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',__islast=None,__deepNow=0,__rootDir=None,__sets=None):
+def treem(mod, types=None, deep=None, __leftStrs=None, __name=u'/', 
+          __islast=None, __deepNow=0, __rootDir=None, __sets=None):
     '''
     类似bash中的tree命令 查看module及子module的每一层结构
     一目了然module的结构和api
@@ -409,10 +410,15 @@ def treem(mod,types=None,deep=None,__leftStrs=None,__name=u'/',__islast=None,__d
     types : list of types, default None
         需要显示出来的类型(module 类型会自动添加)
         默认显示所有类型
+        ps.为了使用deep更简便 若`treem(mod, [int])` 
+           则自动转换为`treem(mod, types=None, deep=[int])`
     deep : int, default None
         能显示的最深深度
         默认不限制
     '''
+    if isinstance(types, int):
+        deep = types
+        types = None
     if deep and __deepNow > deep:
         return
     if __leftStrs is None:
@@ -508,7 +514,7 @@ __attrLogFun__ = {
 'buffer':lambda x:'buffer : %s'%(colorFormat.b%tounicode(x)),
 }
 
-def dira(instance, pattern=None, maxDocLen=50, deep=None):
+def dira(instance, pattern=None, deep=None, maxDocLen=50):
     '''
     以树的结构 分析instance的所有 attrs 
     attr name用红色；str(instance.attr)用蓝色；
@@ -521,6 +527,8 @@ def dira(instance, pattern=None, maxDocLen=50, deep=None):
         Anything, Instance better
     pattern : re.pattern
         用于匹配re.search参数 进行filter
+        ps.为了使用deep更简便 若`dira(instance, [int])` 
+           则自动转换为`dira(instance, pattern=None, deep=[int])`
     maxDocLen : int, default 50
         若有文档显示文档的字数长度
     deep : int, default None
@@ -529,6 +537,9 @@ def dira(instance, pattern=None, maxDocLen=50, deep=None):
     ps.可在__attrLogFuns中 新增常见类别
     pps.不展开 ('__globals__', 'func_globals')
     '''
+    if isinstance(pattern, int):
+        deep = pattern
+        pattern = None
     dirs = dir(instance)
     if pattern is not None:
         import re

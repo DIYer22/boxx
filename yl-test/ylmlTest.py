@@ -31,7 +31,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-#TEST_ALL = False
+TEST_ALL = False
 
 testFun = None
 tests = [testFun]
@@ -121,7 +121,7 @@ if ifTest(f1Score):
 
 
 
-#tests = autoSegmentWholeImg
+tests = autoSegmentWholeImg
 if ifTest(autoSegmentWholeImg):
     simgShape=(100,100)
     core = getWeightCore(*simgShape)

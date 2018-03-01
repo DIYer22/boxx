@@ -353,11 +353,17 @@ def autoFindBestParams(c, args,evaluFun,sortkey=None, savefig=False):
                   loged=False,
                   saveResoult=False,
                   )
-        reload(c.predictInterface)
-        predict = c.predictInterface.predict
+        if 'reload' in c:
+            reload(c.reload)
+            inference = c.reload.inference
+        elif 'predictInterface' in c:
+            reload(c.predictInterface)
+            inference = c.predictInterface.predict
+        else:
+            raise Exception,  "don't reload get c.reload"
         for name in c.names[::]:
             gt = c.readgt(name)
-            prob = predict(c.toimg(name))
+            prob = inference(c.toimg(name))
             re = prob.argmax(2)
 #            from yllab import g
 #            g.re,g.gt = re,gt
