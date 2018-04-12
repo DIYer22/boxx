@@ -294,6 +294,7 @@ __logFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
     'dict':lambda x:colorFormat.b%('dict  %s'%len(x)),
+    'collections.defaultdict':lambda x:colorFormat.b%('defaultDict  %s'%len(x)),
     'dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
     'tool.toolStructObj.dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
     'tool.toolLog.SuperG':lambda x:colorFormat.b%('SuperG  %s'%len(x)),
@@ -341,7 +342,7 @@ def __discribOfInstance(instance,leafColor=None,MAX_LEN=45):
     return (leafColor or '%s')%s
 
 
-def tree(seq,deep=None,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
+def tree(seq,deep=None,logLen=45,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 简单查看list, tuple, dict, numpy组成的树的每一层结构
     可迭代部分用蓝色 叶子用红色打印 
@@ -353,6 +354,8 @@ def tree(seq,deep=None,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None,
         打印出 以树结构展开所有可迭代部分
     deep : int, default None
         能显示的最深深度, 默认不限制
+    logLen : int, default 45
+        能显示的最长字符数
     
     ps.可在__logFuns中 新增类别
     '''
@@ -363,7 +366,7 @@ def tree(seq,deep=None,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None,
         __islast = 1
         __sets = set()
 #    s = __logFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
-    s = __discribOfInstance(seq,leafColor=leafColor)
+    s = __discribOfInstance(seq,leafColor=leafColor,MAX_LEN=logLen)
     s = s.replace('\n',u'↳')
 #    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
     print u'%s%s %s: %s'%(u''.join(__leftStr), u'└──' if __islast else u'├──',tounicode(__key),s)
@@ -382,7 +385,7 @@ def tree(seq,deep=None,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None,
     __leftStr.append(u'    'if __islast else u'│   ')
     for i,kv in enumerate(seq):
         __key,v = kv
-        tree(v,deep=deep, leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
+        tree(v,deep=deep,logLen=logLen, leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
              __islast=(i==len(seq)-1),__deepNow=__deepNow+1,__sets=__sets)
     __leftStr.pop()
 tree = FunAddMagicMethod(tree)
