@@ -55,7 +55,7 @@ def __getNumpyType(typee='int'):
     return types
     
 npFloatTypes = __getNumpyType('float')
-npIntTypes = __getNumpyType('int')+(np.long,)
+npIntTypes = __getNumpyType('int')+[np.long,]
 npBoolTypes = __getNumpyType('bool')
 npStrTypes = __getNumpyType('str')+__getNumpyType('unicode')
 
