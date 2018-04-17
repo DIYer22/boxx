@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from yllab import *
+from boxx import *
 u'''
 使用`ifTest([funName]):`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
@@ -31,7 +31,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-TEST_ALL = False
+#TEST_ALL = False
 
 testFun = None
 tests = [testFun]

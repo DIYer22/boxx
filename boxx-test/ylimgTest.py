@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from ylimg.ylimgTool import *
-from yllab import *
+from boxx.ylimg.ylimgTool import *
+from boxx import *
 u'''
 使用`ifTest([funName]) or 0:`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
@@ -84,7 +84,7 @@ if ifTest(tree):
 
 #tests = treem
 if ifTest(treem):
-    import yllab
+    import boxx
     treem(os,[type],2)
 #tests = shows
 if ifTest(shows):

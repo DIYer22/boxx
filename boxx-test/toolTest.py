@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from yllab import *
-from tool.toolSystem import *
+from boxx import *
+from boxx.tool.toolSystem import *
 u'''
 使用`ifTest([funName]) or 0:`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
@@ -16,7 +16,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-TEST_ALL = False
+#TEST_ALL = False
 
 
 testFun = None
@@ -74,8 +74,8 @@ if ifTest(multiThread):
     mt = multiThread(5)
     def f(i):
         time.sleep(.01)
-        if i==20:
-            raise Exception,'test'
+#        if i==20:
+#            raise Exception,'test'
         print '%d '%i,
     for i in range(100):
         mt(f,i)
@@ -114,7 +114,7 @@ if ifTest(mapmp):
 
 #tests = dira
 if ifTest(dira): 
-    import tool, pandas
+    import pandas
     dira(tool, pattern="^[A-Z]")
     dira(pandas.DataFrame(), pattern="^[A-Z]")
     dira(dicto(a=5,b=6), pattern="^va")

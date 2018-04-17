@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import os
 import numpy as np
-from ylimg import imread
+from ..ylimg import imread
 
 
 from collections import Iterator 

@@ -5,9 +5,9 @@ from __future__ import unicode_literals
 import numpy as np
 import pandas as pd
 
-from tool import dynamicWraps, findints, glob,dicto
-from ylnp import isNumpyType
-from ylimg import (mapp, labelToColor)
+from ..tool import dynamicWraps, findints, glob,dicto
+from ..ylnp import isNumpyType
+from ..ylimg import (mapp, labelToColor)
 
 from ylmlEvalu import Evalu
 
@@ -365,7 +365,7 @@ def autoFindBestParams(c, args,evaluFun,sortkey=None, savefig=False):
             gt = c.readgt(name)
             prob = inference(c.toimg(name))
             re = prob.argmax(2)
-#            from yllab import g
+#            from boxx import g
 #            g.re,g.gt = re,gt
             e.evalu(re,gt,name)
     #        img = readimg(name)

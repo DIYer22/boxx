@@ -490,7 +490,7 @@ class LocalAndGlobal(dicto):
             s = s if len(s) <= MAX_PRINT_LEN else (s[:MAX_PRINT_LEN-3]+'...')
             print(colorFormat.b%'Stacks: '+colorFormat.r%s)
             print(colorFormat.b%'Locals: ')
-            from yllab import tree
+            from boxx import tree
             tree(local, 1)
 def __getFatherFrames__(frame):
     fs = []

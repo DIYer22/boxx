@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from yldb import *
+from boxx.yldb import *
 
 '''
 使用`ifTest([funName]) or 0:`来判断是否执行测试

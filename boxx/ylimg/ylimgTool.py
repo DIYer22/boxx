@@ -2,9 +2,9 @@
 
 from __future__ import unicode_literals
 
-from tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto
-from tool.toolLog import colorFormat, tounicode
-from tool.toolFuncation import mapmp, pipe
+from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto
+from ..tool.toolLog import colorFormat, tounicode
+from ..tool.toolFuncation import mapmp, pipe
 
 import os
 import glob
@@ -732,7 +732,7 @@ def standImg(img):
     '''
     任何输入img都转换为 shape is (m, n, 3) dtype == Float
     '''
-    from ylnp import isNumpyType
+    from ..ylnp import isNumpyType
     if img.ndim == 2:
         img = greyToRgb(img)
     if img.dtype == np.uint8:
