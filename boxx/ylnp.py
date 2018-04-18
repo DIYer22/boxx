@@ -52,10 +52,10 @@ def plot3dSurface(Z):
 def __getNumpyType(typee='int'):
     finds = eval('('+', '.join(['np.'+mu for mu in filterList(typee, dir(np))])+')')
     types = filter(lambda x:type(x)==type,finds)
-    return types
+    return tuple(types)
     
 npFloatTypes = __getNumpyType('float')
-npIntTypes = __getNumpyType('int')+[np.long,]
+npIntTypes = __getNumpyType('int')+(np.long,)
 npBoolTypes = __getNumpyType('bool')
 npStrTypes = __getNumpyType('str')+__getNumpyType('unicode')
 

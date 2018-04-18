@@ -181,7 +181,8 @@ def show(*imgsAndFuns,**kv):
     funs = [arg for arg in imgsAndFuns[1:] if callable(arg)]
     doNumpy = pipe(funs+[ndarrayToImgLists])
     imgls = listToImgLists(imgsAndFuns,doNumpy=doNumpy)
-    assert len(imgls)!=0,"funcation `show`'s args `imgs`  has no any np.ndarray! "
+    imgls = [img for img in imgls if img.ndim >= 2]
+    assert len(imgls)!=0,"funcation `show`'s args `imgs`  has no any np.ndarray that ndim >= 2! "
     showImgLists(imgls,**kv)
 show = FunAddMagicMethod(show)
 
