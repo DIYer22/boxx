@@ -31,6 +31,22 @@ except ImportError:
     pass'''%(mod.__name__,mod.__name__,lines)
     print strr
 
+class impt():
+    '''
+    使Python 3 在包内可直接 import. 并且， 可直接运行包内的文件.
+    原理：
+        enter时候 append __file__, exit时候 pop
+    用法：  
+        with impt(__file__):
+            from tool import *
+    '''
+    def __init__(self, _file_):
+        self.f = _file_
+    def __enter__(self):
+        sys.path.append(self.f)
+    def __exit__(self,*l):
+        assert sys.path.pop() == self.f, 'impt sys.path error'
+        
 def crun(pycode, snakeviz=True):
     '''测试代码pycode的性能'''
     from cProfile import run

@@ -273,7 +273,7 @@ class LogException():
             class beginLogException(Exception):
                 pass
             def f ():
-                raise beginLogException,'LogException is begin to log Exception!'
+                raise beginLogException('LogException is begin to log Exception!')
             self.listen(f)
         
     def listen(self,f,*l,**args):
