@@ -47,6 +47,35 @@ class impt():
     def __exit__(self,*l):
         assert sys.path.pop() == self.f, 'impt sys.path error'
         
+        
+def tryImport(moduleName):
+    '''
+    try `import @moduleName`. if @moduleName is not installed, return a FakeModule to placeholder the module name
+    '''
+    try:
+        exec('import %s as module' % moduleName)
+        return module
+    except ImportError:
+        return FakeModule(moduleName)
+__FAKE_DIC__ = {}
+class FakeModule():
+    '''
+    a fake Module to placeholder the module name that some module may not installed.
+    once use this module, will raise ImportError
+    '''
+    def __init__(self, name):
+        __FAKE_DIC__[id(self)] = '"%s" is not install in your Python Enveroment! This is a fake one. Please install "%s" and retry' % (name, name)
+    def __getattribute__(self, name=None, *l):
+        raise ImportError(__FAKE_DIC__[id(self)])
+    def __getattr__(self, name):
+        raise ImportError(__FAKE_DIC__[id(self)])
+    def __setattr__(self, name, v, *l):
+        raise ImportError(__FAKE_DIC__[id(self)])
+    def __str__(self):
+        errorMsg = __FAKE_DIC__[id(self)]
+        raise ImportError(errorMsg)
+    __repr__ = __str__
+        
 def crun(pycode, snakeviz=True):
     '''测试代码pycode的性能'''
     from cProfile import run

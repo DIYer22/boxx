@@ -5,19 +5,20 @@ from __future__ import unicode_literals
 from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto
 from ..tool.toolLog import colorFormat, tounicode
 from ..tool.toolFuncation import mapmp, pipe
+from ..tool.toolSystem import tryImport
 
 import os
 import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import abc
-import cv2
 import skimage as sk
 from skimage import io as sio
 from skimage import data as da
 from skimage.io import imread
 from skimage.io import imsave
 from skimage.transform import resize 
+cv2 = tryImport('cv2')
 
 # randomm((m, n), max) => m*n matrix
 # randomm(n, max) => n*n matrix
