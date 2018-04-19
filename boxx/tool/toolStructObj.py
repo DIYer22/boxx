@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+from ..ylsys import py2
 
 def listToBatch(listt, batch):
     '''
@@ -13,7 +14,7 @@ def listToBatch(listt, batch):
     if left:
         ind  = n - left
         listt, tail = listt[:ind], tuple(listt[ind:])
-    ziped = zip(*[iter(listt)]*batch)
+    ziped = list(zip(*[iter(listt)]*batch))
     if left:
         ziped.append(tail)
     return ziped
@@ -51,11 +52,11 @@ class FunAddMagicMethodCore(dict):
             return args[0]
         return args
     __sub__ = __call__
-    __add__ = __call__
-    __mul__ = __call__
+#    __add__ = __call__
+#    __mul__ = __call__
 #    __eq__ = __call__
-    __pow__ = __call__
-    __invert__ = __call__
+#    __pow__ = __call__
+#    __invert__ = __call__
 class FunAddMagicMethod(FunAddMagicMethodCore):
     '''
     将函数变为带有魔法函数 且可以__call__的对象
@@ -87,23 +88,24 @@ class dicto(dict):
         if name in dir(dict):
             return dict.__setattr__(self,name,v)
         self[name] = v
-    @property
-    def keys(self):
-        return addCall(dict.keys(self))
-    @property
-    def values(self):
-        return addCall(dict.values(self))
-    @property
-    def items(self):
-        return addCall(dict.items(self))
+    if py2:
+        @property
+        def keys(self):
+            return addCall(dict.keys(self))
+        @property
+        def values(self):
+            return addCall(dict.values(self))
+        @property
+        def items(self):
+            return addCall(dict.items(self))
 SuperDict = dicto
 def dicToObj(dic):  
     '''
     将 dict 转换为易于调用的 Object
     '''
-    top = type(u'MyObject'.encode('utf-8'), (object,), dic)  
+    top = type('MyObject'.encode('utf-8'), (object,), dic)  
     seqs = tuple, list, set, frozenset  
-    for i, j in dic.items():  
+    for i, j in list(dic.items()):  
         if isinstance(j, dict):  
             setattr(top, i, dicToObj(j))  
         elif isinstance(j, seqs):  

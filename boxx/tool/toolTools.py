@@ -6,8 +6,8 @@ import re, random
 from os.path import join,isdir,isfile
 from glob import glob
 
-from toolIo import openread,openwrite
-from toolLog import log
+from .toolIo import openread,openwrite
+from .toolLog import log
 
 def filterList(key, strs):
     '''
@@ -38,7 +38,7 @@ def randchoice(seq, num=None):
     return random.sample(seq, num)
 
 def listdirWithFun(root='.',fun=None):
-    u'''对root路径及子路径下的每个path 执行fun
+    '''对root路径及子路径下的每个path 执行fun
     
     Parameters
     ----------
@@ -83,5 +83,5 @@ def replaceAllInRoot(old, new, root='.', types='py'):
 if __name__ == "__main__":
      
     string=["A001.45，b5，6.45，8.82",'sd4 dfg77']
-    print findints(string)
+    print(findints(string))
     pass

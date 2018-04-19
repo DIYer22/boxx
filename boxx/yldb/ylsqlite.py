@@ -80,6 +80,6 @@ if __name__ == '__main__':
     
     select = 'select * from t'
     r = s.select(select)
-    print v,r
+    print(v,r)
     
     pass

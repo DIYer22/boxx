@@ -3,7 +3,10 @@
 from __future__ import unicode_literals
 
 import os,sys,time
-from toolStructObj import addCall,dicto,FunAddMagicMethod
+
+from .toolStructObj import addCall,dicto,FunAddMagicMethod
+from ..ylsys import py2
+from ..ylcompat import printf, unicode
 
 def localTimeStr():
     '''
@@ -85,28 +88,35 @@ class colorFormat:
     p = purple
     @staticmethod
     def printAllColor(s='printAllColor'):
-        return map(lambda c:stdout((c+' '*10)[:7]) and pcolor(c,": "+str(s)), frontColorDic) and None
+        return [stdout((c+' '*10)[:7]) and pcolor(c,": "+str(s)) for c in frontColorDic] and None
     pall = printAllColor
     
 def tounicode(strr):
     '''
-    Python 中文编码错误解决方案，用于代替str类及函数, 全部换成unicode
+    Python2 中文编码错误解决方案，用于代替str类及函数, 全部换成unicode
     '''
-    if isinstance(strr,unicode):
-        return strr
-    strr = str(strr)
-    if isinstance(strr,str):
-        return strr.decode('utf-8','replace')
-    return unicode(strr)
-
-
+    if not py2:
+        if isinstance(strr,str):
+            return strr
+        if isinstance(strr,bytes):
+            return strr.decode('utf-8','replace')
+        return str(strr)
+    else:
+        if isinstance(strr,unicode):
+            return strr
+        strr = str(strr)
+        if isinstance(strr,str):
+            return strr.decode('utf-8','replace')
+        return unicode(strr)
+        
+        
 def pcolor(color, *s):
     '''
     用颜色打印 不返回
     '''
     if not isinstance(color,int):
         color = frontColorDic[color]
-    print('\x1b[%dm%s\x1b[0m'%(color, ' '.join(map(tounicode,s))))
+    print(('\x1b[%dm%s\x1b[0m'%(color, ' '.join(map(tounicode,s)))))
     return 
     if len(s) == 1:
         return s[0]
@@ -122,16 +132,10 @@ def stdout(*l):
         return l[0]
     return l
 
-def log(*l,**dic):
-    if len(l) == 1:
-        pblue(l[0])
-    else:
-        pblue('\n'.join(map(tounicode,l)))
-    if len(dic):
-        for k in dic:
-            pblue('%s = %s'%(k,tounicode(dic[k])))
-    if len(l) == 1:
-        return l[0]
+
+log = FunAddMagicMethod(printf)
+
+
 class LogAndSaveToList(list):
     '''
     存储最近用于logg的结果, 并返回x的class, list版本SuperG
@@ -177,8 +181,8 @@ class LogAndSaveToList(list):
     __str__ = __repr__
 
 logg = LogAndSaveToList()
-pcyan,pred,ppurple,stdout = map(FunAddMagicMethod,
-                                        [pcyan,pred,ppurple,stdout])
+pcyan,pred,ppurple,stdout = list(map(FunAddMagicMethod,
+                                        [pcyan,pred,ppurple,stdout]))
     
 pblue = pcyan 
 pinfo = pblue
@@ -316,7 +320,7 @@ class LogException():
         判断是否打印和写入
         '''
         if self.printt:
-            print strr
+            print(strr)
         if self.path:
             with open(self.path,'a') as f:     
                 f.write(strr)
@@ -479,17 +483,17 @@ class LocalAndGlobal(dicto):
         if printt:
             print('')
             c = code
-            print((colorFormat.b%'File: "%s", line %s, in %s')%(u'\x1b[32m%s\x1b[0m'% c.co_filename, u'\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name))
+            print(((colorFormat.b%'File: "%s", line %s, in %s')%('\x1b[32m%s\x1b[0m'% c.co_filename, '\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name)))
             fs = __getFatherFrames__(frame)
             self.fs = fs
-            ns = map(lambda f:__getNameFromCodeObj__(f.f_code), fs)
+            ns = [__getNameFromCodeObj__(f.f_code) for f in fs]
             if 'execfile' in ns:
                 ns = ns[:ns.index('execfile')]
             MAX_PRINT_LEN = 100
             s = ' <-'.join(ns)
             s = s if len(s) <= MAX_PRINT_LEN else (s[:MAX_PRINT_LEN-3]+'...')
-            print(colorFormat.b%'Stacks: '+colorFormat.r%s)
-            print(colorFormat.b%'Locals: ')
+            print((colorFormat.b%'Stacks: '+colorFormat.r%s))
+            print((colorFormat.b%'Locals: '))
             from boxx import tree
             tree(local, 1)
 def __getFatherFrames__(frame):
@@ -508,7 +512,7 @@ def __getNameFromCodeObj__(code):
             name = 'ipython-input'
         else:
             name = '%s'%os.path.basename(filee)
-        name = u'\x1b[36m%s\x1b[0m'%name
+        name = '\x1b[36m%s\x1b[0m'%name
     if name == '<lambda>':
         return 'lambda'
     return name

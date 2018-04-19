@@ -11,7 +11,7 @@ def showImgsInBrowser(paths):
     paths : list of path
         图片地址组成的数组
     '''
-    paths = map(os.path.abspath,paths)
+    paths = list(map(os.path.abspath,paths))
     html = getShowsHtml()
     s = 'srcs = [%s]'%(",".join(['"%s"'%p for p in paths]))
     html = html.replace('//replaceTagForPython',s)

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-import yldf
-import ylmysql
-import ylsqlite
+from . import yldf
+from . import ylmysql
+from . import ylsqlite
 
 
 

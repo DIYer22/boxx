@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from boxx import *
 from boxx.tool.toolSystem import *
-u'''
+'''
 使用`ifTest([funName]) or 0:`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
 '''
@@ -61,7 +61,7 @@ if ifTest(listdirWithFun):
 
 def logr(s):
     sys.stdout.flush()
-    print '\r%s'%s,
+    log('\r%s'%s, end=' ')
 #tests = logr
 if ifTest(logr): 
     n=5
@@ -76,7 +76,7 @@ if ifTest(multiThread):
         time.sleep(.01)
 #        if i==20:
 #            raise Exception,'test'
-        print '%d '%i,
+        log('%d '%i, end=' ')
     for i in range(100):
         mt(f,i)
     pred('[fanished befor join]')
@@ -93,7 +93,7 @@ if ifTest(multiThread):
     l.append('b')
     mt.join()
     l.append('a')
-    print l
+    print(l)
     
 
 #tests = mapmp
@@ -107,10 +107,10 @@ if ifTest(mapmp):
     n = 10
     rrs = [np.float64(randomm(20,90)) for i in range(n)]
     ms = {'map':map,'mapmt':mapmt,'mapmp':mapmp}
-    for name,mapp in ms.items():
+    for name,mapp in list(ms.items()):
         with timeit():
             mapp(npt,rrs)
-            print name,
+            log(name, end=' ')
 
 #tests = dira
 if ifTest(dira): 
@@ -123,7 +123,7 @@ tests = pipe
 if ifTest(pipe):
     funList = [lambda x:x+'[f1]',lambda x:x+'[f2]',lambda x:x+'[f3]']
     do = pipe(funList)
-    print(do('start'))
+    print((do('start')))
 if __name__ == '__main__':
     pass
 

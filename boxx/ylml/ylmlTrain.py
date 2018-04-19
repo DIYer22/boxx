@@ -77,7 +77,7 @@ class GenSimg(Iterator):
             self.times = self._times
             raise StopIteration
         self.now = self.maxPerCache
-        inds = np.random.choice(range(len(self.imggts)),self.cache,replace=False)
+        inds = np.random.choice(list(range(len(self.imggts))),self.cache,replace=False)
         datas = {}
         for ind in inds:
             jpg,png = self.imggts[ind]
@@ -85,7 +85,7 @@ class GenSimg(Iterator):
             datas[jpg] = img,gt
         self.data = self.datas = datas
         self.times -= 1
-    def next(self):
+    def __next__(self):
         self.count += 1
         if (self.iters is not None) and not self.infinity:
             if self.iters <= 0:
@@ -99,22 +99,22 @@ class GenSimg(Iterator):
         datas = self.datas
         imgs, gts = [], []
         for t in range(self.batch):
-            img,gt = datas[np.random.choice(datas.keys(),1,replace=False)[0]]
+            img,gt = datas[np.random.choice(list(datas.keys()),1,replace=False)[0]]
             h,w = img.shape[:2]
             i= np.random.randint(h-hh+1)
             j= np.random.randint(w-ww+1)
             (img,gt) =  img[i:i+hh,j:j+ww],gt[i:i+hh,j:j+ww]
             imgs.append(img), gts.append(gt)
-        (imgs,gts) = map(np.array,(imgs,gts))
+        (imgs,gts) = list(map(np.array,(imgs,gts)))
         if self.handleImgGt:
             return self.handleImgGt(imgs,gts)
         return (imgs,gts)
     @property
     def imgs(self):
-        return [img for img,gt in self.datas.values()]
+        return [img for img,gt in list(self.datas.values())]
     @property
     def gts(self):
-        return [gt for img,gt in self.datas.values()]
+        return [gt for img,gt in list(self.datas.values())]
     def __str__(self):
         batch = self.batch
         n = len(self.datas)

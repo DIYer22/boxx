@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from boxx.ylimg.ylimgTool import *
 from boxx import *
-u'''
+'''
 使用`ifTest([funName]) or 0:`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
 '''
-imgGlob = u'/media/dl/60B49345B4931D1A1/IMPORTANT_dataForHome/salDataset/SalBenchmark-master/Data/HKU-IS/Imgs/*.jpg'
+imgGlob = '/media/dl/60B49345B4931D1A1/IMPORTANT_dataForHome/salDataset/SalBenchmark-master/Data/HKU-IS/Imgs/*.jpg'
 #imgGlob = ''
 jpg,png='imgForTest/0004.jpg','imgForTest/0004.png'
 img,gt = imread(jpg),imread(png)
@@ -44,7 +44,7 @@ tests = [testFun]
 if ifTest(generateBigImgForPaper):
     gtmod = classDiff(rem,gtm,colors)
     remod = classDiff(rem,gtm,colors,reMod=True)
-    remn,gtmn = map(normalizing,(rem,gtm))
+    remn,gtmn = list(map(normalizing,(rem,gtm)))
     imgMa = ((gt,remn,gtmn,remn,),
             (re,rec,gtc,rec,),
             (img,gtmod,remod,gtmod,))
@@ -109,10 +109,10 @@ if ifTest(autoSegmentWholeImg):
 if ifTest(plot3dSurface):
     with timeit():
         hh,ww = 256,256
-        print(u'seta=2高斯分布')
+        print('seta=2高斯分布')
         core = getWeightCore(hh,ww,seta=2)
         plot3dSurface(core)
-        print(u'距离分布')
+        print('距离分布')
         core = getWeightCore(hh,ww,lambda i,j:((i*1./hh-.5)**2+(j*1./ww-.5)**2)**.5)
         plot3dSurface(core)
         
@@ -122,12 +122,12 @@ if ifTest(labelToColor):
     
 #tests = getDefaultColorList
 if ifTest(getDefaultColorList):
-    toi = lambda(p):(npa([[p]*4]*4))*1.
+    toi = lambda p:(npa([[p]*4]*4))*1.
     colorNum=3
     includeBackGround=-1
     colors = getDefaultColorList(colorNum,includeBackGround)
-    print colorNum,len(colors)
-    show -map(toi,colors)
+    print(colorNum,len(colors))
+    show -list(map(toi,colors))
 if __name__ == '__main__':
     pass
 

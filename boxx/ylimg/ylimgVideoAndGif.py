@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 
-from ylimgTool import cv2, sk, sio, np, plt, da
-from ylimgTool import (show, loga, mapp, normalizing, imsave, imread,
+from .ylimgTool import cv2, sk, sio, np, plt, da
+from .ylimgTool import (show, loga, mapp, normalizing, imsave, imread,
                        standImg, resize)
 
 
@@ -43,7 +43,7 @@ def videoToImgs(videoPath,begin=0,end=0):
     import cv2
     cap = cv2.VideoCapture(videoPath)  
     if not cap.isOpened():
-        raise NameError,'video "%s" can\'t read by open CV !'%videoPath
+        raise NameError('video "%s" can\'t read by open CV !'%videoPath)
     number = 0
     frames = []
     while(cap.isOpened()):  
@@ -65,7 +65,7 @@ def generateBigImgForPaper(imgMa,lengh=1980,border=20,saveName='bigImgForPaper.p
     '''
     big = None
     for rr in imgMa:
-        rr = map(standImg,rr)
+        rr = list(map(standImg,rr))
         nn = len(rr)
         a = int((lengh-nn*border)/nn)
         m,n = rr[0].shape[:2]
@@ -94,8 +94,8 @@ if __name__ == '__main__':
 
     import pandas as pd
     df = pd.DataFrame({
-                       0:range(5),
-                       1:range(10,15),
+                       0:list(range(5)),
+                       1:list(range(10,15)),
                        'a':list("abcde"),
                        })
     df.set_index(0,inplace=True)

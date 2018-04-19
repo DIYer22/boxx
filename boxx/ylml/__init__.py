@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from ylmlTrain import GenSimg
+from .ylmlTrain import GenSimg
 
-from ylmlTest import (binaryDiff, classDiff, drawBoundAndBackground, 
+from .ylmlTest import (binaryDiff, classDiff, drawBoundAndBackground, 
                       confusionMatrix, f1Score,
                       getWeightCore, smallImg, autoSegmentWholeImg,
                       ArgList, autoFindBestEpoch, autoFindBestParams)
 
-from ylmlEvalu import (Evalu, accEvalu, lplrEvalu, diceEvalu, pd)
+from .ylmlEvalu import (Evalu, accEvalu, lplrEvalu, diceEvalu, pd)
 
 if __name__ == "__main__":
     pass

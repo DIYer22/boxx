@@ -10,7 +10,7 @@ class dictToObj(dict):
     def __init__(self, dic):
         dict.__init__(self)
 #        self.dic = dic
-        for k,v in dic.items():
+        for k,v in list(dic.items()):
             setattr(self,k,v)
     def __getitem__(self,k):
         return getattr(self,k)

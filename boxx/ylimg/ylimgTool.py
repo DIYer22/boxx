@@ -18,6 +18,7 @@ from skimage import data as da
 from skimage.io import imread
 from skimage.io import imsave
 from skimage.transform import resize 
+from functools import reduce
 cv2 = tryImport('cv2')
 
 # randomm((m, n), max) => m*n matrix
@@ -130,7 +131,7 @@ def ndarrayToImgLists(arr):
     imgdim = 3 if arr.shape[-1] in [3,4] else 2
     ls = list(arr)
     while ndim-1>imgdim:
-        ls = reduce(add,map(list,ls),[])
+        ls = reduce(add,list(map(list,ls)),[])
         ndim -=1
     return ls
 
@@ -148,7 +149,7 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
         elif isinstance(x,(list,tuple)):
             listToImgLists(x,res=res,doNumpy=doNumpy)
         elif isinstance(x,dict):
-            listToImgLists(x.values(),res=res,doNumpy=doNumpy)
+            listToImgLists(list(x.values()),res=res,doNumpy=doNumpy)
         elif isinstance(x,np.ndarray):
             res.extend(doNumpy(x))
     return res
@@ -197,14 +198,14 @@ def showb(*arr,**__kv):
     '''
     
     if len(arr)!=1:
-        map(lambda ia:showb(ia[1],tag=ia[0]),enumerate(arr))
+        list(map(lambda ia:showb(ia[1],tag=ia[0]),enumerate(arr)))
         return 
     arr = arr[0]
     if isinstance(arr,np.ndarray):
         path = '/tmp/tmp-%s.png'%len(glob.glob('/tmp/tmp-*.png'))
         imsave(path,arr)
         arr = path
-    cmd = u'shotwell "%s" &'%arr
+    cmd = 'shotwell "%s" &'%arr
     os.system(cmd)
 showb = FunAddMagicMethod(showb)
 
@@ -224,8 +225,8 @@ def shows(*imgs):
             if isinstance(x,(list,tuple)):
                 listToPathList(x,res)
             if isinstance(x,dict):
-                listToPathList(x.values(),res)
-            if isinstance(x,(str,unicode)):
+                listToPathList(list(x.values()),res)
+            if isinstance(x,str):
                 res.append(x)
             if isinstance(x,np.ndarray):
                 path = '/tmp/shows-%s.png'%len(glob.glob('/tmp/shows-*.png'))
@@ -233,7 +234,7 @@ def shows(*imgs):
                 res.append(path)
         return res
     paths = listToPathList(imgs)
-    from showImgsInBrowser import showImgsInBrowser
+    from .showImgsInBrowser import showImgsInBrowser
     showImgsInBrowser(paths)
 shows = FunAddMagicMethod(shows)
 
@@ -244,8 +245,8 @@ def loga(array):
     typeName = typestr(array)
     if typeName in __typesToNumpy:
         array = __typesToNumpy[typeName](array)
-    if isinstance(array,str) or isinstance(array,unicode):
-        print 'info and histogram of',array
+    if isinstance(array,str) or isinstance(array,str):
+        print('info and histogram of',array)
         l=[]
         eval('l.append('+array+')')
         array = l[0]
@@ -253,18 +254,18 @@ def loga(array):
         array = np.array(array)
     
     strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type)[6:], '->%s'%typeName, len(array) and (array.max()), len(array) and (array.min()))]
-    print ('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr))
+    print(('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr)))
     
     unique = np.unique(array)
     if len(unique)<10:
         dic=dict([(i*1,0) for i in unique])
         for i in array.ravel():
             dic[i] += 1
-        listt = dic.items()
+        listt = list(dic.items())
         listt.sort(key=lambda x:x[0])
         data,x=[v for k,v in listt],np.array([k for k,v in listt]).astype(float)
         if len(x) == 1:
-            print 'All value is',x[0]
+            print('All value is',x[0])
             return
         width = (x[0]-x[1])*0.7
         x -=  (x[0]-x[1])*0.35
@@ -277,7 +278,7 @@ def loga(array):
         nans = '"nan":%s (%.2f%%), '%(nan,100.*nan/size) if nan else ''
         inf = np.isinf(array).sum()
         infs = '"inf":%s (%.2f%%), '%(inf,100.*inf/size) if inf else ''
-        print '\n%s%s max: %s, min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min()))
+        print('\n%s%s max: %s, min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min())))
         x=x[1:]
         width = (x[0]-x[1])
     else:
@@ -304,7 +305,7 @@ __logFuns = {
     'dictoSub':lambda x:colorFormat.b%('dictoSub  %s'%len(x)),
     
     'numpy.ndarray':lambda x:colorFormat.r%('%s%s'%
-                                    (unicode(x.shape).replace('L,','').replace('L',''),x.dtype)),
+                                    (str(x.shape).replace('L,','').replace('L',''),x.dtype)),
 
     'torch.FloatTensor':__torchShape,
     'torch.DoubleTensor':__torchShape,
@@ -344,7 +345,7 @@ def __discribOfInstance(instance,leafColor=None,MAX_LEN=45):
     return (leafColor or '%s')%s
 
 
-def tree(seq,deep=None,logLen=45,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
+def tree(seq,deep=None,logLen=45,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 简单查看list, tuple, dict, numpy组成的树的每一层结构
     可迭代部分用蓝色 叶子用红色打印 
@@ -369,12 +370,12 @@ def tree(seq,deep=None,logLen=45,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__lef
         __sets = set()
 #    s = __logFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
     s = __discribOfInstance(seq,leafColor=leafColor,MAX_LEN=logLen)
-    s = s.replace('\n',u'↳')
+    s = s.replace('\n','↳')
 #    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
-    print u'%s%s %s: %s'%(u''.join(__leftStr), u'└──' if __islast else u'├──',tounicode(__key),s)
+    print('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))
     if isinstance(seq,(list,tuple,dict)) :
         if id(seq) in __sets:
-            seq=[(colorFormat.r%u'【printed befor】','')]
+            seq=[(colorFormat.r%'【printed befor】','')]
         else:
             __sets.add(id(seq))
             if isinstance(seq,(list,tuple)):
@@ -384,7 +385,7 @@ def tree(seq,deep=None,logLen=45,leafColor=u'\x1b[31m%s\x1b[0m',__key=u'/',__lef
 #            elif isinstance(seq, abc.types.GeneratorType)
     else:
         return 
-    __leftStr.append(u'    'if __islast else u'│   ')
+    __leftStr.append('    'if __islast else '│   ')
     for i,kv in enumerate(seq):
         __key,v = kv
         tree(v,deep=deep,logLen=logLen, leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
@@ -399,7 +400,7 @@ logModFuns = {
  type(os):lambda x:colorFormat.r%(__typee__(x)),
  }
 logMod = lambda mod:logModFuns.get(type(mod),lambda x:colorFormat.b%tounicode(__typee__(x))[:60])(mod)
-def treem(mod, types=None, deep=None, __leftStrs=None, __name=u'/', 
+def treem(mod, types=None, deep=None, __leftStrs=None, __name='/', 
           __islast=None, __deepNow=0, __rootDir=None, __sets=None):
     '''
     类似bash中的tree命令 查看module及子module的每一层结构
@@ -430,7 +431,7 @@ def treem(mod, types=None, deep=None, __leftStrs=None, __name=u'/',
         __leftStrs = [] 
         __islast = 1
         if '__file__' not in dir(mod): 
-            print 'type(%s: %s) is not module!'%(logMod(mod),tounicode(mod))
+            print('type(%s: %s) is not module!'%(logMod(mod),tounicode(mod)))
             return 
         __rootDir = os.path.dirname(mod.__file__)
         __sets = set()
@@ -446,9 +447,9 @@ def treem(mod, types=None, deep=None, __leftStrs=None, __name=u'/',
             modKind = 3 
         elif '__file__' not in dir(mod) or __rootDir not in mod.__file__:
             modKind = 2
-    names = (tounicode(__name)+('   ' if modKind<2 else u'  ·' )*20)[:40]+modKinds[modKind]
+    names = (tounicode(__name)+('   ' if modKind<2 else '  ·' )*20)[:40]+modKinds[modKind]
     
-    print u'%s%s %s: %s'%(u''.join(__leftStrs), u'└──' if __islast else u'├──',typeStr,names)
+    print('%s%s %s: %s'%(''.join(__leftStrs), '└──' if __islast else '├──',typeStr,names))
     
     if modKind !=1:
         return
@@ -456,7 +457,7 @@ def treem(mod, types=None, deep=None, __leftStrs=None, __name=u'/',
     dirMod = [i for i in dirMod if i not in ['__name__','__file__','unicode_literals']]
     if types is not None:
         dirMod=[i for i in dirMod if type(mod.__getattribute__(i)) in  list(types)+[type(os)]] 
-    __leftStrs.append(u'    'if __islast else u'│   ')
+    __leftStrs.append('    'if __islast else '│   ')
     for i,name in enumerate(dirMod):
         e = mod.__getattribute__(name)
         treem(e,types,deep,__leftStrs,name,__islast=(i==len(dirMod)-1),__deepNow=__deepNow+1,__rootDir=__rootDir,__sets=__sets)
@@ -464,7 +465,7 @@ def treem(mod, types=None, deep=None, __leftStrs=None, __name=u'/',
 treem = FunAddMagicMethod(treem)
 
 
-def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key=u'/',__islast=None,__deepNow=0, __sets=None):
+def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',__islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 简单查看instance的 __attrs__ 组成的树的结构
     attr name用红色；str(instance.attr)用蓝色；
@@ -487,10 +488,10 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key=u'/'
             doc = doc[:maxDocLen-3]+'...'
         s=colorFormat.b%('%d attrs%s'%(len(seq), doc.replace('\n','↳').replace(' :',',',1)))
 #    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
-    print u'%s%s %s: %s'%(u''.join(__leftStr), u'└──' if __islast else u'├──',colorFormat.r%tounicode(__key),s)
+    print('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',colorFormat.r%tounicode(__key),s))
     if isinstance(seq,(list,tuple,dict)) :
         if id(seq) in __sets:
-            seq=[(colorFormat.r%u'【printed befor】','')]
+            seq=[(colorFormat.r%'【printed befor】','')]
         else:
             __sets.add(id(seq))
             if isinstance(seq,(list,tuple)):
@@ -500,7 +501,7 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key=u'/'
                 seq.sort(key=lambda x:x[0])
     else:
         return 
-    __leftStr.append(u'    'if __islast else u'│   ')
+    __leftStr.append('    'if __islast else '│   ')
     for i,kv in enumerate(seq):
         __key,v = kv
         __dira(v,maxDocLen=maxDocLen,deep=deep,__leftStr=__leftStr,__key=__key,
@@ -548,8 +549,8 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50):
     dirs = dir(instance)
     if pattern is not None:
         import re
-        dirs = filter(lambda name:re.search(pattern,name), dirs)
-        print 'Filter by pattern: "%s"'%(colorFormat.r%pattern)
+        dirs = [name for name in dirs if re.search(pattern,name)]
+        print('Filter by pattern: "%s"'%(colorFormat.r%pattern))
     def getAttr(attr):
         try:
 #            if '__getattribute__' in dirs or 1:
@@ -564,7 +565,7 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50):
         except (AttributeError, TypeError):
             return colorFormat.red % 'Both "getattr" and "getattribute" are not work'
         return 'No "getattr" or "getattribute"'
-    l = map(getAttr,dirs)
+    l = list(map(getAttr,dirs))
     def filterMethodName(attrName, attr):
         typee = type(attr)
         typn = typeNameOf(typee)
@@ -573,8 +574,8 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50):
         if attrName in ('__globals__', 'func_globals'):
             return colorFormat.b%('globals-dict %d'%len(attr))
         return attr
-    l = map(filterMethodName,dirs,l)
-    dic = dict(zip(dirs,l))    
+    l = list(map(filterMethodName,dirs,l))
+    dic = dict(list(zip(dirs,l)))    
     __dira(dic,instance=instance, maxDocLen=maxDocLen, deep=deep,__key=typeNameOf(type(instance)), )
 
 dira = FunAddMagicMethod(dira)
@@ -601,12 +602,12 @@ def getShapes(imgGlob, returnn=False):
     lens = list(map(len,shapes))
     dims = np.unique(lens)
     arr = shapes
-    print 'Dims:'
+    print('Dims:')
     for dim in dims:
-        print '\t %s dim: %d'%(dim,lens.count(dim))
+        print('\t %s dim: %d'%(dim,lens.count(dim)))
     if len(dims)!=1:
         maxx = max(dims)
-        arr=map(lambda s:s+(-1,)*(maxx-len(s)),shapes)
+        arr=[s+(-1,)*(maxx-len(s)) for s in shapes]
     arr=np.array(arr)
     maxx, minn = [],[]
     for dim in range(max(dims)):
@@ -614,7 +615,7 @@ def getShapes(imgGlob, returnn=False):
         maxx.append(a[a!=-1].max())
         minn.append(a[a!=-1].min())
     
-    print 'Shape:\n \t max shape: %s\n \t min shape: %s'%(maxx,minn)
+    print('Shape:\n \t max shape: %s\n \t min shape: %s'%(maxx,minn))
     if returnn:
         return shapes
 
@@ -644,7 +645,7 @@ def getHsvColors(hn,sn,vn):
             return l+[0.]
         return l
     
-    hs,ss,vs = map(toNcolor,[hn,sn,vn])
+    hs,ss,vs = list(map(toNcolor,[hn,sn,vn]))
     cs = []
     for s in ss:
         for v in vs:

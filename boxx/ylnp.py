@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import numpy as np
 import matplotlib.pyplot as plt
-from tool.toolTools import filterList
+from .tool.toolTools import filterList
 
 def savenp(path, arr=None):
     '''压缩存储 np.array 为path路径 
@@ -44,14 +44,14 @@ def plot3dSurface(Z):
     对二维数组Z 画出3d直方图 
     '''
     m, n = Z.shape
-    X = range(n)
-    Y = range(m)
+    X = list(range(n))
+    Y = list(range(m))
     X, Y = np.meshgrid(X, Y)
     __draw3dSurface(X,Y,Z)
 
 def __getNumpyType(typee='int'):
     finds = eval('('+', '.join(['np.'+mu for mu in filterList(typee, dir(np))])+')')
-    types = filter(lambda x:type(x)==type,finds)
+    types = [x for x in finds if type(x)==type]
     return tuple(types)
     
 npFloatTypes = __getNumpyType('float')
@@ -65,17 +65,17 @@ def isNumpyType(array, typee='int'):
     注意 isNumpyType([bool],int) 为True 
     '''
     if isinstance(typee,tuple):
-        return any(map(lambda t:isNumpyType(array, t), typee))
+        return any([isNumpyType(array, t) for t in typee])
     if typee in [bool,'bool']:
         return array.dtype in (npBoolTypes)
     if typee in [int,'int']:
         return array.dtype in (npIntTypes+npBoolTypes)
     if typee in [float,'float']:
         return array.dtype in (npFloatTypes)
-    if typee in [str,unicode,'str','unicode']:
+    if typee in [str,str,'str','unicode']:
         return array.dtype in (npStrTypes)
-    raise Exception,"isNumpyType(array, typee) array must be numpy,"+\
-    "typee must be tuple or [bool, int, float, str, unicode] "
+    raise Exception("isNumpyType(array, typee) array must be numpy,"+\
+    "typee must be tuple or [bool, int, float, str, unicode] ")
 
 if __name__ == '__main__':
     

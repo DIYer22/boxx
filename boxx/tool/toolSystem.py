@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import sys, os, time
+from ..ylsys import py2
 
 def importAllFunCode(mod=None):
     '''
@@ -10,7 +11,7 @@ def importAllFunCode(mod=None):
     '''
     if mod is None:
         mod = 'yllab'
-    if isinstance(mod,(str,unicode)):
+    if isinstance(mod,str):
         exec ('import %s as mod'%mod)
 
     names = [name for name in dir(mod) if not ((len(name)>2 and name[:2]=='__') or 
@@ -29,7 +30,7 @@ try:
     from %s import (%s)
 except ImportError:
     pass'''%(mod.__name__,mod.__name__,lines)
-    print strr
+    print(strr)
 
 class impt():
     '''
@@ -52,10 +53,15 @@ def tryImport(moduleName):
     '''
     try `import @moduleName`. if @moduleName is not installed, return a FakeModule to placeholder the module name
     '''
+    
+    notFoundError = ModuleNotFoundError if not py2 else ImportError
+    module = None
     try:
         exec('import %s as module' % moduleName)
         return module
-    except ImportError:
+    except notFoundError:
+        return  '''"%s" is not install in your Python Enveroment! 
+This is a fake one. Please install "%s" and retry''' % (moduleName, moduleName)
         return FakeModule(moduleName)
 __FAKE_DIC__ = {}
 class FakeModule():
@@ -111,8 +117,8 @@ class timeit():
     def __init__(self,code=''):
         self.begin = time.time()
         if len(code):
-            exec code
-            print self.s
+            exec(code)
+            print(self.s)
     def __call__(self):
         '''返回时间差'''
         return time.time()-self.begin
@@ -128,7 +134,7 @@ class timeit():
     @property
     def p(self):
         '''直接打印出来'''
-        print self.s
+        print(self.s)
 
 def heatMap(pathOrCode):
     '''显示python代码的时间热力图
@@ -147,7 +153,8 @@ def heatMap(pathOrCode):
             path = pathOrCode+'_HEAT_MAP_TMP.py'
             with open(pathOrCode) as f:
                 code = f.read()
-        code = code.decode('ascii','replace').replace(u'\ufffd','$?')
+        if py2:
+            code = code.decode('ascii','replace').replace('\ufffd','$?')
         with open(path,'w') as f:
             f.write(code)
         ph = PyHeat(path)
@@ -187,13 +194,13 @@ def getArgvDic(argvTest=None):
         `--k v` 将以{k: v}形式存放在dic中
         `--tag` 将以{k: True}形式存放在dic中
     '''
-    from toolLog import  pred
+    from .toolLog import  pred
     argv = sys.argv
     if argvTest:
         argv = argvTest
-    l = argv = map(strToNum,argv[1:])
-    code = map(lambda x:(isinstance(x,(str,unicode)) 
-        and len(x) >2 and x[:2]=='--'),argv)
+    l = argv = list(map(strToNum,argv[1:]))
+    code = [(isinstance(x,str) 
+        and len(x) >2 and x[:2]=='--') for x in argv]
     dic = {}
     if True in code:
         l = argv[:code.index(True)]

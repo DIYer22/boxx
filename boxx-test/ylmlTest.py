@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from boxx import *
-u'''
+'''
 使用`ifTest([funName]):`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
 '''
@@ -38,32 +38,32 @@ tests = [testFun]
 
 #tests = GenSimg
 if (ifTest(GenSimg)) and 0:
-    imgPath = u'G:\\experiment\\Data\\HKU-IS\\Imgs\\*.jpg'
+    imgPath = 'G:\\experiment\\Data\\HKU-IS\\Imgs\\*.jpg'
     imggts = [(jpg,jpg.replace('.jpg','.png')) for jpg in  glob(imgPath)[:180]]
     simgShape = (100,100)
     cache = 6;batch = 3
     gen = GenSimg(imggts,simgShape,cache=cache,batch=batch)
     n=len(list(gen))
-    print '实际的面积比值%d*%d=%d'%(n,batch,n*batch),'计算的一轮的总面积比值', 300*400/1e4*len(imggts)
+    print('实际的面积比值%d*%d=%d'%(n,batch,n*batch),'计算的一轮的总面积比值', 300*400/1e4*len(imggts))
     
     batch = 12
     gen = GenSimg(imggts,simgShape,cache=cache,batch=batch,timesPerRead=3)
     n=len(list(gen))
-    print 'timesPerRead=3实际的面积比值%d*%d=%d'%(n,batch,n*batch),'计算的一轮的总面积比值', 300*400/1e4*len(imggts)
+    print('timesPerRead=3实际的面积比值%d*%d=%d'%(n,batch,n*batch),'计算的一轮的总面积比值', 300*400/1e4*len(imggts))
     
     genn = GenSimg(imggts,simgShape,cache=cache,batch=batch,timesPerRead=3,iters=300)
     n=len(list(genn))
-    print 'iter=300实际的面积比值%d*%d=%d'%(n,batch,n*batch),'计算的一轮的总面积比值', 300
+    print('iter=300实际的面积比值%d*%d=%d'%(n,batch,n*batch),'计算的一轮的总面积比值', 300)
 
-    print '''检查随机性'''
+    print('''检查随机性''')
     gen = GenSimg(imggts,simgShape,None,cache=2,batch=batch,iters=10)
     for ne in gen:
         show(ne[0])
-    print gen
+    print(gen)
 
 #tests = binaryDiff
 if ifTest(binaryDiff):
-    print 'Tet binaryDiff'
+    print('Tet binaryDiff')
     re = gt.copy()
     re[125:175] = 0
     re[:,250:300] = 1
@@ -76,7 +76,7 @@ if ifTest(binaryDiff):
 if ifTest(drawBoundAndBackground):
     imgg = drawBoundAndBackground(greyToRgb(gt*255).astype(np.uint8),gt,img,size=.5)
     show(img,imgg)
-    print 'Test skimage.segmentation.find_boundaries,mark_boundaries!'
+    print('Test skimage.segmentation.find_boundaries,mark_boundaries!')
     from skimage.segmentation import find_boundaries,mark_boundaries
     #gt = (80<img[...,0])*img[...,0]<100
     #imgg = mark_boundaries(img,gt)
@@ -102,7 +102,7 @@ if ifTest(confusionMatrix):
            [2, 0, 2, 2]]
     re= gt.copy()
     re[0,0] = 0;classn = 4
-    print confusionMatrix(re,gt,classn)
+    print(confusionMatrix(re,gt,classn))
 
 
 
@@ -116,7 +116,7 @@ if ifTest(f1Score):
            [2, 0, 2, 2]]
     re= gt.copy()
     re[0,0] = 0;classn = 4
-    print 'f1Score:',f1Score(re,gt,classn)
+    print('f1Score:',f1Score(re,gt,classn))
 
 
 

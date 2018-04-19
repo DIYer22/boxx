@@ -43,7 +43,7 @@ def replaceTabInPy(dirr='.'):
     将所有tab换成4个空格
     '''
     from glob import glob
-    from toolLog import log
+    from .toolLog import log
     pys = glob(os.path.join(dirr, '*.py'))
     for py in pys:
         code = openread(py)
@@ -59,22 +59,22 @@ def save_data(data, name='Python_pickle'):  #保存进度
     import pickle
     name = name
     f = open(name, "wb")
-    print '正在将数据写入',os.path.abspath('.'),'下的文件:“'+name+'”，请稍等。。。'
+    print('正在将数据写入',os.path.abspath('.'),'下的文件:“'+name+'”，请稍等。。。')
     pickle.dump(data,f)
     f.close()
-    print '\n文件“'+name+'”已保存在',os.path.abspath('.'),'目录下!'
+    print('\n文件“'+name+'”已保存在',os.path.abspath('.'),'目录下!')
 
 def load_data(name='Python_pickle'):  #载入数据
     import pickle
     name = name
     if not os.path.isfile(name):
-        print '在',os.path.abspath('.'),'目录下,“'+name+'”文件不存在，操作失败！'
+        print('在',os.path.abspath('.'),'目录下,“'+name+'”文件不存在，操作失败！')
         return
-    print '正在读取',os.path.abspath('.'),'目录下的文件:“'+name+'”\n请稍等。。。'
+    print('正在读取',os.path.abspath('.'),'目录下的文件:“'+name+'”\n请稍等。。。')
     f = open(name,"rb")
     data = pickle.load(f)
     f.close()
-    print '文件:“'+name+'”读取成功！'
+    print('文件:“'+name+'”读取成功！')
     return data
 
 if __name__ == "__main__":

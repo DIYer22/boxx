@@ -3,7 +3,8 @@
 from __future__ import unicode_literals
 import time
 
-from toolStructObj import typestr
+from .toolStructObj import typestr
+from functools import reduce
 
 def getFunName(fun):
     '''
@@ -97,7 +98,7 @@ def mapmp(fun, *mapArgList, **kv):
     if 'thread' in kv and kv['thread']:
         Pool = PoolThread
     pool = Pool(kv['pool']) if 'pool' in kv and kv['pool'] else Pool()
-    re = pool.map(__multiprocessingFun__,zip([fun]*len(mapArgList[0]),*mapArgList))
+    re = pool.map(__multiprocessingFun__,list(zip([fun]*len(mapArgList[0]),*mapArgList)))
 #    re = pool.map(fun,mapArgList[0])
     pool.close()
     pool.join()
@@ -186,8 +187,8 @@ def retry(fun, times=None, exception=Exception, timeGap=0, log=True):
         except exception as e:
             retry.e = e
             if log:
-                fname = fun.func_name if 'func_name' in dir(fun) else str(fun)
-                print((u'\x1b[31m%s\x1b[0m'%"%dth's Exception: %s of %s")%(count, typestr(e), fname))
+                fname = fun.__name__ if 'func_name' in dir(fun) else str(fun)
+                print((('\x1b[31m%s\x1b[0m'%"%dth's Exception: %s of %s")%(count, typestr(e), fname)))
                 print(e)
                 print('')
         if timeGap:
@@ -201,7 +202,7 @@ if __name__ == "__main__":
     
     def fun():
         for i in range(10):
-            print i
+            print(i)
             time.sleep(1)
     from threading import Timer
     thread = Timer(0,fun)

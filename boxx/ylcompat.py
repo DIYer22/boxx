@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+from __future__ import print_function
+
 import sys
-#py3
-pyv = sys.version_info.major
-py3 = pyv == 3
-if py3:
+from .ylsys import py2
+
+if py2:
+    unicode = __builtins__['unicode']
+else:
+    unicode = str
+
+
+printf = print
+
+if not py2:
     __listRange__ = range
     range = lambda *x:list(__listRange__(*x))
     __rawOpen__ = open

@@ -172,13 +172,13 @@ e = Evalu(accEvalu,
         self.saveResoult = saveResoult
         self.__isTuple = False
         
-        if isinstance(loadcsv,(str,unicode)):
+        if isinstance(loadcsv,str):
             self.evaluDir = os.path.dirname(loadcsv)
         else:
             self.evaluDir = os.path.join(savepath,'Evalu-%s'%evaluName)
         self._defaultCsvPath = pathjoin(self.evaluDir,self.evaluName+'.csv')
         if loadcsv :
-            if isinstance(loadcsv,(str,unicode)):
+            if isinstance(loadcsv,str):
                 self._defaultCsvPath = loadcsv 
             self._loaddf()
     def _initdf(self,name,dic):
@@ -311,8 +311,8 @@ e = Evalu(accEvalu,
             key = self.columns[key]
         key = self.sortkey if key is None else key 
         df = self._sorted(key,False)
-        print(df[key].describe())
-        df['_index_'] = range(1,len(df)+1) 
+        print((df[key].describe()))
+        df['_index_'] = list(range(1,len(df)+1)) 
         df['__mean'] = mean = df[key].mean()
         df.set_index('_index_',inplace=True)
         df['__mean'].plot(style='orange')
@@ -324,7 +324,7 @@ e = Evalu(accEvalu,
         if formatt:
             s=(formatt.format(**dic))
         else:
-            s=(', '.join(['%s: %s'%(k,v) for k,v in dic.items()]))
+            s=(', '.join(['%s: %s'%(k,v) for k,v in list(dic.items())]))
         return s
     def __topAndLowStr(self,n=10):
         top = self.high(n)
@@ -355,7 +355,7 @@ logFormat        : %s
     def summary(self,n=10):
         '''various summary 
         n:同时显示high和low的数量'''
-        print self.__str__(n)
+        print(self.__str__(n))
         
     class Series(pd.Series):
         '''改造了 __str__ 的 pd.Series'''
@@ -397,8 +397,8 @@ if __name__ == '__main__':
     e = Evalu(int)
     import pandas as pd
     df = pd.DataFrame({
-                       0:range(5),
-                       1:range(10,15),
+                       0:list(range(5)),
+                       1:list(range(10,15)),
                        'a':list("abcde"),
                        })
     df.set_index(0,inplace=True)

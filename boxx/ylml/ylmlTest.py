@@ -9,7 +9,8 @@ from ..tool import dynamicWraps, findints, glob,dicto
 from ..ylnp import isNumpyType
 from ..ylimg import (mapp, labelToColor)
 
-from ylmlEvalu import Evalu
+from .ylmlEvalu import Evalu
+import imp
 
 def binaryDiff(re,gt,size=0.5,lines=50,bound=False):
     '''
@@ -46,7 +47,7 @@ def drawBoundAndBackground(img,mask,bg=None,replace=False,lines=50,
     bound:是否画出边缘
     boundmode: thick 粗正好在边界 'inner'只在前景里面 但是较细
     '''
-    assert mask.ndim ==2, u'mask 必须为布尔值'
+    assert mask.ndim ==2, 'mask 必须为布尔值'
     if not mask.any():
         return img
     isint = isNumpyType(img,int)
@@ -88,7 +89,7 @@ def classDiff(rem,gtm,colors=None,size=.15,reMod=False,lines=50,bound=True):
     '''
     assert rem.ndim==2 and gtm.ndim==2,"rem,gtm 's dim must be 2"
     rgb = labelToColor(rem if reMod else gtm, colors) 
-    clas = range(len(colors))
+    clas = list(range(len(colors)))
     for c,color in enumerate((colors)): #c mean iter every Class
         for oc in clas: # oc means OtherClass
             if oc==c:
@@ -140,7 +141,7 @@ def f1Score(re,gt,classn):
         re = re.argmax(2)
     cma = confusionMatrix(re,gt,classn)
     ma = np.float64(cma)
-    tp = ma[range(classn),range(classn)]
+    tp = ma[list(range(classn)),list(range(classn))]
     fp = ma.sum(0)-tp
     fn = ma.sum(1)-tp
     precision = tp/(tp+fp)
@@ -210,8 +211,8 @@ def smallImg(img,simgShape, step=None,f=None):
     if isinstance(step,(tuple,list)):
         steph,stepw = step
     simgs = []
-    for i in range(0,h-hh,steph)[:]+[h-hh]:
-        for j in range(0,w-ww,stepw)[:]+[w-ww]:
+    for i in list(range(0,h-hh,steph))[:]+[h-hh]:
+        for j in list(range(0,w-ww,stepw))[:]+[w-ww]:
             simg = img[i:i+hh,j:j+ww]
             simgs.append(simg)
             if f:
@@ -262,7 +263,7 @@ def autoSegmentWholeImg(img,simgShape,handleSimg,step=None,weightCore=None):
     elif weightCore in ['guss','gauss']:
         weightCore = getWeightCore(hh,ww)
     else:
-        raise Exception,'Illegal argus `weightCore` in `autoSegmentWholeImg`!'
+        raise Exception('Illegal argus `weightCore` in `autoSegmentWholeImg`!')
     weight = np.zeros((h,w))
     class c:
         re=None
@@ -316,7 +317,7 @@ def autoFindBestParams(c, args,evaluFun,sortkey=None, savefig=False):
     Return: DataFrame
         每个参数组合及其评价的平均值
     '''
-    iters = filter(lambda it:isinstance(it[1],ArgList),args.items())
+    iters = [it for it in list(args.items()) if isinstance(it[1],ArgList)]
     iters = sorted(iters,key=lambda x:len(x[1]),reverse=True)
     argsraw = args.copy()
     argsl = []
@@ -354,13 +355,13 @@ def autoFindBestParams(c, args,evaluFun,sortkey=None, savefig=False):
                   saveResoult=False,
                   )
         if 'reload' in c:
-            reload(c.reload)
+            imp.reload(c.reload)
             inference = c.reload.inference
         elif 'predictInterface' in c:
-            reload(c.predictInterface)
+            imp.reload(c.predictInterface)
             inference = c.predictInterface.predict
         else:
-            raise Exception,  "don't reload get c.reload"
+            raise Exception("don't reload get c.reload")
         for name in c.names[::]:
             gt = c.readgt(name)
             prob = inference(c.toimg(name))
@@ -374,13 +375,13 @@ def autoFindBestParams(c, args,evaluFun,sortkey=None, savefig=False):
         if sortkey is None:
             sortkey = e.columns[-1]
         keys = tuple(arg.values())
-        for k,v in arg.items():
+        for k,v in list(arg.items()):
             e[k] = v
         edic[keys] = e
-        print 'arg: %s\n'%str(arg), e.mean()
-    es = pddf(map(lambda x:pds(x.mean()), edic.values()))
-    print '-'*20+'\nmax %s:\n'%sortkey,es.loc[es[sortkey].argmax()]
-    print '\nmin %s:\n'%sortkey,es.loc[es[sortkey].argmin()]
+        print('arg: %s\n'%str(arg), e.mean())
+    es = pddf([pds(x.mean()) for x in list(edic.values())])
+    print('-'*20+'\nmax %s:\n'%sortkey,es.loc[es[sortkey].argmax()])
+    print('\nmin %s:\n'%sortkey,es.loc[es[sortkey].argmin()])
     if len(iters) == 1:
         k = iters[0][0]
         import matplotlib.pyplot as plt
@@ -414,13 +415,13 @@ def autoFindBestEpoch(c, evaluFun,sortkey=None,epochs=None, savefig=False):
     args = c.args
     if not isinstance(epochs,(tuple,list)) :
         pas = [p[len(args.prefix):] for p in glob(args.prefix+'*') if p[-4:]!='json']
-        eps = map(lambda s:len(findints(s)) and findints(s)[-1],pas)
+        eps = [len(findints(s)) and findints(s)[-1] for s in pas]
         maxx = len(eps) and max(eps)
         minn = len(eps) and min(eps)
         if isinstance(epochs,int):
-            epochs = range(minn,maxx)[::epochs]+[maxx]
+            epochs = list(range(minn,maxx))[::epochs]+[maxx]
         else:
-            epochs = range(minn,maxx+1)
+            epochs = list(range(minn,maxx+1))
     args['restore'] = ArgList(epochs)
 #    print epochs
     df = autoFindBestParams(c, args, evaluFun,sortkey=sortkey,savefig=savefig)
