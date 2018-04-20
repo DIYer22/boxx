@@ -59,7 +59,7 @@ def tryImport(moduleName):
     try:
         exec('import %s as module' % moduleName)
         return module
-    except notFoundError:
+    except (notFoundError, ImportError):
         return  '''"%s" is not install in your Python Enveroment! 
 This is a fake one. Please install "%s" and retry''' % (moduleName, moduleName)
         return FakeModule(moduleName)

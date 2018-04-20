@@ -6,17 +6,7 @@ Created on Wed Apr 18 21:27:28 2018
 @author: yanglei
 """
 
-import sys
-
-
-import multiprocessing as __module
-cpun = __module.cpu_count()
-
-pyv = sys.version_info.major
-py3 = (pyv == 3)
-py2 = (pyv == 2)
-
-cloud = cpun > 16
+import sys, os
 
 
 
@@ -43,3 +33,24 @@ class SystemInfo():
         import platform
         return platform.node()
 sysi = SystemInfo()
+
+
+import multiprocessing as __module
+cpun = __module.cpu_count()
+
+pyv = sys.version_info.major
+py3 = (pyv == 3)
+py2 = (pyv == 2)
+
+cloud = cpun > 16
+
+linuxYl = sysi.os.startswith('linux')
+windowsYl = sysi.os.startswith('win')
+
+if linuxYl:
+    homeYl = os.getenv('HOME') + '/'
+    tmpYl = '/tmp/'
+else:
+    homeYl = ''
+    tmpYl = ''
+    
