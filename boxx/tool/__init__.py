@@ -26,11 +26,15 @@ from .toolTools import (filterList, findints, randint, randfloat, randchoice,
                        listdirWithFun, replaceAllInRoot)
 
 from glob import glob
-from collections import namedtuple, defaultdict, Counter
+from collections import namedtuple, defaultdict, Counter, OrderedDict
 dictd = defaultdict
+odict = OrderedDict
 from functools import reduce
 from os.path import join as pathjoin
 from os.path import basename, isfile, isdir, dirname
+from fn import _ as x_
+x = x_
+
 from operator import add, sub, mul
 if py2:
     from operator import div

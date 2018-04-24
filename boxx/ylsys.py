@@ -34,19 +34,24 @@ class SystemInfo():
         return platform.node()
 sysi = SystemInfo()
 
-
-import multiprocessing as __module
-cpun = __module.cpu_count()
-
 pyv = sys.version_info.major
 py3 = (pyv == 3)
 py2 = (pyv == 2)
 
-cloud = cpun > 16
-
 linuxYl = sysi.os.startswith('linux')
 windowsYl = sysi.os.startswith('win')
 
+import multiprocessing as __module
+cpun = __module.cpu_count()
+
+cloud = cpun > 16
+
+if linuxYl:
+    cuda = not os.system('nvcc --version> /dev/null 2>&1')
+else:
+    cuda = 'Not Implemented'
+usecuda = 'auto' # auto: auto, False: not use
+    
 if linuxYl:
     homeYl = os.getenv('HOME') + '/'
     tmpYl = '/tmp/'

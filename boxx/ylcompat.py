@@ -14,7 +14,7 @@ else:
 
 printf = print
 
-if not py2:
+if not py2 and 0:
     __listRange__ = range
     range = lambda *x:list(__listRange__(*x))
     __rawOpen__ = open
