@@ -307,6 +307,8 @@ __logFuns = {
     'numpy.ndarray':lambda x:colorFormat.r%('%s%s'%
                                     (str(x.shape).replace('L,','').replace('L',''),x.dtype)),
 
+    'torch.Tensor':__torchShape,
+    
     'torch.FloatTensor':__torchShape,
     'torch.DoubleTensor':__torchShape,
     'torch.IntTensor':__torchShape,

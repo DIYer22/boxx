@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 
 from . import *
 from .ylsys import cpun, cloud, cuda, usecuda
+from collections import OrderedDict
 import torch
 from torch.autograd import Variable
 import torch.utils.data
@@ -24,10 +25,12 @@ nn = th.nn
 #th.char = torch.cuda.CharTensor 
 #th.float = torch.cuda.FloatTensor 
 
-if (not cuda and usecuda=='auto') or not usecuda:
+usecpu = (not cuda and usecuda=='auto') or not usecuda
+if usecpu:
     cudaAttri =  lambda self,*l,**kv:self
     nn.Module.cuda = cudaAttri
     Variable.cuda = cudaAttri
+    torch.Tensor.cuda = cudaAttri
     
     torch.nn.DataParallel = cudaAttri
     
@@ -62,6 +65,26 @@ if (not cuda and usecuda=='auto') or not usecuda:
             return r
         return DataLoader
     th.utils.data.DataLoader = warp(th.utils.data.DataLoader)
+    
+    rawThLoad = torch.load
+    def torchLoad(*l, **kv):
+        return rawThLoad(*l,**(kv.update({'map_location':'cpu'}) or kv))
+    torch.load = torchLoad
+    
+    rawModule = torch.nn.Module.load_state_dict
+    def tryLoad(self, state_dict, strict=True):
+        try:
+            rawModule(self, state_dict, strict)
+        except KeyError as e:
+            print('\x1b[31m%s\x1b[0m' % '\n"try strict=False! in Module.load_state_dict() " messge from boxx.ylth \n')
+            para = state_dict
+            para = OrderedDict(
+                        [(k.replace('module.', ''),v) for k,v in para.items()]
+                )
+            rawModule(self, para, strict)
+            
+    nn.Module.load_state_dict = tryLoad
+    
 if __name__ == '__main__':
     l = ['LongTensor',
      'DoubleTensor',

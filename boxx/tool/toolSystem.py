@@ -88,7 +88,8 @@ def crun(pycode, snakeviz=True):
     if not snakeviz:
         return run(pycode,sort='time')
     run(pycode, "/tmp/snakeviz.result")
-    assert softInPath and softInPath('snakeviz'),'run `pip install snakeviz`'
+    from . import softInPath
+    assert softInPath('snakeviz'),'run `pip install snakeviz`'
     os.system('snakeviz /tmp/snakeviz.result &')
     
     
