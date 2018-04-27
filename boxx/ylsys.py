@@ -55,7 +55,7 @@ usecuda = 'auto' # auto: auto, False: not use
 if linuxYl:
     homeYl = os.getenv('HOME') + '/'
     tmpYl = '/tmp/'
-else:
-    homeYl = ''
-    tmpYl = ''
+elif windowsYl:
+    homeYl = os.path.expanduser("~")
+    tmpYl = os.getenv('TMP') + '\\'
     

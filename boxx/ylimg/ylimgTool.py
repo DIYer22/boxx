@@ -6,6 +6,7 @@ from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto
 from ..tool.toolLog import colorFormat, tounicode
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
+from ..ylsys import tmpYl
 
 import os
 import glob
@@ -202,7 +203,7 @@ def showb(*arr,**__kv):
         return 
     arr = arr[0]
     if isinstance(arr,np.ndarray):
-        path = '/tmp/tmp-%s.png'%len(glob.glob('/tmp/tmp-*.png'))
+        path = tmpYl + 'tmp-%s.png'%len(glob.glob(tmpYl + 'tmp-*.png'))
         imsave(path,arr)
         arr = path
     cmd = 'shotwell "%s" &'%arr
@@ -229,7 +230,7 @@ def shows(*imgs):
             if isinstance(x,str):
                 res.append(x)
             if isinstance(x,np.ndarray):
-                path = '/tmp/shows-%s.png'%len(glob.glob('/tmp/shows-*.png'))
+                path = tmpYl + '/shows-%s.png'%len(glob.glob(tmpYl + '/shows-*.png'))
                 imsave(path,x)
                 res.append(path)
         return res

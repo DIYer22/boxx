@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os,glob
+from ..ylsys import tmpYl
 
 def showImgsInBrowser(paths):
     '''图片展示分析工具  使用浏览器同步显示图片的image,gt,resoult 等
@@ -14,8 +15,8 @@ def showImgsInBrowser(paths):
     paths = list(map(os.path.abspath,paths))
     html = getShowsHtml()
     s = 'srcs = [%s]'%(",".join(['"%s"'%p for p in paths]))
-    html = html.replace('//replaceTagForPython',s)
-    htmlp = '/tmp/shows-%s.html'%len(glob.glob('/tmp/shows-*.html'))
+    html = html.replace('//replaceTagForPython',s.replace('\\',r'\\'))
+    htmlp = os.path.join(tmpYl, 'shows-%s.html') %len(glob.glob(os.path.join(tmpYl, 'shows-*.html')))
     with open(htmlp,'w') as f:
         f.write(html)
     import webbrowser 
@@ -182,7 +183,7 @@ def getShowsHtml():
     fx = .5
     fy = .5
 
-    var srcs = ['/tmp/shows-0.png','/tmp/shows-0.png','/tmp/shows-0.png','/tmp/shows-0.png',]
+    var srcs = []
     //replaceTagForPython
     bxs = 2
 

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import sys, os, time
-from ..ylsys import py2
+from ..ylsys import py2, tmpYl
 
 def importAllFunCode(mod=None):
     '''
@@ -87,10 +87,10 @@ def crun(pycode, snakeviz=True):
     from cProfile import run
     if not snakeviz:
         return run(pycode,sort='time')
-    run(pycode, "/tmp/snakeviz.result")
+    run(pycode, os.path.join(tmpYl, "snakeviz.result"))
     from . import softInPath
     assert softInPath('snakeviz'),'run `pip install snakeviz`'
-    os.system('snakeviz /tmp/snakeviz.result &')
+    os.system('snakeviz %s &'% os.path.join(tmpYl,'snakeviz.result'))
     
     
 def frun(pyFileName=None):
@@ -147,7 +147,7 @@ def heatMap(pathOrCode):
         .py文件路径或着python代码
     '''
     from pyheat import PyHeat
-    path = '/tmp/pyheat-tmp.py'
+    path = os.path.join(tmpYl, 'pyheat-tmp.py')
     code = pathOrCode
     try :
         if os.path.isfile(pathOrCode):

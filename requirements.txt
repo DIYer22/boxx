@@ -6,3 +6,4 @@ matplotlib
 py-heat
 snakeviz
 opencv-python
+pyopengl
