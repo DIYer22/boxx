@@ -71,13 +71,24 @@ def mapp(f, matrix, need_i_j=False):
             listt[i][j] = f(it,i,j) if need_i_j else f(it)
     return np.array(listt)
 
-
-__torchToNumpy = lambda x:x.numpy()
-__torchCudaToNumpy = lambda x:x.cpu().numpy()
+def __torchVar2Tensor(t):
+    '''
+    同时兼容 PyTorch 3.0 和 4.0 的 Tensor 和 Var
+    '''
+    try:
+        t = t.data
+    except:
+        pass
+    finally:
+        return t
+__torchToNumpy = lambda x:__torchVar2Tensor(x).numpy()
+__torchCudaToNumpy = lambda x:__torchVar2Tensor(x).cpu().numpy()
 
 __typesToNumpy = {
     'PIL.Image.Image':lambda x:np.array(x),
     'mxnet.ndarray.NDArray':lambda x:x.asnumpy(),
+    
+    'torch.Tensor':__torchCudaToNumpy,
     
     'torch.FloatTensor':__torchToNumpy,
     'torch.DoubleTensor':__torchToNumpy,
