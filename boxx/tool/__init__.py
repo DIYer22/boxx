@@ -22,7 +22,7 @@ from .toolSystem import (importAllFunCode, impt, tryImport, FakeModule, crun, fr
 from .toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, retry)
 
-from .toolTools import (filterList, findints, randint, randfloat, randchoice,
+from .toolTools import (increase, filterList, findints, randint, randfloat, randchoice,
                        listdirWithFun, replaceAllInRoot)
 
 from glob import glob

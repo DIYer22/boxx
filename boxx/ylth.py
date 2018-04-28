@@ -25,6 +25,10 @@ nn = th.nn
 #th.char = torch.cuda.CharTensor 
 #th.float = torch.cuda.FloatTensor 
 
+# add summary to torch.nn.Module
+from torchsummary import summary
+nn.Module.summary = lambda self, inputShape=(3,244,244):summary(self, inputShape)
+
 usecpu = (not cuda and usecuda=='auto') or not usecuda
 if usecpu:
     cudaAttri =  lambda self,*l,**kv:self

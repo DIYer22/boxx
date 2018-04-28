@@ -5,10 +5,25 @@ from __future__ import unicode_literals
 import re, random
 from os.path import join,isdir,isfile
 from glob import glob
+from collections import defaultdict
 
 from .toolIo import openread,openwrite
 from .toolLog import log
 
+
+__increase_recording = defaultdict(lambda:-1)
+def increase(namespace=None):
+    '''
+    从0开始 每调用一次返回的数值自增 1， 类似 SQL 中的 AUTO_INCREMENT 字段
+    
+    Parameters
+    ----------
+    namespace : hashable, default None
+        用于计数的命名空间
+    '''
+    __increase_recording[namespace] += 1
+    return __increase_recording[namespace]
+    
 def filterList(key, strs):
     '''
     对一个str列表 找出其中存在字符串 key的所有元素

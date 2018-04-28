@@ -58,4 +58,17 @@ if linuxYl:
 elif windowsYl:
     homeYl = os.path.expanduser("~")
     tmpYl = os.getenv('TMP') + '\\'
-    
+
+
+
+class __TmpboxxWithCall(str):
+    '''
+    the tmp dir for boxx 
+    '''
+    def __call__(self):
+        if not os.path.isdir(self):
+            os.makedirs(self)
+        return self
+tmpboxx = __TmpboxxWithCall(os.path.join(tmpYl,'boxxTmp/'))
+
+
