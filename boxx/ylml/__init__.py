@@ -10,5 +10,7 @@ from .ylmlTest import (binaryDiff, classDiff, drawBoundAndBackground,
 
 from .ylmlEvalu import (Evalu, accEvalu, lplrEvalu, diceEvalu, pd)
 
+from numpy import e, pi
+
 if __name__ == "__main__":
     pass

@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 
 from . import *
 from .ylsys import cpun, cloud, cuda, usecuda
+from .ylimg import npa
 from collections import OrderedDict
 import torch
 from torch.autograd import Variable
@@ -28,6 +29,7 @@ nn = th.nn
 # add summary to torch.nn.Module
 from torchsummary import summary
 nn.Module.summary = lambda self, inputShape=(3,244,244):summary(self, inputShape)
+
 
 usecpu = (not cuda and usecuda=='auto') or not usecuda
 if usecpu:
@@ -88,6 +90,9 @@ if usecpu:
             rawModule(self, para, strict)
             
     nn.Module.load_state_dict = tryLoad
+    
+def tht(t):
+    return th.from_numpy(npa-t).cuda()
     
 if __name__ == '__main__':
     l = ['LongTensor',

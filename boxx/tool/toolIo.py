@@ -51,30 +51,29 @@ def replaceTabInPy(dirr='.'):
         new = code.replace('\t',' '*4)
         openwrite(new, py)
 
-
-def save_data(data, name='Python_pickle'):  #保存进度
+def saveData(data, name='pickle_of_boxx', log=False):  #保存进度
     '''
     保存二进制数据
     '''
     import pickle
-    name = name
-    f = open(name, "wb")
-    print('正在将数据写入',os.path.abspath('.'),'下的文件:“'+name+'”，请稍等。。。')
-    pickle.dump(data,f)
-    f.close()
-    print('\n文件“'+name+'”已保存在',os.path.abspath('.'),'目录下!')
+    if log:
+        print('正在将数据写入',os.path.abspath('.'),'下的文件:“'+name+'”，请稍等。。。')
+    with open(name, "wb") as f:
+        pickle.dump(data,f)
+    if log:
+        print('\n文件“'+name+'”已保存在',os.path.abspath('.'),'目录下!')
 
-def load_data(name='Python_pickle'):  #载入数据
+def loadData(name='pickle_of_boxx', log=False):  #载入数据
     import pickle
-    name = name
     if not os.path.isfile(name):
         print('在',os.path.abspath('.'),'目录下,“'+name+'”文件不存在，操作失败！')
-        return
-    print('正在读取',os.path.abspath('.'),'目录下的文件:“'+name+'”\n请稍等。。。')
-    f = open(name,"rb")
-    data = pickle.load(f)
+    if log:
+        print('正在读取',os.path.abspath('.'),'目录下的文件:“'+name+'”\n请稍等。。。')
+    with open(name,"rb") as f:
+        data = pickle.load(f)
     f.close()
-    print('文件:“'+name+'”读取成功！')
+    if log:
+        print('文件:“'+name+'”读取成功！')
     return data
 
 if __name__ == "__main__":

@@ -13,8 +13,10 @@ from .toolLog import localTimeStr, gmtTimeStr, timeGap
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr,
                                         listToBatch, FunAddMagicMethod)
 
-from .toolIo import (listdir, filename, openread, openwrite, replaceTabInPy, save_data, 
-                    load_data, fileJoinPath)
+from .toolIo import (listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
+                    loadData, fileJoinPath)
+save_data = saveData
+load_data = loadData
 
 from .toolSystem import (importAllFunCode, impt, tryImport, FakeModule, crun, frun, 
                         timeit, heatMap, getArgvDic, softInPath, addPathToSys)
