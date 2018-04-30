@@ -13,7 +13,7 @@ from .toolLog import localTimeStr, gmtTimeStr, timeGap
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr,
                                         listToBatch, FunAddMagicMethod)
 
-from .toolIo import (listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
+from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
                     loadData, fileJoinPath)
 save_data = saveData
 load_data = loadData
@@ -25,7 +25,7 @@ from .toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, retry)
 
 from .toolTools import (increase, filterList, findints, randint, randfloat, randchoice,
-                       listdirWithFun, replaceAllInRoot)
+                       listdirWithFun, replaceAllInRoot, findInRoot)
 
 from glob import glob
 from collections import namedtuple, defaultdict, Counter, OrderedDict

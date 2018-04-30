@@ -7,7 +7,7 @@ from os.path import join,isdir,isfile
 from glob import glob
 from collections import defaultdict
 
-from .toolIo import openread,openwrite
+from .toolIo import openread, openwrite, getsizem
 from .toolLog import log
 
 
@@ -95,6 +95,52 @@ def replaceAllInRoot(old, new, root='.', types='py'):
                     log('replaceAllInRoot: %s  old=%s  new=%s'%(path, old, new))
                     openwrite(code.replace(old,new),path)
     listdirWithFun(root, replace)
+
+def findInRoot(pattern, root='.', maxsize=1, types=None):
+    '''在root及子路径下的所有文件中 查找 pattern。存在 则打印出对应文件的那一行。
+    
+    Parameters
+    ----------
+    pattern : str
+        要查找的内容
+    root : str, default '.'
+        路径 即根文件夹
+    maxsize : number, default 1
+        被查找文件的最大文件大小，单位为 MB
+        为避免不小心查找太大的二进制文件，默认不超过 1MB
+        设为 None，则不设大小限制
+    types : str or list, default None
+        被查找文件的类型限制
+        str:单个类型, list:多个类型 默认为所有文件
+    '''
+    if types is not None :
+        if not isinstance(types,(list,tuple)):
+            types = [types]
+        types = [t.replace('.', '') for t in types]
+    def intypes(path):
+        if types is None:
+            return True
+        return '.' in path and path.split('.')[-1] in types
+    
+    def find(path):
+        if isfile(path):
+            if (getsizem(path) <= maxsize or maxsize is None) and intypes(path):
+                try:
+                    s = openread(path)
+                    if pattern in s:
+                        lines = [(i, l) for i,l in enumerate(s.split('\n'), 1) if pattern in l]
+                        print('"%s" in "%s" with %s'%('\x1b[31m%s\x1b[0m'%pattern, '\x1b[36m%s\x1b[0m'%path, '\x1b[35m%s Lines\x1b[0m'%len(lines)))
+                        for (i, l) in lines:
+                            if l.startswith('   '):
+                                l = '... '+l.strip()
+                            if len(l) > 83:
+                                l = l[:80] +' ...'
+                            print('\t%s:%s'%('\x1b[35m%s\x1b[0m'%i, '\x1b[31m%s\x1b[0m'%l))
+                        print()
+                except:
+                    return 
+    listdirWithFun(root, find)
+    
 if __name__ == "__main__":
      
     string=["A001.45，b5，6.45，8.82",'sd4 dfg77']

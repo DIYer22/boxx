@@ -422,15 +422,16 @@ class SuperG(Gs):
         if name in dir(Gs):
             return Gs.__setattr__(self,name,v)
         self[name] = v
-    @property
-    def keys(self):
-        return addCall(dict.keys(self))
-    @property
-    def values(self):
-        return addCall(dict.values(self))
-    @property
-    def items(self):
-        return addCall(dict.items(self))
+    if py2:
+        @property
+        def keys(self):
+            return addCall(dict.keys(self))
+        @property
+        def values(self):
+            return addCall(dict.values(self))
+        @property
+        def items(self):
+            return addCall(dict.items(self))
 
 GlobalG = SuperG
 g = SuperG()

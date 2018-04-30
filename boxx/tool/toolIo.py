@@ -4,6 +4,17 @@ from __future__ import unicode_literals
 
 import os
 
+getsize = os.path.getsize
+
+def getsizem(path='.'):
+    '''
+    返回 path 的大小 支持文件夹 单位为 MB
+    '''
+    if os.path.isdir(path):
+        return sum([getsizem(os.path.join(path, p)) for p in os.listdir(path)])
+    return os.path.getsize(path)/float(1024**2)
+
+
 def fileJoinPath(_file_,path='.'):
     '''
     返回 __file__ + 相对路径 path 后的绝对路径
