@@ -72,14 +72,16 @@ def __multiprocessingFun__(args):
     return args[0](*args[1:])
 def mapmp(fun, *mapArgList, **kv):
     '''
-    Multi Processing Map:多进程版本的map函数
+    Map with Multi Processing:多进程版本的map函数
     mapmp(fun, sequence[, sequence, ...], pool=None, thread=False)->list
-    >>> re = map(np.add,range(10),range(5,15),pool=8)
+    
+    >>> mapmp(np.add, range(3), range(3), pool=3)
+    [0, 2, 4]
     
     Notice
     ----------
     * 多进程中 异常无法精确定位
-    * numpy操作 由于指令集优化原因 可能多进程和多线程差不多
+    * numpy操作 由于指令集优化 及numpy版本原因 可能多进程可能会更慢
     * 多进程中 list, dict等元素会被直接复制，无法改变内部元素
     
     Parameters
@@ -106,7 +108,21 @@ def mapmp(fun, *mapArgList, **kv):
 
 def mapmt(fun, *mapArgList, **kv):
     '''
-    Multi Threading Map:多进线版本的map函数
+    Map with Multi Threading:多线程版本的map函数， 适用于IO密集型任务
+    mapmt(fun, sequence[, sequence, ...], pool=None)->list
+    
+    >>> mapmt(np.add, range(3), range(3), pool=3)
+    [0, 2, 4]
+    
+    
+    Parameters
+    ----------
+    fun : function
+        与 map 使用相同的函数 
+    *mapArgList : list 
+        用于fun的参数list, fun需要N个参数则有N个列表
+    pool : int, default None
+        线程数目，默认为CPU进程数
     '''
     return mapmp(fun, *mapArgList,thread=True, **kv)
 

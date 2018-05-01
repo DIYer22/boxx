@@ -51,6 +51,9 @@ class FunAddMagicMethodCore(dict):
         if len(args)==1:
             return args[0]
         return args
+    def __str__(self):
+        return 'FunAddMagicMethod(%s)'%self[0].__str__()
+    __repr__ = __str__
     __sub__ = __call__
 #    __add__ = __call__
 #    __mul__ = __call__
@@ -136,6 +139,22 @@ def typestr(instance):
     u'dict'
     '''
     return typeNameOf(type(instance))
+
+
+def nextIter(iterr, raiseException=True):
+    '''
+    do next(iter(iterr)) then return resoult
+    
+    while iterr is empty and raiseException is False, just return  '【Iterable is empty!】'
+    '''
+    re = default = '【Iterable is empty!】'
+    for i in iterr:
+        re = i
+        break
+    if raiseException and re == default:
+        raise StopIteration('Iterable is empty!')
+    return re
+
 typestr = FunAddMagicMethod(typestr)
 if __name__ == "__main__":
 

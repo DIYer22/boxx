@@ -109,6 +109,20 @@ def tounicode(strr):
             return strr.decode('utf-8','replace')
         return unicode(strr)
         
+def shortDiscrib(s, maxlen=60):
+    '''
+    genrate one line discrib str shorter than maxlen.
+    if len(s)> maxlen then slice additional str and append '...' 
+    BTW. funcation will replace '\n' to '↳'
+    '''
+    s = tounicode(s)
+    if len(s) > maxlen:
+        s = s[:maxlen-3]
+        s +=  '...'
+        if '\x1b[' in s :
+            s += '\x1b[0m' * (list(s).count('\x1b'))
+    s = s.replace('\n','↳')
+    return s
         
 def pcolor(color, *s):
     '''

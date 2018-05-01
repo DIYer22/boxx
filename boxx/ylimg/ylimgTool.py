@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 
-from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto
-from ..tool.toolLog import colorFormat, tounicode
+from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, nextIter
+from ..tool.toolLog import colorFormat, tounicode, LogLoopTime, shortDiscrib
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl
@@ -12,7 +12,7 @@ import os
 import glob
 import numpy as np
 import matplotlib.pyplot as plt
-import abc
+import types
 import skimage as sk
 from skimage import io as sio
 from skimage import data as da
@@ -20,7 +20,8 @@ from skimage.io import imread
 from skimage.io import imsave
 from skimage.transform import resize 
 from functools import reduce
-cv2 = tryImport('cv2')
+from operator import add
+#cv2 = tryImport('cv2')
 
 # randomm((m, n), max) => m*n matrix
 # randomm(n, max) => n*n matrix
@@ -57,6 +58,16 @@ def tprgb(ndarray):
     return ndarray
 tprgb = FunAddMagicMethod(tprgb)
 
+def torgb(img):
+    '''
+    将被处理过给网络用的图片 转换回 RGB 图像。
+    即自动 Normalization 到 [0,1], 并transpose 到 W*H*3
+    '''
+    if img.min() < 0:
+        img = norma(img)
+    return tprgb(img)
+torgb = FunAddMagicMethod(torgb)
+
 def mapp(f, matrix, need_i_j=False):
     '''
     for each item of a 2-D matrix
@@ -84,7 +95,7 @@ def __torchVar2Tensor(t):
 __torchToNumpy = lambda x:__torchVar2Tensor(x).numpy()
 __torchCudaToNumpy = lambda x:__torchVar2Tensor(x).cpu().numpy()
 
-__typesToNumpy = {
+typesToNumpyFuns = {
     'PIL.Image.Image':lambda x:np.array(x),
     'mxnet.ndarray.NDArray':lambda x:x.asnumpy(),
     
@@ -113,23 +124,74 @@ __typesToNumpy = {
     }
 def npa(array):
     '''
-    根据`./__typesToNumpy` 将array转换为 np.ndarray
+    根据`./typesToNumpyFuns` 将array转换为 np.ndarray
     
     Parameters
     ----------
     array : list/tuple, torch.Tensor, mxnet.NDArray 
-        在 字典 __typesToNumpy 的中的类型
+        在 字典 typesToNumpyFuns 的中的类型
     '''
     typeName = typestr(array)
-    if typeName in __typesToNumpy:
-        ndarray = __typesToNumpy[typeName](array)
+    if typeName in typesToNumpyFuns:
+        ndarray = typesToNumpyFuns[typeName](array)
     else:
         ndarray = np.array(array)
     return ndarray
 npa = FunAddMagicMethod(npa)
 
+def loga(array):
+    '''
+    Analysis np.array with a graph. include shape, max, min, distribute
+    '''
+    typeName = typestr(array)
+    if typeName in typesToNumpyFuns:
+        array = typesToNumpyFuns[typeName](array)
+    if isinstance(array,str) or isinstance(array,str):
+        print('info and histogram of',array)
+        l=[]
+        eval('l.append('+array+')')
+        array = l[0]
+    if isinstance(array,list):
+        array = np.array(array)
+    
+    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type)[6:], '->%s'%typeName, len(array) and (array.max()), len(array) and (array.min()))]
+    print(('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr)))
+    
+    unique = np.unique(array)
+    if len(unique)<10:
+        dic=dict([(i*1,0) for i in unique])
+        for i in array.ravel():
+            dic[i] += 1
+        listt = list(dic.items())
+        listt.sort(key=lambda x:x[0])
+        data,x=[v for k,v in listt],np.array([k for k,v in listt]).astype(float)
+        if len(x) == 1:
+            print('All value is',x[0])
+            return
+        width = (x[0]-x[1])*0.7
+        x -=  (x[0]-x[1])*0.35
+    elif not (np.isfinite(array)).all():
+        finiteInd = np.isfinite(array)
+        finite = array[finiteInd]
+        data, x = np.histogram(finite,8)
+        size = array.size
+        nan = np.isnan(array).sum()
+        nans = '"nan":%s (%.2f%%), '%(nan,100.*nan/size) if nan else ''
+        inf = np.isinf(array).sum()
+        infs = '"inf":%s (%.2f%%), '%(inf,100.*inf/size) if inf else ''
+        print('\n%s%s max: %s, min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min())))
+        x=x[1:]
+        width = (x[0]-x[1])
+    else:
+        data, x = np.histogram(array.ravel(),8)
+        x=x[1:]
+        width = (x[0]-x[1])
+    plt.plot(x, data, color = 'orange')
+    plt.bar(x, data,width = width, alpha = 0.5, color = 'b')
+    plt.show()
+    return 
+loga = FunAddMagicMethod(loga)
 
-from operator import add
 def ndarrayToImgLists(arr):
     '''
     将所有ndarray转换为imgList
@@ -155,8 +217,8 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
         res = []
     for x in l:
         typeName = typestr(x)
-        if typeName in __typesToNumpy:
-            ndarray = __typesToNumpy[typeName](x)
+        if typeName in typesToNumpyFuns:
+            ndarray = typesToNumpyFuns[typeName](x)
             res.extend(doNumpy(ndarray))
         elif isinstance(x,(list,tuple)):
             listToImgLists(x,res=res,doNumpy=doNumpy)
@@ -164,6 +226,10 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
             listToImgLists(list(x.values()),res=res,doNumpy=doNumpy)
         elif isinstance(x,np.ndarray):
             res.extend(doNumpy(x))
+        elif typeName.startswith('torch.utils.data') or typeName.startswith('torchvision.datasets'):
+            seq = unfoldTorchData(x)
+            if seq is not False:
+                listToImgLists(seq,res=res,doNumpy=doNumpy)
     return res
 def showImgLists(imgs,**kv):
     n = len(imgs)
@@ -250,65 +316,13 @@ def shows(*imgs):
     showImgsInBrowser(paths)
 shows = FunAddMagicMethod(shows)
 
-def loga(array):
-    '''
-    Analysis np.array with a graph. include shape, max, min, distribute
-    '''
-    typeName = typestr(array)
-    if typeName in __typesToNumpy:
-        array = __typesToNumpy[typeName](array)
-    if isinstance(array,str) or isinstance(array,str):
-        print('info and histogram of',array)
-        l=[]
-        eval('l.append('+array+')')
-        array = l[0]
-    if isinstance(array,list):
-        array = np.array(array)
-    
-    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type)[6:], '->%s'%typeName, len(array) and (array.max()), len(array) and (array.min()))]
-    print(('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr)))
-    
-    unique = np.unique(array)
-    if len(unique)<10:
-        dic=dict([(i*1,0) for i in unique])
-        for i in array.ravel():
-            dic[i] += 1
-        listt = list(dic.items())
-        listt.sort(key=lambda x:x[0])
-        data,x=[v for k,v in listt],np.array([k for k,v in listt]).astype(float)
-        if len(x) == 1:
-            print('All value is',x[0])
-            return
-        width = (x[0]-x[1])*0.7
-        x -=  (x[0]-x[1])*0.35
-    elif not (np.isfinite(array)).all():
-        finiteInd = np.isfinite(array)
-        finite = array[finiteInd]
-        data, x = np.histogram(finite,8)
-        size = array.size
-        nan = np.isnan(array).sum()
-        nans = '"nan":%s (%.2f%%), '%(nan,100.*nan/size) if nan else ''
-        inf = np.isinf(array).sum()
-        infs = '"inf":%s (%.2f%%), '%(inf,100.*inf/size) if inf else ''
-        print('\n%s%s max: %s, min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min())))
-        x=x[1:]
-        width = (x[0]-x[1])
-    else:
-        data, x = np.histogram(array.ravel(),8)
-        x=x[1:]
-        width = (x[0]-x[1])
-    plt.plot(x, data, color = 'orange')
-    plt.bar(x, data,width = width, alpha = 0.5, color = 'b')
-    plt.show()
-    return 
-
-loga = FunAddMagicMethod(loga)
 
 __torchShape = lambda x:colorFormat.r%'%s %s'%(str(x.shape),x.type())
-__logFuns = {
+StructLogFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
     'dict':lambda x:colorFormat.b%('dict  %s'%len(x)),
+    'set':lambda x:(colorFormat.r%'set %s = '%len(x) + colorFormat.b%str(x)),
     'collections.defaultdict':lambda x:colorFormat.b%('defaultDict  %s'%len(x)),
     'dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
     'tool.toolStructObj.dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
@@ -341,40 +355,98 @@ __logFuns = {
     "torch.autograd.variable.Variable":lambda x:__torchShape(x.data),
     "torch.nn.parameter.Parameter":lambda x:__torchShape(x.data),
     
+    'torch.utils.data.dataloader.DataLoader':lambda x:(colorFormat.b%'DataLoader(len=%d, batch=%d, worker=%d)'%
+                                                       (len(x.dataset), x.batch_size, x.num_workers)),
+    
     'mxnet.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
+    
+    'pandas.core.frame.DataFrame':lambda x:colorFormat.r%('DataFrame%s.%s'%(x.shape, str(x.columns))) 
     }
 
-
-def __discribOfInstance(instance,leafColor=None,MAX_LEN=45):
+def discribOfInstance(instance,leafColor=None,MAX_LEN=45):
     typee = type(instance)
     typen = typeNameOf(typee)
-#    print typen,typen in __logFuns
-    if isinstance(instance,dicto) and typen not in __logFuns:
+#    print typen,typen in StructLogFuns
+    if isinstance(instance,dicto) and typen not in StructLogFuns:
         typen = 'dictoSub'
-    if typen in __logFuns:
-        return __logFuns[typen](instance)
+    if typen in StructLogFuns:
+        s = StructLogFuns[typen](instance)
+        return shortDiscrib(s, MAX_LEN+18)
     s = tounicode(instance)
     if len(s) > MAX_LEN:
         s = s[:MAX_LEN-3]+'...'
     return (leafColor or '%s')%s
 
 
-def tree(seq,deep=None,logLen=45,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
+def unfoldTorchData(seq):
     '''
-    类似bash中的tree命令 简单查看list, tuple, dict, numpy组成的树的每一层结构
-    可迭代部分用蓝色 叶子用红色打印 
-    >>>tree(seq) 
+    unfold torch.Dataset and Dataloader use next(iter()) for tree  
+    '''
+    import torch
+    if isinstance(seq, torch.utils.data.DataLoader):
+        seq = [('DataLoader.next', nextIter(seq, raiseException=False))]
+    elif isinstance(seq, torch.utils.data.Dataset):
+        seq = [(colorFormat.b%'Dataset[0/%d]'%len(seq), seq[0])]
+    else:
+        return False
+    return seq
+    
+def unfoldAble(seq):
+    '''
+    能展开的 object 
+    '''
+    if isinstance(seq,(list,tuple,dict,types.GeneratorType)) :
+        if isinstance(seq,(list,tuple)):
+            seq = list(enumerate(seq))
+        elif isinstance(seq,(dict)):
+            seq = list(seq.items())
+        elif isinstance(seq, types.GeneratorType):
+            seq = [('Generator', nextIter(seq, raiseException=False))]
+        return seq
+    
+    tys = typestr(seq)
+    if tys.startswith('torch.utils.data') or tys.startswith('torchvision.datasets'):
+        return unfoldTorchData(seq)
+    return False
+
+class HiddenForTree():
+    def __init__(self, lenn, maxprint):
+        self.n = lenn
+        self.m = maxprint
+        self.s = colorFormat.r%'Hidden %s of all %d'%((lenn-maxprint//2*2), lenn)
+        self.repeat = max(4,min(1,maxprint//2))
+    def __str__(self):
+        return self.s
+    def strr(self, leftStr):
+        lineTempl = ''.join(leftStr)
+        lineTempl += '├── '
+        half = (lineTempl + colorFormat.r%'···\n')*self.repeat
+        mid = lineTempl + colorFormat.b%self.s+'\n'
+        s = half + mid + half
+        return s 
+    
+def tree(seq,deep=None,maxprint=50,logLen=45,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
+    '''
+    类似bash中的tree命令 
+    直观地查看list, tuple, dict, numpy, tensor, dataset, dataloader 等组成的树的每一层结构   
+    可迭代部分用蓝色 叶子用红色打印   
+    以下命令可以查看支持的数据结构类型   
+    
+    >>> tree(boxx.ylimg.ylimgTool.StructLogFuns)
     
     Parameters
     ----------
-    seq : list or tuple or dict or numpy or any Object
+    seq : list or tuple or dict or numpy or tensor or torch.Dataset or torch.Dataloader or any Object
         打印出 以树结构展开所有可迭代部分
     deep : int, default None
         能显示的最深深度, 默认不限制
+    maxprint : int, default 50
+        每个 seq 内部，最大允许的数目 默认最多展示 50 个   
+        若 bool(maxprint) 为 False 则不做限制
     logLen : int, default 45
         能显示的最长字符数
     
-    ps.可在__logFuns中 新增类别
+    ps.可在StructLogFuns中 新增类别
     '''
     if deep and __deepNow > deep:
         return
@@ -382,27 +454,33 @@ def tree(seq,deep=None,logLen=45,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftS
         __leftStr = [] 
         __islast = 1
         __sets = set()
-#    s = __logFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
-    s = __discribOfInstance(seq,leafColor=leafColor,MAX_LEN=logLen)
+    if maxprint and isinstance(seq, HiddenForTree):
+        print(seq.strr(__leftStr), end='')
+        return 
+#    s = StructLogFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
+    s = discribOfInstance(seq,leafColor=leafColor,MAX_LEN=logLen)
     s = s.replace('\n','↳')
 #    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
     print('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))
-    if isinstance(seq,(list,tuple,dict)) :
+    
+    unfold = unfoldAble(seq)
+    if unfold is False :
+        return 
+    else:
         if id(seq) in __sets:
             seq=[(colorFormat.r%'【printed befor】','')]
         else:
             __sets.add(id(seq))
-            if isinstance(seq,(list,tuple)):
-                seq = list(enumerate(seq))
-            elif isinstance(seq,(dict)):
-                seq = list(seq.items())
-#            elif isinstance(seq, abc.types.GeneratorType)
-    else:
-        return 
+            seq = unfold
     __leftStr.append('    'if __islast else '│   ')
+    if maxprint : 
+        lenn = len(seq)
+        if lenn > maxprint:
+            head = maxprint//2
+            seq = seq[:head] + [('HiddenForTree',HiddenForTree(lenn=lenn, maxprint=maxprint))] + seq[-head:]
     for i,kv in enumerate(seq):
         __key,v = kv
-        tree(v,deep=deep,logLen=logLen, leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
+        tree(v,deep=deep,maxprint=maxprint,logLen=logLen, leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
              __islast=(i==len(seq)-1),__deepNow=__deepNow+1,__sets=__sets)
     __leftStr.pop()
 tree = FunAddMagicMethod(tree)
@@ -490,7 +568,7 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
     '''
     if deep and __deepNow > deep:
         return
-    s = __discribOfInstance(seq,colorFormat.b,MAX_LEN=maxDocLen)
+    s = discribOfInstance(seq,colorFormat.b,MAX_LEN=maxDocLen)
     if maxDocLen < 100:
         s = s.replace('\n','↳')
     if __leftStr is None:

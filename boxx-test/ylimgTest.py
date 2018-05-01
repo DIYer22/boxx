@@ -5,7 +5,7 @@ from boxx import *
 使用`ifTest([funName]) or 0:`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
 '''
-imgGlob = '/media/dl/60B49345B4931D1A1/IMPORTANT_dataForHome/salDataset/SalBenchmark-master/Data/HKU-IS/Imgs/*.jpg'
+imgGlob = 'imgForTest/*'
 #imgGlob = ''
 jpg,png='imgForTest/0004.jpg','imgForTest/0004.png'
 img,gt = imread(jpg),imread(png)

@@ -5,13 +5,13 @@ from __future__ import unicode_literals
 import os, sys, time
 from ..ylsys import py2
 
-from .toolLog import (stdout, log, tounicode, ignoreWarning, LogException, 
+from .toolLog import (stdout, log, tounicode, shortDiscrib, ignoreWarning, LogException, 
                      LogLoopTime, SuperG, g, cf, p, lc)
 from .toolLog import colorFormat, pblue, pred, pdanger, perr, pinfo
 from .toolLog import localTimeStr, gmtTimeStr, timeGap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr,
-                                        listToBatch, FunAddMagicMethod)
+                            nextIter, listToBatch, FunAddMagicMethod)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
                     loadData, fileJoinPath)
@@ -28,19 +28,23 @@ from .toolTools import (increase, filterList, findints, randint, randfloat, rand
                        listdirWithFun, replaceAllInRoot, findInRoot)
 
 from glob import glob
+from os.path import join as pathjoin
+from os.path import basename, isfile, isdir, dirname
+
 from collections import namedtuple, defaultdict, Counter, OrderedDict
 dictd = defaultdict
 odict = OrderedDict
-from functools import reduce
-from os.path import join as pathjoin
-from os.path import basename, isfile, isdir, dirname
-from fn import _ as x_
-x = x_
 
+from time import sleep
+from functools import reduce
 from operator import add, sub, mul
 if py2:
     from operator import div
 else :
     from operator import truediv as div
+from fn import _ as x_
+x = x_
+
+
 if __name__ == "__main__":
     pass

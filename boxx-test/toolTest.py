@@ -109,7 +109,7 @@ if ifTest(mapmp):
     ms = {'map':map,'mapmt':mapmt,'mapmp':mapmp}
     for name,mapp in list(ms.items()):
         with timeit():
-            mapp(npt,rrs)
+            list(mapp(npt,rrs))
             log(name, end=' ')
 
 #tests = dira

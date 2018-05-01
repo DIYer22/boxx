@@ -3,16 +3,16 @@
 from __future__ import unicode_literals
 
 
-from .ylimgTool import cv2, sk, sio, np, plt, da
+from .ylimgTool import sk, sio, np, plt, da
 from .ylimgTool import (show, loga, mapp, normalizing, imsave, imread,
                        standImg, resize)
 
+from ..ylcompat import py2
 
 def base64Img(arr):
-    import base64,sys
-    py3 = sys.version_info.major == 3
+    import base64,cv2
     cnt = cv2.imencode('.jpg',arr[:,:,[2,1,0]])[1]
-    if py3:
+    if not py2:
         return base64.encodebytes(cnt[...,0]).decode('utf-8')
     return base64.encodestring(cnt)
 
@@ -91,16 +91,4 @@ def generateBigImgForPaper(imgMa,lengh=1980,border=20,saveName='bigImgForPaper.p
     return big
 
 if __name__ == '__main__':
-
-    import pandas as pd
-    df = pd.DataFrame({
-                       0:list(range(5)),
-                       1:list(range(10,15)),
-                       'a':list("abcde"),
-                       })
-    df.set_index(0,inplace=True)
-#    e = Evalu('sd','','%s')
-#    e = Evalu('zd','','%s')
-#    ed = Evalu.evalus
-
     pass
