@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+from __future__ import print_function
 
 import os,sys,time
 
@@ -452,7 +453,47 @@ g = SuperG()
 config = dicto()
 cf = config
 
+def prettyFrameLocation(frame):
+    '''
+    get frame return pretty str
+    
+    >>> prettyFrameLocation(frame)
+    "/home/dl/junk/printtAndRootFarme-2018.03.py", line 109, in wlf
+    '''
+    c = frame.f_code
+    return ((colorFormat.b%'File: "%s", line %s, in %s')%
+            ('\x1b[32m%s\x1b[0m'% c.co_filename, '\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name))
 
+def getNameFromCodeObj(code):
+    name = code.co_name
+    filee = code.co_filename
+    if name == '<module>':
+        if filee.startswith('<ipython-input-'):
+            name = 'ipython-input'
+        else:
+            name = '%s'%os.path.basename(filee)
+        name = '\x1b[36m%s\x1b[0m'%name
+    if name == '<lambda>':
+        return 'lambda'
+    return name
+def prettyFrameStack(frame, maxprint=100):
+    '''
+    get frame return pretty str
+    
+    >>> prettyFrameLocation(frame)
+    __init__ <-f <-ff <-demo.py
+    '''
+    fs = getFatherFrames(frame)
+    ns = [getNameFromCodeObj(f.f_code) for f in fs]
+    if 'execfile' in ns:
+        ns = ns[:ns.index('execfile')]
+    if '_call_with_frames_removed' in ns:
+        ns = ns[:ns.index('_call_with_frames_removed')]
+        
+    maxprint = 100
+    s = ' <-'.join(ns)
+    s = s if len(s) <= maxprint else (s[:maxprint-3]+'...')
+    return s
 
 class LocalAndGlobal(dicto):
     '''
@@ -497,16 +538,11 @@ class LocalAndGlobal(dicto):
         self.l = self.local = local
         if printt:
             print('')
-            c = code
-            print(((colorFormat.b%'File: "%s", line %s, in %s')%('\x1b[32m%s\x1b[0m'% c.co_filename, '\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name)))
+            prettyStr = prettyFrameLocation(frame)
+            print(prettyStr)
             fs = getFatherFrames(frame)
             self.fs = fs
-            ns = [getNameFromCodeObj(f.f_code) for f in fs]
-            if 'execfile' in ns:
-                ns = ns[:ns.index('execfile')]
-            MAX_PRINT_LEN = 100
-            s = ' <-'.join(ns)
-            s = s if len(s) <= MAX_PRINT_LEN else (s[:MAX_PRINT_LEN-3]+'...')
+            s = prettyFrameStack(frame)
             print((colorFormat.b%'Stacks: '+colorFormat.r%s))
             print((colorFormat.b%'Locals: '))
             from boxx import tree
@@ -518,19 +554,6 @@ def getFatherFrames(frame):
         frame = frame.f_back
     return fs
 
-def getNameFromCodeObj(code):
-    name = code.co_name
-    filee = code.co_filename
-    
-    if name == '<module>':
-        if filee.startswith('<ipython-input-'):
-            name = 'ipython-input'
-        else:
-            name = '%s'%os.path.basename(filee)
-        name = '\x1b[36m%s\x1b[0m'%name
-    if name == '<lambda>':
-        return 'lambda'
-    return name
 
 class Pdicto(dicto):
     def __call__(self, depth=0, printt=True):
@@ -540,6 +563,62 @@ class Pdicto(dicto):
         lc(depth+1, printt)
 p = Pdicto()
 lc = LocalAndGlobal()
+
+
+class withprint():
+    '''
+    使用with结构来打印变量值
+    仍旧处于实验阶段
+    In interactive mod,var may not detected in following cases：
+        1. var is int and < 256
+        2. 变量名存在过 而且`id(var)` 也没有变化
+    
+        >>> with withprint():
+        >>>     a = 3.14
+    '''
+    def __init__(self):
+        self.locs = {}
+    def __enter__(self):
+        f = sys._getframe(1)
+        ind = id(f)
+        self.locs[ind] = (f.f_locals).copy()
+        return self
+    def __exit__(self, typee, value, traceback):
+        f = sys._getframe(1)
+        ind = id(f)
+        locsb = self.locs[ind]
+        self.locs.pop(ind)
+        locs = f.f_locals
+        kvs = []
+        newVars = []
+        for k in locs:
+            if k in locsb:
+                if not (locsb[k] is locs[k]):
+                    kvs.append((k, locs[k]))
+            else:
+                kvs.append((k, locs[k]))
+                newVars.append(k)
+        print()
+        from .toolTools import increase
+        count = increase('boxxx.withprint id:%s'%id(self))
+        if count : 
+            print(colorFormat.p%(str(count+1)+'st')+colorFormat.b%' times ', end='')
+        print(colorFormat.b%'withprint from %s'%prettyFrameLocation(f))
+
+        if len(kvs):
+            print(colorFormat.b% 'New Vars: ', end='')
+            if len(newVars):
+                print((', '.join([colorFormat.p%k for k in newVars])))
+            else:
+                print((colorFormat.b% 'None'))
+            print((colorFormat.b% "All Vars's Values (ps.some base object may not detected):"))
+            from boxx import tree
+            tree(dict(kvs))
+        else:
+            print((colorFormat.r% 'No detected any Vars:'+
+                   '\n    id(var) may not change in interactive mod if var is int and < 256 \n'+
+                   '    `help(withprint)` for more infomation'))
+wp = withprint()
 
 if __name__ == "__main__":
     colorFormat.pall()
