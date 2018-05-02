@@ -14,4 +14,4 @@ install:
 #  - pip install boxx/
 # command to run tests
 script: 
-  - yllab.py
+  - python yllab.py
