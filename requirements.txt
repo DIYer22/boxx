@@ -1,9 +1,9 @@
-scikit_image
 numpy
-imageio
-pandas
+scikit_image
 matplotlib
+pandas
+imageio
 py-heat
 snakeviz
-opencv-python
+fn
 pyopengl

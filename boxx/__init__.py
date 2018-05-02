@@ -2,13 +2,19 @@
 
 from __future__ import unicode_literals
 
-#import sys
-#from os.path import abspath,join,dirname
-#
-#yllibPath = abspath(join(dirname(abspath(__file__)),'.'))
-#if yllibPath not in sys.path:
-#    sys.path = [yllibPath] + sys.path
-    
+'''
+Box-X is a develop-time Toolbox for Python.
+Espacially for Scientific Computing and Computer Vision.
+'''
+__version__ = "0.8"
+__short_description__ = "Box-X is a develop-time Toolbox for Python. Espacially for Scientific Computing and Computer Vision."
+__license__ = "MIT"
+__author__ = "DIYer22"
+__author_email__ = "ylxx@live.com"
+__maintainer__ = "DIYer22"
+__maintainer_email__ = "ylxx@live.com"
+__github_username__ = "DIYer22"
+
 from . import tool
 from . import yldb
 from . import ylsys
@@ -29,7 +35,5 @@ from .ylnp import *
 
 
 if __name__ == '__main__':
-    print((yldb, py3, tool, ylimg, ylnp))
-    tool.importAllFunCode('yl')
     pass
 
