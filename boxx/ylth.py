@@ -8,6 +8,8 @@ from __future__ import unicode_literals
 from . import *
 from .ylsys import cpun, cloud, cuda, usecuda
 from .ylimg import npa
+from .tool import FunAddMagicMethod
+
 from collections import OrderedDict
 import torch
 from torch.autograd import Variable
@@ -62,15 +64,21 @@ if usecpu:
     
     rawDataLoader = th.utils.data.DataLoader
     from functools import wraps    
-    def warp(f):
-        @wraps(f)
-        def DataLoader(*l, **kv):
-            if 'pin_memory' in kv:
-                kv.pop('pin_memory')
-            r = f(*l, **kv)
-            return r
-        return DataLoader
-    th.utils.data.DataLoader = warp(th.utils.data.DataLoader)
+#    def warp(f):
+#        @wraps(f)
+#        def DataLoader(*l, **kv):
+#            if 'pin_memory' in kv:
+#                kv.pop('pin_memory')
+#            r = f(*l, **kv)
+#            return r
+#        return DataLoader
+    
+    class DataLoaderForCPU(rawDataLoader):
+        def __init__(self, *l, **kv):
+            rawDataLoader.__init__(self, *l, **kv)
+            self.pin_memory = False
+        
+    th.utils.data.DataLoader = DataLoaderForCPU
     
     rawThLoad = torch.load
     def torchLoad(*l, **kv):
@@ -92,8 +100,17 @@ if usecpu:
     nn.Module.load_state_dict = tryLoad
     
 def tht(t):
-    return th.from_numpy(npa-t).cuda()
-    
+    if not isinstance(t, torch.tensor._TensorBase):
+        t = th.from_numpy(npa-t).cuda()
+    return t
+tht = FunAddMagicMethod(tht)
+
+def var(t):
+    t = tht(t)
+    t = Variable(t)
+    return t
+var = FunAddMagicMethod(var)
+
 if __name__ == '__main__':
     l = ['LongTensor',
      'DoubleTensor',

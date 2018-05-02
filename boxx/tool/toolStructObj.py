@@ -2,10 +2,13 @@
 
 from __future__ import unicode_literals
 from ..ylsys import py2
+from ..ylcompat import istype
+import inspect
 
 def listToBatch(listt, batch):
     '''
     将一段序列按照每batch个元素组成一组
+    
     >>> listToBatch(range(8),3)
     [(0, 1, 2), (3, 4, 5), (6, 7)]
     '''
@@ -34,6 +37,7 @@ def addCall(instance):
 
 class FunAddMagicMethodCore(dict):
     '''magic 未解之谜 疑惑
+    
     >>> z=FunAddMagicMethod(zip)
     >>> isinstance(z,type(zip)) => True
     >>> isinstance(z,dict) => True
@@ -141,7 +145,7 @@ def typestr(instance):
     return typeNameOf(type(instance))
 
 
-def nextIter(iterr, raiseException=True):
+def nextiter(iterr, raiseException=True):
     '''
     do next(iter(iterr)) then return resoult
     
@@ -155,6 +159,33 @@ def nextIter(iterr, raiseException=True):
         raise StopIteration('Iterable is empty!')
     return re
 
+def getfathers(objOrType):
+    '''
+    获得 objOrType 的所有父类，以 tuple 返回
+    
+    Parameters
+    ----------
+    objOrType : obj or type (includ classobj in python 2)
+        if is obj, 则自动转换为 type(obj)
+    '''
+    if not istype(objOrType):
+        objOrType = type(objOrType)
+    return inspect.getmro((objOrType))
+getfathers = FunAddMagicMethod(getfathers)
+
+def getfather(objOrType): 
+    '''
+    获得 objOrType 的父类
+    
+    Parameters
+    ----------
+    objOrType : obj or type (includ classobj in python 2)
+        if is obj, 则自动转换为 type(obj)
+    '''
+    return getfathers(objOrType)[0]
+getfather = FunAddMagicMethod(getfather)
+
+    
 typestr = FunAddMagicMethod(typestr)
 if __name__ == "__main__":
 

@@ -64,6 +64,8 @@ elif windowsYl:
 class __TmpboxxWithCall(str):
     '''
     the tmp dir for boxx 
+    use tmpboxx() to get tmpdir 
+    if not exist then will auto mkdir of boxxTmp in `/tmp`
     '''
     def __call__(self):
         if not os.path.isdir(self):

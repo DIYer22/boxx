@@ -10,8 +10,8 @@ from .toolLog import (stdout, log, tounicode, shortDiscrib, ignoreWarning, LogEx
 from .toolLog import colorFormat, pblue, pred, pdanger, perr, pinfo
 from .toolLog import localTimeStr, gmtTimeStr, timeGap
 
-from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr,
-                            nextIter, listToBatch, FunAddMagicMethod)
+from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather,
+                            nextiter, listToBatch, FunAddMagicMethod)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
                     loadData, fileJoinPath)

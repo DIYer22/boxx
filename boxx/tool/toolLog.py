@@ -479,7 +479,7 @@ class LocalAndGlobal(dicto):
             self.c = self.code = frame.f_code
             self.l = self.local = locals()
             self.f = self.frame = frame
-            self.fs = __getFatherFrames__(frame) 
+            self.fs = getFatherFrames(frame) 
     '''
     def __call__(self, depth=0, printt=True):
         if depth is False:
@@ -499,9 +499,9 @@ class LocalAndGlobal(dicto):
             print('')
             c = code
             print(((colorFormat.b%'File: "%s", line %s, in %s')%('\x1b[32m%s\x1b[0m'% c.co_filename, '\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name)))
-            fs = __getFatherFrames__(frame)
+            fs = getFatherFrames(frame)
             self.fs = fs
-            ns = [__getNameFromCodeObj__(f.f_code) for f in fs]
+            ns = [getNameFromCodeObj(f.f_code) for f in fs]
             if 'execfile' in ns:
                 ns = ns[:ns.index('execfile')]
             MAX_PRINT_LEN = 100
@@ -510,15 +510,15 @@ class LocalAndGlobal(dicto):
             print((colorFormat.b%'Stacks: '+colorFormat.r%s))
             print((colorFormat.b%'Locals: '))
             from boxx import tree
-            tree(local, 1)
-def __getFatherFrames__(frame):
+            tree(local, 1, maxprint=None)
+def getFatherFrames(frame):
     fs = []
     while frame:
         fs.append(frame)
         frame = frame.f_back
     return fs
 
-def __getNameFromCodeObj__(code):
+def getNameFromCodeObj(code):
     name = code.co_name
     filee = code.co_filename
     
@@ -532,13 +532,13 @@ def __getNameFromCodeObj__(code):
         return 'lambda'
     return name
 
-class __P__(dicto):
+class Pdicto(dicto):
     def __call__(self, depth=0, printt=True):
         if depth is False:
             printt = depth
             depth = 0
         lc(depth+1, printt)
-p = __P__()
+p = Pdicto()
 lc = LocalAndGlobal()
 
 if __name__ == "__main__":

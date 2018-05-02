@@ -3,16 +3,34 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
-import sys
 from .ylsys import py2
+
+
+printf = print
+
 
 if py2:
     unicode = __builtins__['unicode']
 else:
     unicode = str
 
+def isstr(s):
+    '''
+    `isinstance(s, str)` for compatibility both python 2/3
+    '''
+    return isinstance(s, (str, unicode))
 
-printf = print
+
+class Classobj:
+    ''' 兼容 python 2 的 classobj'''
+    pass
+classobj = type(Classobj)
+def istype(objOrType):
+    ''' 
+    `isinstance(objOrType, type)` for compatibility both python 2/3
+    '''
+    return isinstance(objOrType, (type, classobj))
+
 
 if not py2 and 0:
     __listRange__ = range

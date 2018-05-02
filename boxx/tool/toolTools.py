@@ -97,7 +97,8 @@ def replaceAllInRoot(old, new, root='.', types='py'):
     listdirWithFun(root, replace)
 
 def findInRoot(pattern, root='.', maxsize=1, types=None):
-    '''在root及子路径下的所有文件中 查找 pattern。存在 则打印出对应文件的那一行。
+    '''
+    在root及子路径下的所有文件中 查找 pattern。存在 则打印出对应文件的那一行。
     
     Parameters
     ----------

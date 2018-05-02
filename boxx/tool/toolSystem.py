@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import sys, os, time
 from ..ylsys import py2, tmpYl
+from ..ylcompat import isstr
 
 def importAllFunCode(mod=None):
     '''
@@ -111,15 +112,18 @@ class timeit():
     记时2 :
         >>> with timeit():
         >>>     fun()
-        
+        加个 0 即可方便地关闭计时，即 with timeit(0)
+    
     测试code时间 :
         >>> timeit(your_code)
     '''
     def __init__(self,code=''):
         self.begin = time.time()
-        if len(code):
-            exec(code)
-            print(self.s)
+        self.log = isstr(code) or bool(code)
+        if isstr(code):
+            if len(code):
+                exec(code)
+                print(self.s)
     def __call__(self):
         '''返回时间差'''
         return time.time()-self.begin
@@ -135,7 +139,8 @@ class timeit():
     @property
     def p(self):
         '''直接打印出来'''
-        print(self.s)
+        if self.log:
+            print(self.s)
 
 def heatMap(pathOrCode):
     '''显示python代码的时间热力图

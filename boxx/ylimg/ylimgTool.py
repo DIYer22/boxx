@@ -2,11 +2,12 @@
 
 from __future__ import unicode_literals, print_function
 
-from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, nextIter
+from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, nextiter, getfathers
 from ..tool.toolLog import colorFormat, tounicode, LogLoopTime, shortDiscrib
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl
+from ..ylcompat import istype
 
 import os
 import glob
@@ -198,6 +199,8 @@ def ndarrayToImgLists(arr):
     '''
     arr = np.squeeze(arr)
     ndim = arr.ndim
+    if not ndim:
+        return []
     if arr.ndim==2 or (arr.ndim ==3 and arr.shape[-1] in [3,4]):
          return [arr]
     if arr.shape[-1] == 2: # 二分类情况下自动转换
@@ -217,6 +220,7 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
         res = []
     for x in l:
         typeName = typestr(x)
+        fathersStr = str(getfathers(x))
         if typeName in typesToNumpyFuns:
             ndarray = typesToNumpyFuns[typeName](x)
             res.extend(doNumpy(ndarray))
@@ -226,7 +230,7 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
             listToImgLists(list(x.values()),res=res,doNumpy=doNumpy)
         elif isinstance(x,np.ndarray):
             res.extend(doNumpy(x))
-        elif typeName.startswith('torch.utils.data') or typeName.startswith('torchvision.datasets'):
+        elif ('torch.utils.data') in fathersStr or ('torchvision.datasets') in fathersStr:
             seq = unfoldTorchData(x)
             if seq is not False:
                 listToImgLists(seq,res=res,doNumpy=doNumpy)
@@ -384,7 +388,7 @@ def unfoldTorchData(seq):
     '''
     import torch
     if isinstance(seq, torch.utils.data.DataLoader):
-        seq = [('DataLoader.next', nextIter(seq, raiseException=False))]
+        seq = [('DataLoader.next', nextiter(seq, raiseException=False))]
     elif isinstance(seq, torch.utils.data.Dataset):
         seq = [(colorFormat.b%'Dataset[0/%d]'%len(seq), seq[0])]
     else:
@@ -401,11 +405,10 @@ def unfoldAble(seq):
         elif isinstance(seq,(dict)):
             seq = list(seq.items())
         elif isinstance(seq, types.GeneratorType):
-            seq = [('Generator', nextIter(seq, raiseException=False))]
+            seq = [('Generator', nextiter(seq, raiseException=False))]
         return seq
-    
-    tys = typestr(seq)
-    if tys.startswith('torch.utils.data') or tys.startswith('torchvision.datasets'):
+    fathersStr = str(getfathers(seq))
+    if ('torch.utils.data') in fathersStr or ('torchvision.datasets') in fathersStr:
         return unfoldTorchData(seq)
     return False
 
@@ -556,6 +559,17 @@ def treem(mod, types=None, deep=None, __leftStrs=None, __name='/',
     __leftStrs.pop()
 treem = FunAddMagicMethod(treem)
 
+def getFunDoc(f):
+    if '__doc__' in dir(f) and f.__doc__:
+        return ' : %s'%(colorFormat.black%tounicode(f.__doc__.strip()))
+    return ''
+
+attrLogFuns = {
+'method-wrapper': lambda x:'method-wrapper%s'%getFunDoc(x),
+'builtin_function_or_method':lambda x:'builtin-method%s'%getFunDoc(x),
+'instancemethod':lambda x:'instancemethod%s'%getFunDoc(x),
+'buffer':lambda x:'buffer : %s'%(colorFormat.b%tounicode(x)),
+}
 
 def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',__islast=None,__deepNow=0, __sets=None):
     '''
@@ -590,7 +604,10 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
                 seq = list(enumerate(seq))
             elif isinstance(seq,(dict)):
                 seq = list(seq.items())
-                seq.sort(key=lambda x:x[0])
+                try: # key may not be sort
+                    seq.sort(key=lambda x:x[0])
+                except:
+                    pass
     else:
         return 
     __leftStr.append('    'if __islast else '│   ')
@@ -600,21 +617,10 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
                __islast=(i==len(seq)-1), __deepNow=__deepNow+1,__sets=__sets)#leafColor=colorFormat.black)
     __leftStr.pop()
 
-def getFunDoc(f):
-    if '__doc__' in dir(f) and f.__doc__:
-        return ' : %s'%(colorFormat.black%tounicode(f.__doc__))
-    return ''
-
-__attrLogFun__ = {
-'method-wrapper': lambda x:'method-wrapper%s'%getFunDoc(x),
-'builtin_function_or_method':lambda x:'builtin-method%s'%getFunDoc(x),
-'instancemethod':lambda x:'instancemethod%s'%getFunDoc(x),
-'buffer':lambda x:'buffer : %s'%(colorFormat.b%tounicode(x)),
-}
 
 def dira(instance, pattern=None, deep=None, maxDocLen=50):
     '''
-    以树的结构 分析instance的所有 attrs 
+    以树的结构 分析instance的所有 attrs, 并展示父类的继承链
     attr name用红色；str(instance.attr)用蓝色；
     如果attr 为instancemethod，builtin_function_or_method，method-wrapper之一
     instance.attr.__doc__用黑色 
@@ -633,8 +639,20 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50):
         能显示的最深深度, 默认不限制
         
     ps.可在__attrLogFuns中 新增常见类别
-    pps.不展开 ('__globals__', 'func_globals')
+    pps.不展开 ('__globals__', 'func_globals', __builtins__)
     '''
+    
+    def getFathersStr(obj):
+        fas = getfathers(obj)
+        fas = [colorFormat.p%typeNameOf(fa) for fa in fas]
+        s = 'Type' if istype(obj)  else 'Instance'
+        s = colorFormat.r % s
+        s += ' of '+ (' <-').join(fas)
+        return s
+    s = getFathersStr(instance)
+    print((colorFormat.b%'Classes: \n'+'└── '+s+'\n'))
+    print((colorFormat.b%'Attrs: '))
+
     if isinstance(pattern, int):
         deep = pattern
         pattern = None
@@ -645,26 +663,41 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50):
         print('Filter by pattern: "%s"'%(colorFormat.r%pattern))
     def getAttr(attr):
         try:
-#            if '__getattribute__' in dirs or 1:
-            return instance.__getattribute__(attr)
-        except (AttributeError, TypeError):
-            pass
-        except KeyError:
-            pass
-        try:
-            if '__getattr__' in dirs:
-                return instance.__getattr__(attr)
-        except (AttributeError, TypeError):
-            return colorFormat.red % 'Both "getattr" and "getattribute" are not work'
-        return 'No "getattr" or "getattribute"'
+            try :
+                return getattr(instance, attr)
+            except :
+                pass
+            try:
+    #            if '__getattribute__' in dirs or 1:
+                return instance.__getattribute__(attr)
+            except (TypeError): # may be type
+                try :
+                    return instance.__getattribute__(instance, attr)
+                except :
+                    pass
+                
+            except (AttributeError, KeyError):
+                pass
+            try:
+                if '__getattr__' in dirs:
+                    return instance.__getattr__(attr)
+            except (AttributeError, TypeError):
+                return colorFormat.p % '【"getattr"/"getattribute" are not work】'
+            return  colorFormat.p % '【No "getattr" or "getattribute"】'
+        except Exception as e:
+            return colorFormat.p % '【"getAttr" fail, %s(%s)】'%(typestr(e),e)
     l = list(map(getAttr,dirs))
     def filterMethodName(attrName, attr):
         typee = type(attr)
         typn = typeNameOf(typee)
-        if typn in __attrLogFun__:
-            return __attrLogFun__[typn](attr)
+        if typn in attrLogFuns:
+            return attrLogFuns[typn](attr)
         if attrName in ('__globals__', 'func_globals'):
             return colorFormat.b%('globals-dict %d'%len(attr))
+        elif attrName in ('__builtins__', ):
+            return colorFormat.b%('builtins-dict %d'%len(attr))
+        elif attrName in ('__all__',):
+            return colorFormat.b%('all-list %d'%len(attr))
         return attr
     l = list(map(filterMethodName,dirs,l))
     dic = dict(list(zip(dirs,l)))    
