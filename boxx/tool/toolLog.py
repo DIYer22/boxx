@@ -212,7 +212,7 @@ class Log():
     __sub__ = __call__
     __truediv__ = __div__
 log = FunAddMagicMethod(printf)
-
+printt = log
 
 class LogAndSaveToList(list):
     '''
@@ -565,7 +565,7 @@ def getNameFromCodeObj(code, pretty=True):
         if name == '<lambda>':
             return 'lambda'
     return name
-def prettyFrameStack(frame=0, maxprint=200):
+def prettyFrameStack(frame=0, endByMain=True, maxprint=None):
     '''
     get frame return pretty str of stack
     
@@ -576,10 +576,15 @@ def prettyFrameStack(frame=0, maxprint=200):
     ----------
     frame : frame or int, default 0
         if int:相对于调用此函数frame的 int 深度的对应frame
+    endByMain : bool, default True
+        为 True 则在第一个 frame.f_locals[‘__name__’] == ‘__main__’ 处停止搜寻 
+        目的是去除 IPython 自身多余的 Call Stack
     '''
+    if frame is False and endByMain:
+        frame, endByMain = 0, False
     if isinstance(frame, int):
         frame = sys._getframe(1 + frame)
-    fs = getFatherFrames(frame)
+    fs = getFatherFrames(frame, endByMain=endByMain)
     ns = [getNameFromCodeObj(f.f_code) for f in fs]
     if 'execfile' in ns:
         ns = ns[:ns.index('execfile')]
@@ -587,7 +592,7 @@ def prettyFrameStack(frame=0, maxprint=200):
         ns = ns[:ns.index('_call_with_frames_removed')]
         
     s = ' <-'.join(ns)
-    s = s if len(s) <= maxprint else (s[:maxprint-3]+'...')
+    s = shortDiscrib(s, maxlen=maxprint)
     return s
 
 def generaPAndLc():
@@ -701,7 +706,7 @@ def generaPAndLc():
     out = LocalAndGlobal(out = True)
     return p, lc, out
 p, lc, out = generaPAndLc()
-pp, lcc, outt = generaPAndLc()
+#pp, lcc, outt = generaPAndLc()
 
 class withprint():
     '''

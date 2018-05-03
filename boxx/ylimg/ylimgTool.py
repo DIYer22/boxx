@@ -726,8 +726,7 @@ def what(anything, full=False):
     print()
     print((colorFormat.b%'Document: \n'+'└── '+tabstr(doc, 5)+'\n'))    
 
-    tys = typestr(anything)
-    innerStruct = tys in StructLogFuns
+    innerStruct = isinstance(anything, (list,tuple,dict)) or (typestr(anything) in StructLogFuns)
     if innerStruct:
         print((colorFormat.b%'Inner Struct:'))
         tree(anything, maxprint=not(full) and 12)

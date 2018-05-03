@@ -98,7 +98,7 @@ if ifTest(getShapes) and len(glob(imgGlob)):
         
 #tests = autoSegmentWholeImg
 if ifTest(autoSegmentWholeImg):
-    img = da.astronaut()
+    img = sda.astronaut()
     hh,ww = 256,256
     hh,ww = 128,128
     resoult = autoSegmentWholeImg(img,(hh,ww),lambda x:x.mean(2)*getWeightCore(hh,ww),

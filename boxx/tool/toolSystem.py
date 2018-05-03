@@ -262,6 +262,8 @@ def getFatherFrames(frame=0, endByMain=True):
         为 True 则在第一个 frame.f_locals['__name__'] == '__main__' 处停止搜寻
         目的是去除 IPython 自身多余的 Call Stack
     '''
+    if frame is False and endByMain:
+        frame, endByMain = 0, False
     if isinstance(frame, int):
         frame = sys._getframe(1 + frame)
     fs = []
@@ -287,6 +289,7 @@ def getRootFrame(frame=0, endByMain=True):
     '''
     fs = getFatherFrames(frame=frame+1, endByMain=endByMain)
     return fs[-1]
+
 
 if __name__ == "__main__":
 

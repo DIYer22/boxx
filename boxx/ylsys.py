@@ -16,10 +16,7 @@ class SystemInfo():
     '''
     os = sys.platform
     # todo
-    qt = True
-    ipython = True
     gui = True
-    
     
     @property
     def ip(self):
@@ -34,6 +31,29 @@ class SystemInfo():
         return platform.node()
 sysi = SystemInfo()
 
+def getIPytonConfig():
+    try:
+        cfg = get_ipython().config
+        return cfg
+    # to do 
+        if cfg['IPKernelApp']['parent_appname'] == 'ipython-notebook':
+            return 'jn'
+        else:
+            return 'qt'
+    except (NameError,KeyError):
+        return None
+
+class pyi():
+    config = getIPytonConfig()
+    
+    cmdipython = 'IPython' in sys.modules
+    gui = 'ipykernel' in sys.modules
+
+    ipython = cmdipython or gui
+    cmd = not ipython
+    
+    # to do
+    qt = jn = gui
 pyv = sys.version_info.major
 py3 = (pyv == 3)
 py2 = (pyv == 2)

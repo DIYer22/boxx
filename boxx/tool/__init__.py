@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 import os, sys, time
 from ..ylsys import py2
 
-from .toolLog import (stdout, log, logg, tounicode, shortDiscrib, discrib, getDoc, tabstr, ignoreWarning, LogException, 
+from .toolLog import (stdout, log, printt, logg, tounicode,
+                      shortDiscrib, discrib, getDoc, tabstr, ignoreWarning, LogException, 
                      LogLoopTime, SuperG, g, cf, p, lc, out)
 from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo
 from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, withprint, wp
@@ -21,7 +22,7 @@ load_data = loadData
 
 from .toolSystem import (importAllFunCode, impt, tryImport, FakeModule, crun, frun, 
                         timeit, heatMap, getArgvDic, softInPath, addPathToSys)
-from .toolSystem import getRootFrame, getFatherFrames
+from .toolSystem import getRootFrame, getFatherFrames#, exceptionHook
 
 from .toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, retry)
