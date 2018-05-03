@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from .ylimgTool import sk, sio, np, plt, da
-from .ylimgTool import (show, showb, shows, loga, tree, treem, treea, tprgb, 
-                        torgb, dira, mapp, normalizing, norma, imsave, imread, npa, 
+from .ylimgTool import sk, sio, np, plt, sda
+from .ylimgTool import (show, showb, shows, loga, tree, treem, treea, dira, what, tprgb, 
+                        torgb, mapp, normalizing, norma, imsave, imread, npa, 
                        getShapes, greyToRgb, resize, histEqualize)
 from .ylimgTool import (uint8, randomm , r, labelToColor,getDefaultColorList,
                        standImg, getMeanStd)

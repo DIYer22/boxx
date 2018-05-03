@@ -249,6 +249,45 @@ def addPathToSys(_file_, pathToJoin='.'):
     if apath not in sys.path:
         sys.path.append(apath)
     return apath
+
+def getFatherFrames(frame=0, endByMain=True):
+    '''
+    返还 frame 的所有的父 frame 即 Call Stack
+    
+    Parameters
+    ----------
+    frame : frame or int, default 0
+        if int:相对于调用此函数frame的 int 深度的对应frame
+    endByMain : bool, default True
+        为 True 则在第一个 frame.f_locals['__name__'] == '__main__' 处停止搜寻
+        目的是去除 IPython 自身多余的 Call Stack
+    '''
+    if isinstance(frame, int):
+        frame = sys._getframe(1 + frame)
+    fs = []
+    while frame:
+        fs.append(frame)
+        if endByMain:
+            if '__name__' in frame.f_locals and frame.f_locals['__name__'] == '__main__':
+                break
+        frame = frame.f_back
+    return fs
+
+def getRootFrame(frame=0, endByMain=True):
+    '''
+    返还 frame 的root frame 即 interactive 所在的 frame
+    
+    Parameters
+    ----------
+    frame : frame or int, default 0
+        if int:相对于调用此函数frame的 int 深度的对应frame
+    endByMain : bool, default True
+        为 True 则在第一个 frame.f_locals['__name__'] == '__main__' 处停止搜寻
+        目的是去除 IPython 自身多余的 Call Stack
+    '''
+    fs = getFatherFrames(frame=frame+1, endByMain=endByMain)
+    return fs[-1]
+
 if __name__ == "__main__":
 
     pass

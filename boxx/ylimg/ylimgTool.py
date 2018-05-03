@@ -3,11 +3,11 @@
 from __future__ import unicode_literals, print_function
 
 from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, nextiter, getfathers
-from ..tool.toolLog import colorFormat, tounicode, LogLoopTime, shortDiscrib
+from ..tool.toolLog import colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
+from ..tool.toolLog import tabstr, getDoc, shortDiscrib, discrib
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl
-from ..ylcompat import istype
 
 import os
 import glob
@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import types
 import skimage as sk
 from skimage import io as sio
-from skimage import data as da
+from skimage import data as sda
 from skimage.io import imread
 from skimage.io import imsave
 from skimage.transform import resize 
@@ -321,6 +321,7 @@ def shows(*imgs):
 shows = FunAddMagicMethod(shows)
 
 
+
 __torchShape = lambda x:colorFormat.r%'%s %s'%(str(x.shape),x.type())
 StructLogFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
@@ -364,7 +365,7 @@ StructLogFuns = {
     
     'mxnet.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
     
-    'pandas.core.frame.DataFrame':lambda x:colorFormat.r%('DataFrame%s.%s'%(x.shape, str(x.columns))) 
+    'pandas.core.frame.DataFrame':lambda x:clf.r%'DataFrame(col=%d, Index=[%s], dtype="%s")'%(x.shape[0], ', '.join(map(str,x.columns)), x.columns.dtype)
     }
 
 def discribOfInstance(instance,leafColor=None,MAX_LEN=45):
@@ -559,15 +560,16 @@ def treem(mod, types=None, deep=None, __leftStrs=None, __name='/',
     __leftStrs.pop()
 treem = FunAddMagicMethod(treem)
 
-def getFunDoc(f):
-    if '__doc__' in dir(f) and f.__doc__:
-        return ' : %s'%(colorFormat.black%tounicode(f.__doc__.strip()))
+def getFunDocForDira(f):
+    d = getDoc(f)
+    if d:
+        return ' : %s'%(colorFormat.black%tounicode(d.strip()))
     return ''
 
 attrLogFuns = {
-'method-wrapper': lambda x:'method-wrapper%s'%getFunDoc(x),
-'builtin_function_or_method':lambda x:'builtin-method%s'%getFunDoc(x),
-'instancemethod':lambda x:'instancemethod%s'%getFunDoc(x),
+'method-wrapper': lambda x:'method-wrapper%s'%getFunDocForDira(x),
+'builtin_function_or_method':lambda x:'builtin-method%s'%getFunDocForDira(x),
+'instancemethod':lambda x:'instancemethod%s'%getFunDocForDira(x),
 'buffer':lambda x:'buffer : %s'%(colorFormat.b%tounicode(x)),
 }
 
@@ -589,7 +591,7 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
         __leftStr = [] 
         __islast = 1
         __sets = set()
-        doc = '' if instance is None else getFunDoc(instance)
+        doc = '' if instance is None else getFunDocForDira(instance)
         if len(doc) > maxDocLen:
             doc = doc[:maxDocLen-3]+'...'
         s=colorFormat.b%('%d attrs%s'%(len(seq), doc.replace('\n','↳').replace(' :',',',1)))
@@ -618,7 +620,7 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
     __leftStr.pop()
 
 
-def dira(instance, pattern=None, deep=None, maxDocLen=50):
+def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=True):
     '''
     以树的结构 分析instance的所有 attrs, 并展示父类的继承链
     attr name用红色；str(instance.attr)用蓝色；
@@ -641,18 +643,11 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50):
     ps.可在__attrLogFuns中 新增常见类别
     pps.不展开 ('__globals__', 'func_globals', __builtins__)
     '''
+    if __printClassFathers:
+        s = prettyClassFathers(instance)
+        print((colorFormat.b%'Classes: \n'+'└── '+s+''))
     
-    def getFathersStr(obj):
-        fas = getfathers(obj)
-        fas = [colorFormat.p%typeNameOf(fa) for fa in fas]
-        s = 'Type' if istype(obj)  else 'Instance'
-        s = colorFormat.r % s
-        s += ' of '+ (' <-').join(fas)
-        return s
-    s = getFathersStr(instance)
-    print((colorFormat.b%'Classes: \n'+'└── '+s+'\n'))
     print((colorFormat.b%'Attrs: '))
-
     if isinstance(pattern, int):
         deep = pattern
         pattern = None
@@ -705,6 +700,43 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50):
 
 dira = FunAddMagicMethod(dira)
 treea = dira
+
+def what(anything, full=False):
+    '''
+    tell you what's this by
+    pretty print `Document`, `Classes`, `Attributes` of anything.
+    
+    a magic tool to learn new Python Package
+
+    Parameters
+    ----------
+    anything : anything in Python
+        decompose all of anything
+    full : bool, default False
+        in default, print lines is less than 10
+        set full to True, print all lines
+    '''
+    tostr = discrib(anything, maxline=not(full) and 10)
+    doc = getDoc(anything) or clf.p%"【Not found document】"
+    doc = discrib(doc, maxline=not(full) and 15)
+    classes = prettyClassFathers(anything)
+    
+    print('-'*15+clf.b%'end of what(' + clf.p%('"%s"'%shortDiscrib(tostr, 20)) + clf.b%')'+'-'*15)
+    dira(anything, deep=2, __printClassFathers=False)
+    print()
+    print((colorFormat.b%'Document: \n'+'└── '+tabstr(doc, 5)+'\n'))    
+
+    tys = typestr(anything)
+    innerStruct = tys in StructLogFuns
+    if innerStruct:
+        print((colorFormat.b%'Inner Struct:'))
+        tree(anything, maxprint=not(full) and 12)
+        print()
+        
+    print((colorFormat.b%'Classes: \n'+'└── '+classes+'\n'))    
+    print((colorFormat.b%'To Str: \n'+'└── "'+tabstr(tostr, 5)+'"\n'))
+
+what = FunAddMagicMethod(what)
 
 def __readShape(n):
     return imread(n).shape

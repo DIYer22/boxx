@@ -59,6 +59,7 @@ class FunAddMagicMethodCore(dict):
         return 'FunAddMagicMethod(%s)'%self[0].__str__()
     __repr__ = __str__
     __sub__ = __call__
+    __truediv__ = __div__
 #    __add__ = __call__
 #    __mul__ = __call__
 #    __eq__ = __call__

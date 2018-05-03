@@ -7,11 +7,19 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7-dev"
+  #- "3.7-dev"
   # PyPy versions
   #- "pypy2.7"
   #- "pypy3.5"
 # command to install dependencies
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      brew update;
+      brew install python3 redis memcached;
+      virtualenv -p python3 ~/py-env;
+      . ~/py-env/bin/activate;
+    fi
+
 install:
   - pip install -r requirements.txt
 #  - pip install boxx/

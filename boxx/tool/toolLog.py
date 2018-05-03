@@ -3,11 +3,14 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
-import os,sys,time
-
-from .toolStructObj import addCall,dicto,FunAddMagicMethod
+from .toolStructObj import addCall, dicto, FunAddMagicMethod, getfathers, typeNameOf
+from .toolSystem import getRootFrame, getFatherFrames
 from ..ylsys import py2
 from ..ylcompat import printf, unicode
+from ..ylcompat import istype
+
+import os,sys,time
+from collections import defaultdict
 
 def localTimeStr():
     '''
@@ -91,7 +94,9 @@ class colorFormat:
     def printAllColor(s='printAllColor'):
         return [stdout((c+' '*10)[:7]) and pcolor(c,": "+str(s)) for c in frontColorDic] and None
     pall = printAllColor
-    
+
+clf = colorFormat
+
 def tounicode(strr):
     '''
     Python2 中文编码错误解决方案，用于代替str类及函数, 全部换成unicode
@@ -110,20 +115,71 @@ def tounicode(strr):
             return strr.decode('utf-8','replace')
         return unicode(strr)
         
-def shortDiscrib(s, maxlen=60):
+def shortDiscrib(x, maxlen=60):
     '''
     genrate one line discrib str shorter than maxlen.
     if len(s)> maxlen then slice additional str and append '...' 
     BTW. funcation will replace '\n' to '↳'
+    
+    if bool(maxlen) is False, not be short
     '''
-    s = tounicode(s)
-    if len(s) > maxlen:
+    s = tounicode(x).strip()
+    if maxlen and len(s) > maxlen:
         s = s[:maxlen-3]
         s +=  '...'
         if '\x1b[' in s :
             s += '\x1b[0m' * (list(s).count('\x1b'))
     s = s.replace('\n','↳')
     return s
+
+def discrib(x, maxline=20):
+    '''
+    return discrib of x less than maxline.
+    if len(s)> maxline*80 then slice additional str and append '...' 
+    
+    if bool(maxline) is False, return s
+    '''
+    s = tounicode(x)
+    if not maxline:
+        return s
+    enters = s.count('\n')+1
+    n  = len(s)
+    maxlen = maxline * 80
+    if n > maxlen:
+        s = s[:maxlen-6]+'......'
+    elif enters > maxline:
+        s = '\n'.join(s.split('\n')[:maxline]) + '\n......'
+    else:
+        return s
+    if '\x1b[' in s :
+        s += '\x1b[0m' * (list(s).count('\x1b'))
+    return s
+
+def tabstr(s, head=4, firstline=False):
+    '''
+    to tab a block of str for pretty print
+    
+    Parameters
+    ----------
+    head : str or int, default 4
+        the str that to fill the head of each line
+        if value is int, head = ' '*head
+    firstline : bool, default False
+        whether fill the first line 
+    '''
+    if isinstance(head, int):
+        head = ' '*head
+    if firstline:
+        s = head + s
+    return s.replace('\n','\n'+head)
+
+def getDoc(f):
+    '''
+    get document of f, if f don't have __doc__, return None
+    '''
+    if '__doc__' in dir(f) and f.__doc__:
+        return f.__doc__
+    return None
         
 def pcolor(color, *s):
     '''
@@ -147,7 +203,14 @@ def stdout(*l):
         return l[0]
     return l
 
-
+class Log():
+    def __call__(self,*l, **kv):
+        printf(*l, **kv)
+    def __div__(self, x):
+        printf(x)
+        return x
+    __sub__ = __call__
+    __truediv__ = __div__
 log = FunAddMagicMethod(printf)
 
 
@@ -188,7 +251,7 @@ class LogAndSaveToList(list):
             self.append(dic)
         self.append(l)
         return l
-    __sub__ = __lshift__ = __rshift__  = __div__ = __call__
+    __sub__ = __lshift__ = __rshift__  = __div__ = __truediv__ =__call__
     def __repr__(self):
         blue  = '\x1b[%dm%s\x1b[0m'%(frontColorDic['red'],tounicode(len(self) and self[len(self)-1]))
         return '''LogAndSaveToList(printFun=%s, cache=%s) log[-1]: %s'''%(
@@ -377,13 +440,17 @@ class Gs(dict):
         else:
             gsAttrDic[idd].log = on
     def __call__(self, x=None):
-        pblue(x)
+        pretty = False
+        if pretty:
+            loc = prettyFrameLocation(1)
+            pblue('Print by g from %s:'%loc)
+        else:
+            pblue('%s: %s'%(clf.p%'Print by g', x))
         return x
     __sub__ = __call__
     __lshift__ = __call__
     __rshift__ = __call__
-    __div__ = __call__
-        
+    __truediv__ = __div__ = __call__
     
     def __del__(self):
         idd = id(self)
@@ -453,36 +520,65 @@ g = SuperG()
 config = dicto()
 cf = config
 
-def prettyFrameLocation(frame):
+def prettyClassFathers(obj):
+    '''
+    get object or type, return pretty str
+    
+    >>> prettyClassFathers(cf)
+    Instance of boxx.tool.toolStructObj.dicto <-dict <-object
+    '''
+    fas = getfathers(obj)
+    fas = [colorFormat.p%typeNameOf(fa) for fa in fas]
+    s = 'Type' if istype(obj)  else 'Instance'
+    s = colorFormat.r % s
+    s += ' of '+ (' <-').join(fas)
+    return s
+
+def prettyFrameLocation(frame=0):
     '''
     get frame return pretty str
     
     >>> prettyFrameLocation(frame)
     "/home/dl/junk/printtAndRootFarme-2018.03.py", line 109, in wlf
+    
+    Parameters
+    ----------
+    frame : frame or int, default 0
+        if int:相对于调用此函数frame的 int 深度的对应frame
     '''
+    if isinstance(frame, int):
+        frame = sys._getframe(1 + frame)
     c = frame.f_code
     return ((colorFormat.b%'File: "%s", line %s, in %s')%
             ('\x1b[32m%s\x1b[0m'% c.co_filename, '\x1b[32m%s\x1b[0m'% c.co_firstlineno, colorFormat.purple% c.co_name))
 
-def getNameFromCodeObj(code):
+def getNameFromCodeObj(code, pretty=True):
     name = code.co_name
     filee = code.co_filename
-    if name == '<module>':
-        if filee.startswith('<ipython-input-'):
-            name = 'ipython-input'
-        else:
-            name = '%s'%os.path.basename(filee)
-        name = '\x1b[36m%s\x1b[0m'%name
-    if name == '<lambda>':
-        return 'lambda'
+    if pretty:
+        if name == '<module>':
+            if filee.startswith('<ipython-input-'):
+                name = 'ipython-input'
+            else:
+                name = '%s'%os.path.basename(filee)
+            name = '\x1b[36m%s\x1b[0m'%name
+        if name == '<lambda>':
+            return 'lambda'
     return name
-def prettyFrameStack(frame, maxprint=100):
+def prettyFrameStack(frame=0, maxprint=200):
     '''
-    get frame return pretty str
+    get frame return pretty str of stack
     
     >>> prettyFrameLocation(frame)
     __init__ <-f <-ff <-demo.py
+    
+    Parameters
+    ----------
+    frame : frame or int, default 0
+        if int:相对于调用此函数frame的 int 深度的对应frame
     '''
+    if isinstance(frame, int):
+        frame = sys._getframe(1 + frame)
     fs = getFatherFrames(frame)
     ns = [getNameFromCodeObj(f.f_code) for f in fs]
     if 'execfile' in ns:
@@ -490,7 +586,6 @@ def prettyFrameStack(frame, maxprint=100):
     if '_call_with_frames_removed' in ns:
         ns = ns[:ns.index('_call_with_frames_removed')]
         
-    maxprint = 100
     s = ' <-'.join(ns)
     s = s if len(s) <= maxprint else (s[:maxprint-3]+'...')
     return s
@@ -547,12 +642,7 @@ class LocalAndGlobal(dicto):
             print((colorFormat.b%'Locals: '))
             from boxx import tree
             tree(local, 1, maxprint=None)
-def getFatherFrames(frame):
-    fs = []
-    while frame:
-        fs.append(frame)
-        frame = frame.f_back
-    return fs
+
 
 
 class Pdicto(dicto):
@@ -561,6 +651,18 @@ class Pdicto(dicto):
             printt = depth
             depth = 0
         lc(depth+1, printt)
+    def printt(self, x=None):
+        pretty = False
+        if pretty:
+            loc = prettyFrameLocation(1)
+            pblue('Print by p from %s:'%loc)
+        else:
+            pblue('%s: %s'%(clf.p%'Print by p', x))
+        return x
+    __sub__ = printt
+    __lshift__ = printt
+    __rshift__ = printt
+    __truediv__ = __div__ = printt
 p = Pdicto()
 lc = LocalAndGlobal()
 
@@ -577,17 +679,16 @@ class withprint():
         >>>     a = 3.14
     '''
     def __init__(self):
-        self.locs = {}
+        self.locs = defaultdict(lambda:[])
     def __enter__(self):
         f = sys._getframe(1)
         ind = id(f)
-        self.locs[ind] = (f.f_locals).copy()
+        self.locs[ind].append((f.f_locals).copy())
         return self
     def __exit__(self, typee, value, traceback):
         f = sys._getframe(1)
         ind = id(f)
-        locsb = self.locs[ind]
-        self.locs.pop(ind)
+        locsb = self.locs[ind].pop()
         locs = f.f_locals
         kvs = []
         newVars = []

@@ -17,7 +17,7 @@ def ifTest(fun):
 
 TEST_ALL = True
 #TEST_ALL = False
-
+ 
 
 testFun = None
 
@@ -101,7 +101,7 @@ if ifTest(mapmp):
     import multiprocessing as mp
     mpd = mp.dummy
     def npt(rr):
-        for i in range(int(1e4)):
+        for i in range(int(4e3)):
             rr = abs(rr**0.9-rr)
         return rr.sum()
     n = 10
@@ -118,6 +118,7 @@ if ifTest(dira):
     dira(tool, pattern="^[A-Z]")
     dira(pandas.DataFrame(), pattern="^[A-Z]")
     dira(dicto(a=5,b=6), pattern="^va")
+    what([0,{'k':'v'}])
 
 tests = pipe
 if ifTest(pipe):
