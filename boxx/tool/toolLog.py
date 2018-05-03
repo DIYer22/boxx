@@ -590,82 +590,118 @@ def prettyFrameStack(frame=0, maxprint=200):
     s = s if len(s) <= maxprint else (s[:maxprint-3]+'...')
     return s
 
-class LocalAndGlobal(dicto):
-    '''
-    在函数内运行`p()` or `lc()`  
-    则此函数的global和local 变量会载入全局变量 p 中
-    函数的 frame等其他信息 则放入全局变量 lc
-    
-    Parameters
-    ----------
-    depth : int or bool, default 0
-        相对于`p()`所在frame的深度
-        ps.为了使关闭printt简便 若`p(False)` 自动转换为`p(0, False)`
-    printt : bool, default True
-        是否打印
+def generaPAndLc():
+    saveOut = {}
+    class LocalAndGlobal(dicto):
+        '''
+        在函数内运行`p()` or `lc()`  
+        则此函数的global和local 变量会载入全局变量 p 中
+        函数的 frame等其他信息 则放入全局变量 lc
         
-    Effect
-    ----------
-    p : dicto
-        将当前frame的locals()和globals()存入p
-        运行 `p()`, 等价于 p.update(globals());p.update(locals())
-    lc : callabel dicto
-        lc则存储更多、更细致的信息 包含code, frame, frames栈
-        lc 的 items：
-            self.c = self.code = frame.f_code
-            self.l = self.local = locals()
+        Parameters
+        ----------
+        depth : int or bool, default 0
+            相对于`p()`所在frame的深度
+            ps.为了使关闭printt简便 若`p(False)` 自动转换为`p(0, False)`
+        printt : bool, default True
+            是否打印
+            
+        Effect
+        ----------
+        p : dicto
+            将当前frame的locals()和globals()存入p
+            运行 `p()`, 等价于 p.update(globals());p.update(locals())
+        lc : callabel dicto
+            lc则存储更多、更细致的信息 包含code, frame, frames栈
+            lc 的 items：
+                self.c = self.code = frame.f_code
+                self.l = self.local = locals()
+                self.f = self.frame = frame
+                self.fs = getFatherFrames(frame) 
+        '''
+        def __init__(self, out=False):
+            saveOut[id(self)] = out
+        def __call__(self, depth=0, printt=True):
+            if depth is False:
+                printt = depth
+                depth = 0
+            frame = sys._getframe(depth+1)
+            code = frame.f_code
+            p.clear()
+            glob = frame.f_globals
+            local = frame.f_locals
+            p.update(glob)
+            p.update(local)
+                
+            self.c = self.code = code
             self.f = self.frame = frame
-            self.fs = getFatherFrames(frame) 
-    '''
-    def __call__(self, depth=0, printt=True):
-        if depth is False:
-            printt = depth
-            depth = 0
-        frame = sys._getframe(depth+1)
-        code = frame.f_code
-        p.clear()
-        glob = frame.f_globals
-        local = frame.f_locals
-        p.update(glob)
-        p.update(local)
-        self.c = self.code = code
-        self.f = self.frame = frame
-        self.l = self.local = local
-        if printt:
-            print('')
-            prettyStr = prettyFrameLocation(frame)
-            print(prettyStr)
-            fs = getFatherFrames(frame)
-            self.fs = fs
-            s = prettyFrameStack(frame)
-            print((colorFormat.b%'Stacks: '+colorFormat.r%s))
-            print((colorFormat.b%'Locals: '))
-            from boxx import tree
-            tree(local, 1, maxprint=None)
-
-
-
-class Pdicto(dicto):
-    def __call__(self, depth=0, printt=True):
-        if depth is False:
-            printt = depth
-            depth = 0
-        lc(depth+1, printt)
-    def printt(self, x=None):
-        pretty = False
-        if pretty:
-            loc = prettyFrameLocation(1)
-            pblue('Print by p from %s:'%loc)
-        else:
-            pblue('%s: %s'%(clf.p%'Print by p', x))
-        return x
-    __sub__ = printt
-    __lshift__ = printt
-    __rshift__ = printt
-    __truediv__ = __div__ = printt
-p = Pdicto()
-lc = LocalAndGlobal()
-
+            self.l = self.local = local
+            if printt:
+                print('')
+                prettyStr = prettyFrameLocation(frame)
+                print(prettyStr)
+                fs = getFatherFrames(frame)
+                self.fs = fs
+                s = prettyFrameStack(frame)
+                print((colorFormat.b%'Stacks: '+colorFormat.r%s))
+                print((colorFormat.b%'Locals: '))
+                from boxx import tree
+                tree(local, 1, maxprint=None)
+                
+            if saveOut[id(self)]:
+                print()
+                root = getRootFrame()
+                addDic = dict(
+#                        code=code,
+#                        frame=frame,
+#                        local=local,
+#                        glob=glob,
+#                        gl=glob,
+#                        rootGlob=root.f_globals,
+                        )
+                
+                
+                addDic.update(local)
+                same = set(addDic).intersection(set(root.f_globals))
+                
+                addVarStr = ', '.join([colorFormat.p%k for k in addDic if k not in same])
+                if addVarStr:
+                    print(colorFormat.b% '\nVars add to Root Frame by out: '+'\n└── '+ addVarStr)
+                if len(same):
+                    print(colorFormat.r% '\nVars that replaced by out in Root Frame: '+'\n└── '+', '.join([colorFormat.p%k for k in same]))
+                root.f_globals.update(addDic)
+                lc.c = lc.code = code
+                lc.f = lc.frame = frame
+                lc.l = lc.local = local
+                self.clear()
+                self.update(local)
+    
+    
+    
+    class Pdicto(dicto):
+        def __call__(self, depth=0, printt=True):
+            if depth is False:
+                printt = depth
+                depth = 0
+            lc(depth+1, printt)
+        def printt(self, x=None):
+            pretty = False
+            if pretty:
+                loc = prettyFrameLocation(1)
+                pblue('Print by p from %s:'%loc)
+            else:
+                pblue('%s: %s'%(clf.p%'Print by p', x))
+            return x
+        __sub__ = printt
+        __lshift__ = printt
+        __rshift__ = printt
+        __truediv__ = __div__ = printt
+    p = Pdicto()
+    lc = LocalAndGlobal()
+    out = LocalAndGlobal(out = True)
+    return p, lc, out
+p, lc, out = generaPAndLc()
+pp, lcc, outt = generaPAndLc()
 
 class withprint():
     '''

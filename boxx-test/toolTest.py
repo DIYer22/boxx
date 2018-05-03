@@ -22,7 +22,7 @@ TEST_ALL = True
 testFun = None
 
 tests = [testFun]
-
+df=pd.DataFrame([{'a':5,'b':3},{1:1}]*20)
     
 #tests = getArgvDic    
 if ifTest(getArgvDic):    
@@ -120,11 +120,34 @@ if ifTest(dira):
     dira(dicto(a=5,b=6), pattern="^va")
     what([0,{'k':'v'}])
 
-tests = pipe
-if ifTest(pipe):
+#tests = pipe
+#if ifTest(pipe):
     funList = [lambda x:x+'[f1]',lambda x:x+'[f2]',lambda x:x+'[f3]']
     do = pipe(funList)
     print((do('start')))
+
+#tests = [wp, p]
+if ifTest(wp):
+    def fff( a=5):
+        inf = 6
+        p()
+#        log-prettyFrameLocation(4)
+    def ff():
+        with wp:
+            fff()
+            fout=0
+            with wp:
+                fin = 1
+    ff()
+
+tests = [wp, p]
+if ifTest(p):
+    def fff(argfff=55):
+        inf = 66
+        out()
+    def ff():
+        fff()
+    ff()
 if __name__ == '__main__':
     pass
 

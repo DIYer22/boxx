@@ -704,7 +704,7 @@ treea = dira
 def what(anything, full=False):
     '''
     tell you what's this by
-    pretty print `Document`, `Classes`, `Attributes` of anything.
+    pretty print `Document`, `Classes`, `Inner Struct`, `Attributes` of anything.
     
     a magic tool to learn new Python Package
 

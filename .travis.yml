@@ -1,7 +1,10 @@
 language: python
 os:
-  - linux
-  - osx
+  include:
+    - linux
+    
+  allow_failures:
+    - osx
 python:
   - "2.7"
   - "3.4"

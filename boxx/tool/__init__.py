@@ -6,7 +6,7 @@ import os, sys, time
 from ..ylsys import py2
 
 from .toolLog import (stdout, log, logg, tounicode, shortDiscrib, discrib, getDoc, tabstr, ignoreWarning, LogException, 
-                     LogLoopTime, SuperG, g, cf, p, lc)
+                     LogLoopTime, SuperG, g, cf, p, lc, out)
 from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo
 from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, withprint, wp
 from .toolLog import localTimeStr, gmtTimeStr, timeGap
