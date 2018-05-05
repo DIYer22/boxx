@@ -23,7 +23,7 @@ def increase(namespace=None):
     '''
     __increase_recording[namespace] += 1
     return __increase_recording[namespace]
-    
+increase.d = __increase_recording
 def filterList(key, strs):
     '''
     对一个str列表 找出其中存在字符串 key的所有元素

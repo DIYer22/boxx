@@ -8,10 +8,21 @@ help(out) for more help
 '''
 from .ylsys import  py2
 from .tool import out
+
+deep = 6
 if py2:
-    out(1)
-else:
-    out(6)
+    deep = 1  
+
+out(deep)
+
+#from .tool import BoxxException, prettyFrameLocation
+#import sys
+#sys.modules.pop('boxx.out')
+#class BoxxOutStop(BoxxException):
+#    pass
+#stop = '\x1b[36m%s\x1b[0m'%'rasied at '
+#callPath = prettyFrameLocation(sys._getframe(deep))
+#raise BoxxOutStop(stop + callPath)
 #from . import *
 #print(prettyFrameStack())
 #fs = getFatherFrames(endByMain=1)

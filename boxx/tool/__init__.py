@@ -16,7 +16,7 @@ from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, ge
                             nextiter, listToBatch, ll, FunAddMagicMethod)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
-                    loadData, fileJoinPath)
+                    loadData, fileJoinPath, BoxxException)
 save_data = saveData
 load_data = loadData
 
@@ -47,6 +47,8 @@ else :
     from operator import truediv as div
 from fn import _ as x_
 x = x_
+
+from functools import wraps
 
 
 if __name__ == "__main__":

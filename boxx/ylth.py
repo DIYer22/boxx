@@ -11,6 +11,8 @@ from .ylimg import npa
 from .tool import FunAddMagicMethod
 
 from collections import OrderedDict
+from functools import wraps
+
 import torch
 from torch.autograd import Variable
 import torch.utils.data
@@ -100,15 +102,19 @@ if usecpu:
     nn.Module.load_state_dict = tryLoad
     
 def tht(t):
+    '''
+    anything t to torch.Tensor
+    '''
     if not isinstance(t, torch.tensor._TensorBase):
         t = th.from_numpy(npa-t).cuda()
-    return t
+    return t.cuda()
 tht = FunAddMagicMethod(tht)
 
-def var(t):
+@wraps(torch.autograd.Variable)
+def var(t, *l,  **kv):
     t = tht(t)
-    t = Variable(t)
-    return t
+    t = Variable(t, *l, **kv)
+    return t.cuda()
 var = FunAddMagicMethod(var)
 
 if __name__ == '__main__':

@@ -4,6 +4,12 @@ from __future__ import unicode_literals
 
 import os
 
+class BoxxException(Exception):
+    '''
+    root Exception for boxx
+    '''
+    pass
+
 getsize = os.path.getsize
 
 def getsizem(path='.'):

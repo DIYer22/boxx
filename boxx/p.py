@@ -8,11 +8,13 @@ help(p) for more help
 '''
 from .ylsys import  py2
 from .tool import p
+
+deep = 6
 if py2:
-    p(1)
-else:
-    p(6)
-#from . import *
+    deep = 1  
+    
+p(deep)
+#from .. import *
 #print(prettyFrameStack())
 #fs = getFatherFrames(endByMain=1)
 #list(map(pipe(prettyFrameLocation,log),fs))

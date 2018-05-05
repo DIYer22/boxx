@@ -36,7 +36,7 @@ def setFuncation2ForAutoList():
     '''
     add funcation 'range2', 'map2', 'reduce2', 'zip2' that retrun a list like python2
     '''
-    funForAutoList = ['range', 'map', 'reduce', 'zip']
+    funForAutoList = ['range', 'map', 'reduce', 'filter', 'zip']
     if py2:
         addListAfter = lambda x:x
     else:    

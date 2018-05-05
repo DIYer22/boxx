@@ -5,6 +5,7 @@ import sys, os, time
 from ..ylsys import py2, tmpYl
 from ..ylcompat import isstr
 
+
 def importAllFunCode(mod=None):
     '''
     mod 为包名(type(mod)=='str')或包本身(type(mod)==module)

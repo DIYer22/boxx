@@ -8,19 +8,22 @@ from ..tool.toolLog import tabstr, getDoc, shortDiscrib, discrib
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl
+from ..ylnp import isNumpyType
 
-import os
-import glob
-import numpy as np
-import matplotlib.pyplot as plt
-import types
 import skimage as sk
 from skimage import io as sio
 from skimage import data as sda
 from skimage.io import imread
 from skimage.io import imsave
 from skimage.transform import resize 
+
+import os
+import glob
+import numpy as np
+import matplotlib.pyplot as plt
+import types
 from functools import reduce
+from collections import defaultdict
 from operator import add
 #cv2 = tryImport('cv2')
 
@@ -32,9 +35,10 @@ shape if (isinstance(shape,tuple) or isinstance(shape,list)
 r = randomm(4,4)
 
 def normalizing(arr):
-    a = arr.astype(float)
-    minn = a.min()
-    return (a-minn)/(a.max() - minn)
+    if isinstance(arr, np.ndarray) and not isNumpyType(arr, 'float'):
+        arr = arr.astype(float)
+    minn = arr.min()
+    return (arr-minn)/(arr.max() - minn)
 normalizing = FunAddMagicMethod(normalizing)
 norma = normalizing
 
@@ -45,6 +49,9 @@ def uint8(img):
 greyToRgb = lambda grey:grey.repeat(3).reshape(grey.shape+(3,)) 
 
 histEqualize = FunAddMagicMethod(sk.exposure.equalize_hist)
+
+boolToIndex = lambda boolMa1d:np.arange(len(boolMa1d))[npa(boolMa1d).squeeze()>0]
+boolToIndex = FunAddMagicMethod(boolToIndex)
 
 def tprgb(ndarray):
     '''
@@ -140,47 +147,96 @@ def npa(array):
     return ndarray
 npa = FunAddMagicMethod(npa)
 
+
+def discribArray(array):
+    '''
+    return str of discrib for array, include shape type max min
+    '''
+    typeName = typestr(array)
+    array = npa(array)
+    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type)[6:], '->%s'%typeName, len(array) and (array.max()), len(array) and (array.min()))]
+    return (('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr)))
+    
+    
+def prettyArray(array):
+    '''
+    return str of pretty discrib for array, include nan inf (shape type max min)  
+    '''
+    discrib = discribArray(array)
+    array = npa(array)
+    unique = np.unique(array)
+    finiteInd = np.isfinite(array)
+    nan = np.isnan(array).sum()
+    
+    discribNan = ''
+    if not (finiteInd).all():
+        finite = array[finiteInd]
+        size = array.size
+        nan = np.isnan(array).sum()
+        nans = clf.p%'"nan":%s (%.2f%%), '%(nan,100.*nan/size) if nan else ''
+        inf = np.isinf(array).sum()
+        infs = clf.p%'"inf":%s (%.2f%%), '%(inf,100.*inf/size) if inf else ''
+        discribNan = (clf.r%'\nNotice: ' + '%s%s finite max: %s, finite min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min())))
+    if len(unique)<10:
+        dic = defaultdict(lambda : 0)
+        for i in array.ravel():
+            dic[i] += 1
+        listt = list(dic.items())
+        listt.sort(key=lambda x:x[0])
+        x = np.array([k for k,v in listt]).astype(float)
+        if len(x) <= 1:
+            discrib += (clf.p%'\nAll value is %s' % x[0])
+        else:
+            discrib += ('\nOlny %s unique values are %s'%(len(x), ', '.join([clf.p%v for v in x])))
+    discrib += discribNan
+    return discrib
+
+def plot(array, maxline=10):
+    '''to do
+    plot line or lines
+    '''
+    if callable(array):
+        x = np.linspace(np.e*-1.5,np.e*1.5,100)
+        array = array(x)
+    discrib = prettyArray(array).replace('\n','\n\n')
+    print(discrib)
+    array = npa(array).squeeze()
+    n = array.shape[-1]
+    if array.ndim >= 2:
+        array = np.resize(array, (array.size//n, n))
+        arrays = array[:maxline]
+    else:
+        arrays = [array]
+    for arr in arrays:
+        plt.plot(arr)
+    plt.show()        
+plot = FunAddMagicMethod(plot)
+ 
 def loga(array):
     '''
     Analysis np.array with a graph. include shape, max, min, distribute
     '''
-    typeName = typestr(array)
-    if typeName in typesToNumpyFuns:
-        array = typesToNumpyFuns[typeName](array)
-    if isinstance(array,str) or isinstance(array,str):
-        print('info and histogram of',array)
-        l=[]
-        eval('l.append('+array+')')
-        array = l[0]
-    if isinstance(array,list):
-        array = np.array(array)
+    discrib = prettyArray(array)
+    print(discrib.replace('\n','\n\n'))
     
-    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type)[6:], '->%s'%typeName, len(array) and (array.max()), len(array) and (array.min()))]
-    print(('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr)))
-    
+    array = npa(array)
     unique = np.unique(array)
+    finiteInd = np.isfinite(array)
+    if not (finiteInd).all():
+        finite = array[finiteInd]
+        data, x = np.histogram(finite,8)
     if len(unique)<10:
-        dic=dict([(i*1,0) for i in unique])
+        dic = defaultdict(lambda : 0)
         for i in array.ravel():
             dic[i] += 1
         listt = list(dic.items())
         listt.sort(key=lambda x:x[0])
         data,x=[v for k,v in listt],np.array([k for k,v in listt]).astype(float)
-        if len(x) == 1:
-            print('All value is',x[0])
+        if len(x) <= 1:
             return
         width = (x[0]-x[1])*0.7
         x -=  (x[0]-x[1])*0.35
-    elif not (np.isfinite(array)).all():
-        finiteInd = np.isfinite(array)
-        finite = array[finiteInd]
-        data, x = np.histogram(finite,8)
-        size = array.size
-        nan = np.isnan(array).sum()
-        nans = '"nan":%s (%.2f%%), '%(nan,100.*nan/size) if nan else ''
-        inf = np.isinf(array).sum()
-        infs = '"inf":%s (%.2f%%), '%(inf,100.*inf/size) if inf else ''
-        print('\n%s%s max: %s, min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min())))
+    elif not (finiteInd).all():
         x=x[1:]
         width = (x[0]-x[1])
     else:
@@ -190,7 +246,7 @@ def loga(array):
     plt.plot(x, data, color = 'orange')
     plt.bar(x, data,width = width, alpha = 0.5, color = 'b')
     plt.show()
-    return 
+    
 loga = FunAddMagicMethod(loga)
 
 def ndarrayToImgLists(arr):

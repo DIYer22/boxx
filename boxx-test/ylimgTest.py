@@ -67,7 +67,11 @@ if ifTest(show):
           gt,gtm
           ]
     show(re)
-
+    
+tests = loga
+if ifTest(loga):
+#    loga([(np.inf,5,7,np.nan)]*10)
+    loga([(np.inf,np.nan)]*10)
 
 #tests = tree
 if ifTest(tree):

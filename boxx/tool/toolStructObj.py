@@ -26,7 +26,7 @@ class Ll(list):
     '''to do
     '''
     def __init__(self):
-        list.__init__(self)
+        list.__init__(self, [0, 1])
     def __sub__(self, intOrLazyIter):
         if isinstance(intOrLazyIter, int):
             return self * intOrLazyIter
