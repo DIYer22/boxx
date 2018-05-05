@@ -6,7 +6,8 @@ useage:
     
 help(p) for more help
 '''
-from . import p, py2
+from .ylsys import  py2
+from .tool import p
 if py2:
     p(1)
 else:

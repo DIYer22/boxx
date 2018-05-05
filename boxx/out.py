@@ -6,7 +6,8 @@ useage:
     
 help(out) for more help
 '''
-from . import out, py2
+from .ylsys import  py2
+from .tool import out
 if py2:
     out(1)
 else:

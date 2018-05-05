@@ -96,7 +96,7 @@ def replaceAllInRoot(old, new, root='.', types='py'):
                     openwrite(code.replace(old,new),path)
     listdirWithFun(root, replace)
 
-def findInRoot(pattern, root='.', maxsize=1, types=None):
+def findinRoot(pattern, root='.', maxsize=1, types=None):
     '''
     在root及子路径下的所有文件中 查找 pattern。存在 则打印出对应文件的那一行。
     

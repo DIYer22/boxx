@@ -22,6 +22,20 @@ def listToBatch(listt, batch):
         ziped.append(tail)
     return ziped
 
+class Ll(list):
+    '''to do
+    '''
+    def __init__(self):
+        list.__init__(self)
+    def __sub__(self, intOrLazyIter):
+        if isinstance(intOrLazyIter, int):
+            return self * intOrLazyIter
+        return list(intOrLazyIter)
+    def __mul__(self, intt):
+        return list(range(intt))
+    __call__ = __truediv__ = __div__ = __sub__
+ll = Ll()
+
 CALL_CLASS_CACHE={}
 def addCall(instance):
     '''

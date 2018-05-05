@@ -3,7 +3,7 @@
 from __future__ import unicode_literals, print_function
 
 from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, nextiter, getfathers
-from ..tool.toolLog import colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
+from ..tool.toolLog import log, colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
 from ..tool.toolLog import tabstr, getDoc, shortDiscrib, discrib
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
@@ -429,7 +429,7 @@ class HiddenForTree():
         s = half + mid + half
         return s 
     
-def tree(seq,deep=None,maxprint=50,logLen=45,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
+def tree(seq,deep=None,maxprint=50,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 
     直观地查看list, tuple, dict, numpy, tensor, dataset, dataloader 等组成的树的每一层结构   
@@ -459,13 +459,13 @@ def tree(seq,deep=None,maxprint=50,logLen=45,leafColor='\x1b[31m%s\x1b[0m',__key
         __islast = 1
         __sets = set()
     if maxprint and isinstance(seq, HiddenForTree):
-        print(seq.strr(__leftStr), end='')
+        dealStr(seq.strr(__leftStr), end='')
         return 
 #    s = StructLogFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
     s = discribOfInstance(seq,leafColor=leafColor,MAX_LEN=logLen)
     s = s.replace('\n','↳')
-#    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
-    print('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))
+#    dealStr ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
+    dealStr('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))
     
     unfold = unfoldAble(seq)
     if unfold is False :
@@ -484,7 +484,7 @@ def tree(seq,deep=None,maxprint=50,logLen=45,leafColor='\x1b[31m%s\x1b[0m',__key
             seq = seq[:head] + [('HiddenForTree',HiddenForTree(lenn=lenn, maxprint=maxprint))] + seq[-head:]
     for i,kv in enumerate(seq):
         __key,v = kv
-        tree(v,deep=deep,maxprint=maxprint,logLen=logLen, leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
+        tree(v,deep=deep,maxprint=maxprint,logLen=logLen, dealStr=dealStr,leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
              __islast=(i==len(seq)-1),__deepNow=__deepNow+1,__sets=__sets)
     __leftStr.pop()
 tree = FunAddMagicMethod(tree)

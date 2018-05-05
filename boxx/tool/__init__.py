@@ -13,7 +13,7 @@ from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, 
 from .toolLog import localTimeStr, gmtTimeStr, timeGap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather,
-                            nextiter, listToBatch, FunAddMagicMethod)
+                            nextiter, listToBatch, ll, FunAddMagicMethod)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
                     loadData, fileJoinPath)
@@ -28,7 +28,7 @@ from .toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, retry)
 
 from .toolTools import (increase, filterList, findints, randint, randfloat, randchoice,
-                       listdirWithFun, replaceAllInRoot, findInRoot)
+                       listdirWithFun, replaceAllInRoot, findinRoot)
 
 from glob import glob
 from os.path import join as pathjoin

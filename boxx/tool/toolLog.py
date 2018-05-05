@@ -214,6 +214,12 @@ class Log():
 log = FunAddMagicMethod(printf)
 printt = log
 
+class printToStr():
+    # to do
+    def __call__(self):
+        pass
+    pass
+
 class LogAndSaveToList(list):
     '''
     存储最近用于logg的结果, 并返回x的class, list版本SuperG
@@ -691,11 +697,13 @@ def generaPAndLc():
             lc(depth+1, printt)
         def printt(self, x=None):
             pretty = False
+            root = getRootFrame()
+            root.f_globals['pp'] = x
             if pretty:
                 loc = prettyFrameLocation(1)
                 pblue('Print by p from %s:'%loc)
             else:
-                pblue('%s: %s'%(clf.p%'Print by p', x))
+                pblue('%s: %s'%(clf.p%'As pp by p', x))
             return x
         __sub__ = printt
         __lshift__ = printt
@@ -706,6 +714,7 @@ def generaPAndLc():
     out = LocalAndGlobal(out = True)
     return p, lc, out
 p, lc, out = generaPAndLc()
+pp = "registered `pp` var name that will be used by `p/x`"
 #pp, lcc, outt = generaPAndLc()
 
 class withprint():

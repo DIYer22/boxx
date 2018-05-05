@@ -15,7 +15,7 @@ class SystemInfo():
     sys info
     '''
     os = sys.platform
-    # todo
+    # to do
     gui = True
     
     @property
