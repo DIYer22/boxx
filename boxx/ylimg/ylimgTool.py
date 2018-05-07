@@ -154,8 +154,12 @@ def discribArray(array):
     '''
     typeName = typestr(array)
     array = npa(array)
-    strr = [colorFormat.r%tounicode(s) for s in (str(array.shape),typeNameOf(array.dtype.type)[6:], '->%s'%typeName, len(array) and (array.max()), len(array) and (array.min()))]
-    return (('shape:%s ,type:%s%s ,max: %s, min: %s'%tuple(strr)))
+    strr = (clf.r%tounicode(array.shape),
+          clf.r%typeNameOf(array.dtype.type)[6:], 
+          clf.r%typeName,
+          clf.r%( (array.max()) if (array.size) else 'Empty'), 
+          clf.r%( (array.min()) if (array.size) else 'Empty') )
+    return (('shape:%s type:(%s of %s) max: %s, min: %s'%tuple(strr)))
     
     
 def prettyArray(array):
@@ -184,14 +188,16 @@ def prettyArray(array):
         listt = list(dic.items())
         listt.sort(key=lambda x:x[0])
         x = np.array([k for k,v in listt]).astype(float)
-        if len(x) <= 1:
+        if len(x) == 0:
+            discrib += (clf.p%'\nEmpty array')
+        elif len(x) == 1:
             discrib += (clf.p%'\nAll value is %s' % x[0])
         else:
             discrib += ('\nOlny %s unique values are %s'%(len(x), ', '.join([clf.p%v for v in x])))
     discrib += discribNan
     return discrib
 
-def plot(array, maxline=10):
+def plot(array, sort=False, maxline=10):
     '''to do
     plot line or lines
     '''
@@ -208,6 +214,8 @@ def plot(array, maxline=10):
     else:
         arrays = [array]
     for arr in arrays:
+        if sort:
+            arr = sorted(arr, reverse=True)
         plt.plot(arr)
     plt.show()        
 plot = FunAddMagicMethod(plot)

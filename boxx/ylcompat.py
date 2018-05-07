@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 from .ylsys import py2
+import os, sys, warnings
 from functools import reduce, wraps
 
 printf = print
@@ -46,7 +47,7 @@ def setFuncation2ForAutoList():
                 r = f(*l, **kv)
                 return list(r)
             return innerF
-    
+    reduce
     glob = globals()
     for name in funForAutoList:
         rawf = glob[name] if name in glob else  __builtins__[name]
@@ -54,6 +55,18 @@ def setFuncation2ForAutoList():
 
 setFuncation2ForAutoList()
 
+
+def setDisplayEnv():
+    msg = '''%s
+        os.environ["DISPLAY"] not found, may cuse error like this 
+        [QXcbConnection Error](https://github.com/ipython/ipython/issues/10627)
+        so, we auto set os.environ["DISPLAY"] = ":0"    '''%'\x1b[36m%s\x1b[0m'% 'warning from boxx'
+    f = sys._getframe(0)
+    c = f.f_code
+    warnings.warn_explicit(msg, RuntimeWarning, c.co_filename, c.co_firstlineno, module='boxx')
+    os.environ["DISPLAY"] = ":0"
+if 'DISPLAY' not in os.environ:
+    setDisplayEnv()
 
 if not py2 and 0:
     __rawOpen__ = open

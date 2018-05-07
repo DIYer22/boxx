@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
+`import boxx.out` act same as `out()`
+
+Notice: For Python 2 only first time import works 
+
 useage:
     >>> import boxx.out
     
@@ -15,12 +19,11 @@ if py2:
 
 out(deep)
 
-#from .tool import BoxxException, prettyFrameLocation
-#import sys
-#sys.modules.pop('boxx.out')
-#class BoxxOutStop(BoxxException):
-#    pass
-#stop = '\x1b[36m%s\x1b[0m'%'rasied at '
+if not py2:
+    from .tool import removeImportSelf
+    removeImportSelf('boxx.out')
+
+
 #callPath = prettyFrameLocation(sys._getframe(deep))
 #raise BoxxOutStop(stop + callPath)
 #from . import *

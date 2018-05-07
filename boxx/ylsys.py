@@ -7,7 +7,7 @@ Created on Wed Apr 18 21:27:28 2018
 """
 
 import sys, os
-
+from os import environ
 
 
 class SystemInfo():
@@ -17,6 +17,8 @@ class SystemInfo():
     os = sys.platform
     # to do
     gui = True
+    
+    display = 'DISPLAY' in environ and environ['DISPLAY']
     
     @property
     def ip(self):

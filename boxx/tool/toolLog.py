@@ -3,13 +3,15 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
-from .toolStructObj import addCall, dicto, FunAddMagicMethod, getfathers, typeNameOf
+from .toolStructObj import addCall, dicto, FunAddMagicMethod, getfathers, typeNameOf, typestr
 from .toolSystem import getRootFrame, getFatherFrames
 from ..ylsys import py2
 from ..ylcompat import printf, unicode
 from ..ylcompat import istype
 
 import os,sys,time
+import math
+import re
 from collections import defaultdict
 
 def localTimeStr():
@@ -34,7 +36,9 @@ class timeGap:
         隔多少秒返回一个 True
     fun : funcation, default None
         每一次要执行fun()
-        
+    quickBegin : bool, default True
+        First time call will return True
+    
     Attribute
     ----------
     __call__ : 
@@ -42,10 +46,11 @@ class timeGap:
     time : @property
         is @property 返回已记录的时长
     '''
-    def __init__(self, gap=1,fun=False):
+    def __init__(self, gap=1,fun=False, quickBegin=True):
         self.n = 0
         self.gap = gap
-        self.begin = self.last = time.time()
+        self.begin = time.time()
+        self.last = self.begin - (quickBegin and gap)
         self.fun = fun
     def __call__(self,):
         t = time.time()
@@ -59,9 +64,26 @@ class timeGap:
     @property
     def time(self):
         return time.time() - self.begin
+
+TimeGapDic = {}
+def timegap(gap, key='boxx.default'):
+    '''
+    定时器 隔固定的一段时间 返回 当前轮数(True), use to log in loop
+    This is light version of timeGap, for More Infomation help(timeGap)
     
-            
-    
+    Init Parameters
+    ----------
+    gap : number
+        隔多少秒返回一个 True
+    key : hashable, default 'boxx.default'
+        the namespace to count
+    '''
+    keyt = (gap, key)
+    if keyt not in TimeGapDic:
+        TimeGapDic[keyt] = timeGap(gap)
+    return TimeGapDic[keyt]()
+
+
 frontColorDic = dicto({   # 前景色
         'black'    : 30,   #  黑色
         'red'      : 31,   #  红色
@@ -94,8 +116,16 @@ class colorFormat:
     def printAllColor(s='printAllColor'):
         return [stdout((c+' '*10)[:7]) and pcolor(c,": "+str(s)) for c in frontColorDic] and None
     pall = printAllColor
-
 clf = colorFormat
+
+def decolor(colored):
+    '''
+    remove color of str
+    '''
+    pa = re.compile('\x1b\[3[0-9]m|\x1b\[0m')
+    new = pa.sub('', colored)
+    new = pa.sub('', new)
+    return new
 
 def tounicode(strr):
     '''
@@ -115,6 +145,25 @@ def tounicode(strr):
             return strr.decode('utf-8','replace')
         return unicode(strr)
         
+def shortstr(x):
+    '''
+    to do: batter for matria
+    '''
+    typee = typestr(x)
+    from ..ylimg import StructLogFuns
+    fund = StructLogFuns
+    f = shortDiscrib
+    if typee in fund:
+        f = fund[typee]
+    elif '__float__' in dir(x):
+        try:
+            float(x)
+            f = strnum
+        except:
+            pass
+    return decolor(f(x))
+
+
 def shortDiscrib(x, maxlen=60):
     '''
     genrate one line discrib str shorter than maxlen.
@@ -154,6 +203,59 @@ def discrib(x, maxline=20):
     if '\x1b[' in s :
         s += '\x1b[0m' * (list(s).count('\x1b'))
     return s
+
+
+def logc(code, run=1):
+    '''
+    to do:
+        1. use re to replace vars name avoid the same names
+        2. use Abstract Syntax Tree and re 
+           to distinguish .attr and funcation call
+    '''
+    frame = sys._getframe(2)
+    local = frame.f_locals
+    glob = frame.f_globals
+    
+    if run:
+        exec(code, local, glob)
+    
+    varss = re.findall('[a-zA-Z_][a-zA-Z0-9_]*',code)
+    dic = {}
+    for name in varss:
+        if name in local:
+            dic[name] = local[name]
+        elif name in glob:
+            dic[name] = glob[name]
+        elif run is None:
+            exec(code, local, glob)
+            dic[name] = local[name]
+    
+    coder = numr = code
+    
+    toNotVarName = lambda name: '$_%s_$'% ''.join([str(ord(c)) for c in name])
+    
+    for k, v in sorted(dic.items(), key=lambda x:-len(x[0])):
+        vstr = shortstr(v)
+        maxs = max(len(vstr), len(k))
+        
+        dic[k] = dict(
+                vstr=vstr,
+                maxs=maxs,
+                v=v,
+                ks=k+' '*(maxs-len(k)),
+                vs=vstr+' '*(maxs-len(vstr)),
+                mid = '↓'+' '*(maxs-1),
+                )
+        coder = coder.replace(k, toNotVarName(k))
+        numr = numr.replace(k, toNotVarName(k))
+    
+    for k, d in sorted(list(dic.items()), key=lambda x:-len(x[0])):
+        coder = coder.replace(toNotVarName(k), clf.b%d['ks'])
+        numr = numr.replace(toNotVarName(k), clf.r%d['vs'])
+    
+    s = ('Code: %s\n  └── %s'%(coder, numr))   
+    print(s)
+logc = FunAddMagicMethod(logc)
 
 def tabstr(s, head=4, firstline=False):
     '''
@@ -273,6 +375,53 @@ pinfo = pblue
 pdanger = pred
 perr = pred
 
+
+def notationScientifique(num, roundn=None, tuple=False):
+    '''
+    科学计数法 
+
+    roundn : int, default None
+        Notation Scientifique
+        保留有效位数 
+    tuple : bool, default False
+        if True, return a tuple(head, pow) instead of string
+    '''
+    if num == 0:
+        head, pow = 0,0
+    else:
+        loged = (math.log(abs(num),10))
+        pow = int(loged) + (loged < 0 and -1)
+        head = num*10**-pow
+        if roundn is not None:
+            head = round(head, roundn-1)
+    if tuple:
+        return (head, pow)
+    s = '%se%d'%(str(head),pow)
+    return s
+
+def strnum(num, roundn=4):
+    '''
+    my impletement of str(num)
+    '''
+    if isinstance(num, int):
+        return str(num)
+    elif not isinstance(num, float) and '__float__' in dir(num):
+        num = float(num)
+    head, pow = notationScientifique(num, roundn=roundn, tuple=True)
+    if pow > roundn or pow < -min(3,roundn):
+        s = '%se%d'%(str(head),pow)
+    else:
+        s = str(round(num, -pow+roundn))
+    return s
+    
+def percentStr(num, roundn=2):
+    '''
+    float to percent sign
+    roundn mean round to percent
+    '''
+    num = round(num*100, roundn)
+    tabn = (2 if num <10 else 1 )if num <100 else 0
+    return (' '*tabn+'%.'+str(roundn)+'f%%')%(num)
                
 def ignoreWarning():
     from warnings import filterwarnings
@@ -703,7 +852,9 @@ def generaPAndLc():
                 loc = prettyFrameLocation(1)
                 pblue('Print by p from %s:'%loc)
             else:
-                pblue('%s: %s'%(clf.p%'As pp by p', x))
+                pass
+#                pblue('%s: %s'%(clf.p%'As pp by p', x))
+                print(x)
             return x
         __sub__ = printt
         __lshift__ = printt

@@ -105,7 +105,7 @@ def tht(t):
     '''
     anything t to torch.Tensor
     '''
-    if not isinstance(t, torch.tensor._TensorBase):
+    if not isinstance(t, torch._C._TensorBase):
         t = th.from_numpy(npa-t).cuda()
     return t.cuda()
 tht = FunAddMagicMethod(tht)

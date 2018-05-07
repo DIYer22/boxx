@@ -83,7 +83,22 @@ class FakeModule():
         errorMsg = __FAKE_DIC__[id(self)]
         raise ImportError(errorMsg)
     __repr__ = __str__
-        
+
+def removeImportSelf(modelName='boxx.out'):
+    '''
+    remove a model while import itself
+    that mean every time import model will exec model again
+    
+    Notice: Only support Python 3, For Python 2 only first time import works 
+    '''
+    if py2 :
+        return 
+    sys.modules.pop(modelName)
+    
+    f = sys._getframe(4)
+    if 'spec' in f.f_locals:
+        f.f_locals['spec'].name = 'sys'
+
 def crun(pycode, snakeviz=True):
     '''测试代码pycode的性能'''
     from cProfile import run

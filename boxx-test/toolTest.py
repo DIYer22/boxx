@@ -140,7 +140,7 @@ if ifTest(wp):
                 fin = 1
     ff()
 
-tests = [wp, p]
+#tests = [wp, p]
 if ifTest(p):
     def fff(argfff=55):
         inf = 66
@@ -148,6 +148,13 @@ if ifTest(p):
     def ff():
         fff()
     ff()
+    
+
+#tests = strnum
+if ifTest(strnum):
+    tree-[strnum(i) for i in (0., 1, .99, 100., e*1e9,-pi*1e-9,)]
+    tree-[percentStr(i) for i in (0., 1.,  e/10, pi)]
+
 if __name__ == '__main__':
     pass
 

@@ -5,12 +5,13 @@ from __future__ import unicode_literals
 import os, sys, time
 from ..ylsys import py2
 
-from .toolLog import (stdout, log, printt, logg, tounicode,
-                      shortDiscrib, discrib, getDoc, tabstr, ignoreWarning, LogException, 
-                     LogLoopTime, SuperG, g, cf, p, lc, out)
-from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo
+from .toolLog import (stdout, log, logc, printt, logg, tounicode,
+                      shortstr, shortDiscrib, discrib, getDoc, tabstr, ignoreWarning, LogException, 
+                      LogLoopTime, SuperG, g, cf, p, lc, out)
+from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo, decolor
+from .toolLog import strnum, percentStr, notationScientifique
 from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, withprint, wp
-from .toolLog import localTimeStr, gmtTimeStr, timeGap
+from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather,
                             nextiter, listToBatch, ll, FunAddMagicMethod)
@@ -20,7 +21,7 @@ from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, 
 save_data = saveData
 load_data = loadData
 
-from .toolSystem import (importAllFunCode, impt, tryImport, FakeModule, crun, frun, 
+from .toolSystem import (importAllFunCode, impt, tryImport, FakeModule, removeImportSelf,  crun, frun, 
                         timeit, heatMap, getArgvDic, softInPath, addPathToSys)
 from .toolSystem import getRootFrame, getFatherFrames#, exceptionHook
 
