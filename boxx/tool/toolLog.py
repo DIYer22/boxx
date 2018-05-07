@@ -205,7 +205,7 @@ def discrib(x, maxline=20):
     return s
 
 
-def logc(code, run=1):
+def logc(code, run=None):
     '''
     to do:
         1. use re to replace vars name avoid the same names
@@ -228,23 +228,28 @@ def logc(code, run=1):
             dic[name] = glob[name]
         elif run is None:
             exec(code, local, glob)
-            dic[name] = local[name]
-    
+            if name in local:
+                dic[name] = local[name]
+            else:
+                dic[name] = addCall(name)
+    import boxx.out
     coder = numr = code
     
     toNotVarName = lambda name: '$_%s_$'% ''.join([str(ord(c)) for c in name])
+    addSpaceBothSide = lambda s, n: (n//2)*' ' + str(s) + (n-n//2)*' '
     
     for k, v in sorted(dic.items(), key=lambda x:-len(x[0])):
         vstr = shortstr(v)
+        if callable(v):
+            vstr = k
         maxs = max(len(vstr), len(k))
         
         dic[k] = dict(
                 vstr=vstr,
                 maxs=maxs,
                 v=v,
-                ks=k+' '*(maxs-len(k)),
-                vs=vstr+' '*(maxs-len(vstr)),
-                mid = '↓'+' '*(maxs-1),
+                ks=addSpaceBothSide(k, maxs-len(k)),
+                vs=addSpaceBothSide(vstr, maxs-len(vstr)),
                 )
         coder = coder.replace(k, toNotVarName(k))
         numr = numr.replace(k, toNotVarName(k))

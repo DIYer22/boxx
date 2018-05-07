@@ -60,11 +60,12 @@ def setDisplayEnv():
     msg = '''%s
         os.environ["DISPLAY"] not found, may cuse error like this 
         [QXcbConnection Error](https://github.com/ipython/ipython/issues/10627)
-        so, we auto set os.environ["DISPLAY"] = ":0"    '''%'\x1b[36m%s\x1b[0m'% 'warning from boxx'
+        so, we auto set os.environ["QT_QPA_PLATFORM"] = "offscreen"    '''%'\x1b[36m%s\x1b[0m'% 'warning from boxx'
     f = sys._getframe(0)
     c = f.f_code
-    warnings.warn_explicit(msg, RuntimeWarning, c.co_filename, c.co_firstlineno, module='boxx')
-    os.environ["DISPLAY"] = ":0"
+    warnings, msg, c
+#    warnings.warn_explicit(msg, RuntimeWarning, c.co_filename, c.co_firstlineno, module='boxx')
+    os.environ["QT_QPA_PLATFORM"] = "offscreen"
 if 'DISPLAY' not in os.environ:
     setDisplayEnv()
 
