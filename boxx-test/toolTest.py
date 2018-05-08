@@ -70,7 +70,7 @@ if ifTest(logr):
         time.sleep(.2)
         
 #tests = multiThread
-if ifTest(multiThread): 
+if ifTest(multiThread) and __name__ == '__main__': 
     mt = multiThread(5)
     def f(i):
         time.sleep(.01)
@@ -98,19 +98,19 @@ if ifTest(multiThread):
 
 #tests = mapmp
 if ifTest(mapmp): 
-    import multiprocessing as mp
-    mpd = mp.dummy
     def npt(rr):
         for i in range(int(4e3)):
             rr = abs(rr**0.9-rr)
         return rr.sum()
     n = 10
     rrs = [np.float64(randomm(20,90)) for i in range(n)]
-    ms = {'map':map,'mapmt':mapmt,'mapmp':mapmp}
-    for name,mapp in list(ms.items()):
-        with timeit():
-            list(mapp(npt,rrs))
-            log(name, end=' ')
+    ms = {'map':map,'mapmt':mapmt,}
+    if __name__ == '__main__':
+        ms.update({'mapmp':mapmp})
+        for name,mapp in list(ms.items()):
+            with timeit():
+                list(mapp(npt,rrs))
+                log(name, end=' ')
 
 #tests = dira
 if ifTest(dira): 
@@ -118,7 +118,10 @@ if ifTest(dira):
     dira(tool, pattern="^[A-Z]")
     dira(pandas.DataFrame(), pattern="^[A-Z]")
     dira(dicto(a=5,b=6), pattern="^va")
-    what([0,{'k':'v'}])
+    class A:
+        d = [0,{'k':'v'}]
+        pass
+    what(A)
 
 #tests = pipe
 #if ifTest(pipe):

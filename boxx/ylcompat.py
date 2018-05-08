@@ -73,7 +73,7 @@ def setDisplayEnv():
 if not pyi.plt:
     setDisplayEnv()
     import matplotlib.pyplot as plt
-    def savefig():
+    def savefig(*l, **kv):
         from .ylsys import tmpboxx
         from .tool import increase, warn, OffScreenWarning
         showtmp = os.path.join(tmpboxx(), 'showtmp')

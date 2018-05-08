@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 import time
 
+from ..ylsys import cpun
 from .toolStructObj import typestr
+
 from functools import reduce
 
 def getFunName(fun):
@@ -66,16 +68,34 @@ def setInterval(fun, inter, maxTimes=None):
 
 from multiprocessing import Pool as PoolMp
 from multiprocessing.dummy import Pool as PoolThread
-
 def __multiprocessingFun__(args):
     '''
     多线程专用
     '''
     return args[0](*args[1:])
-def mapmp(fun, *mapArgList, **kv):
+
+def __multiprocessLogFun__(args):
+    '''
+    '''
+    
+    fun, args, ind, lenn, logf = args
+    if ind is None:
+        return fun(*args)
+    from .toolLog import timeit, percentStr, shortDiscrib
+    with timeit(None) as t:
+        re = fun(*args)
+    if logf:
+        logf([fun, args, ind, lenn, logf])
+    else:
+        print('%s/%s(%s) spend %s args[0]: %s'%(ind,lenn,isinstance(lenn, int) and percentStr(ind*1./lenn),t.s,shortDiscrib(args[0])), end='\n')
+    return re
+
+def mapmp(fun, *iterables, **kv):
     '''
     Map with Multi Processing:多进程版本的map函数
     mapmp(fun, sequence[, sequence, ...], pool=None, thread=False)->list
+    !Important, multi processing must do in `__name__ == '__main__'`'s block 
+    see more at https://docs.python.org/3/library/multiprocessing.html
     
     >>> mapmp(np.add, range(3), range(3), pool=3)
     [0, 2, 4]
@@ -91,19 +111,41 @@ def mapmp(fun, *mapArgList, **kv):
     fun : function
         *多进程*只支持`def`定义的函数 不能是lambda 和 内部函数 
         否则 PicklingError: Can't pickle 
-    *mapArgList : list 
+    *iterables : list 
         用于fun的参数list, fun需要N个参数则有N个列表
     pool : int, default None
         进程数目，默认为CPU进程数
+    logfreq : int, default None
+        打印进度的频次 默认不打印
+    logf : funcation, default None
+        Hook Funcation For log , every logfreq
+        do logf([fun, args, ind, lenn, logf])
     thread : bool, default False
         是否以*多线程*形式替换多进程
-    '''
+    '''    
     Pool = PoolMp
     if 'thread' in kv and kv['thread']:
         Pool = PoolThread
     pool = Pool(kv['pool']) if 'pool' in kv and kv['pool'] else Pool()
-    re = pool.map(__multiprocessingFun__,list(zip([fun]*len(mapArgList[0]),*mapArgList)))
-#    re = pool.map(fun,mapArgList[0])
+    
+    pooln = kv['pool'] if 'pool' in kv else cpun
+    logf = kv['logf'] if 'logf' in kv else None
+    
+    if 'logfreq' in kv and kv['logfreq']:
+        logfreq = kv['logfreq']
+        l = iterables[-1] = list(iterables[-1])
+        lenn = len(l)
+        
+        def yieldWithIndFun(fun, iterables, lenn, logf, logfreq):
+            for i,args in enumerate(zip(*iterables)):
+                yield (fun, args, None if i%logfreq else i, lenn, logf)
+        chunksize = kv['chunksize'] if 'chunksize' in kv else min(max(1, logfreq*2//3), lenn//pooln)
+        re = pool.map(__multiprocessLogFun__, yieldWithIndFun(fun, iterables, lenn, logf, logfreq), chunksize=chunksize)
+    else:
+        def yieldWithFun(fun, iterables):
+            for args in zip(*iterables):
+                yield (fun,)+args
+        re = pool.map(__multiprocessingFun__,  yieldWithFun(fun, iterables))
     pool.close()
     pool.join()
     return re

@@ -41,7 +41,7 @@ testFun = None
 tests = [testFun]
 
 #tests = generateBigImgForPaper
-if ifTest(generateBigImgForPaper):
+if ifTest(generateBigImgForPaper) and 0:
     gtmod = classDiff(rem,gtm,colors)
     remod = classDiff(rem,gtm,colors,reMod=True)
     remn,gtmn = list(map(normalizing,(rem,gtm)))
@@ -97,8 +97,9 @@ if ifTest(shows):
     
 #tests = getShapes
 if ifTest(getShapes) and len(glob(imgGlob)):
-    with timeit():
-        shapes = getShapes(imgGlob)
+    if __name__ == '__main__':
+        with timeit():
+            shapes = getShapes(imgGlob)
         
 #tests = autoSegmentWholeImg
 if ifTest(autoSegmentWholeImg):

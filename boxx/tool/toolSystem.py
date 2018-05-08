@@ -121,42 +121,40 @@ def frun(pyFileName=None):
 
 class timeit():
     '''
-    记时 :
+    记时1 :
+        >>> with timeit():
+        >>>     fun()
+    记时2 :
         >>> ti = timeit()
         # run your code
         >>> print ti()
-    记时2 :
-        >>> with timeit():
-        >>>     fun()
         加个 0 即可方便地关闭计时，即 with timeit(0)
-    
-    测试code时间 :
-        >>> timeit(your_code)
+
     '''
-    def __init__(self,code=''):
+    def __init__(self,namespace=''):
         self.begin = time.time()
-        self.log = isstr(code) or bool(code)
-        if isstr(code):
-            if len(code):
-                exec(code)
-                print(self.s)
+        self.log = isstr(namespace) or bool(namespace)
+        self.key = namespace
     def __call__(self):
         '''返回时间差'''
         return time.time()-self.begin
     def __enter__(self):
         return self
     def __exit__(self, typee, value, traceback):
+        self.t = time.time()-self.begin
         self.p
     @property
     def s(self):
-        t = time.time()-self.begin
-        s='\x1b[36mspend time: %s\x1b[0m'%t
+        from .toolLog import strnum
+        return strnum(self.t,6)
+    def __str__(self):
+        s='\x1b[36m%s spend time: %s\x1b[0m'%(self.key, self.s)
         return s
     @property
     def p(self):
         '''直接打印出来'''
         if self.log:
-            print(self.s)
+            print(self)
 
 def heatmap(pathOrCode):
     '''显示python代码的时间热力图

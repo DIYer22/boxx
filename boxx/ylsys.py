@@ -10,28 +10,6 @@ import sys, os
 from os import environ
 
 
-class SystemInfo():
-    '''
-    sys info
-    '''
-    os = sys.platform
-    # to do
-#    gui = True
-    
-    display = 'DISPLAY' in environ and environ['DISPLAY']
-    
-    @property
-    def ip(self):
-        return '127.0.0.1'
-    @property
-    def user(self):
-        import getpass
-        return getpass.getuser()
-    @property
-    def host(self):
-        import platform
-        return platform.node()
-sysi = SystemInfo()
 
 
 def jupyterNotebookOrQtConsole():
@@ -63,6 +41,42 @@ def jupyterNotebookOrQtConsole():
 pyv = sys.version_info.major
 py3 = (pyv == 3)
 py2 = (pyv == 2)
+
+
+linuxYl = sys.platform.startswith('linux')
+windowsYl = sys.platform.startswith('win')
+osxYl = sys.platform.startswith('darwin')
+
+import multiprocessing as __module
+cpun = __module.cpu_count()
+
+cloud = cpun > 16
+
+if linuxYl or osxYl:
+    cuda = not os.system('nvcc --version> /dev/null 2>&1')
+else:
+    cuda = 'Not Implemented'
+usecuda = 'auto' # auto: auto, False: not use
+    
+if linuxYl or osxYl:
+    homeYl = os.getenv('HOME') + '/'
+    tmpYl = '/tmp/'
+elif windowsYl:
+    homeYl = os.path.expanduser("~")
+    tmpYl = os.getenv('TMP') + '\\'
+
+class __TmpboxxWithCall(str):
+    '''
+    the tmp dir for boxx 
+    use tmpboxx() to get tmpdir 
+    if not exist then will auto mkdir of boxxTmp in `/tmp`
+    '''
+    def __call__(self):
+        if not os.path.isdir(self):
+            os.makedirs(self)
+        return self
+tmpboxx = __TmpboxxWithCall(os.path.join(tmpYl,'boxxTmp/'))
+
 class pyi():
     '''
     python info
@@ -86,43 +100,30 @@ class pyi():
     qtipython = env == 'qtipython'
     jn = env == 'jn'
     
-    plt = gui or 'DISPLAY' in os.environ 
+    plt = True
+    if not gui and linuxYl and 'DISPLAY' not in os.environ :
+        plt =  False
     
-
-linuxYl = sysi.os.startswith('linux')
-windowsYl = sysi.os.startswith('win')
-osxYl = sysi.os.startswith('darwin')
-
-import multiprocessing as __module
-cpun = __module.cpu_count()
-
-cloud = cpun > 16
-
-if linuxYl or osxYl:
-    cuda = not os.system('nvcc --version> /dev/null 2>&1')
-else:
-    cuda = 'Not Implemented'
-usecuda = 'auto' # auto: auto, False: not use
+class SystemInfo():
+    '''
+    sys info
+    '''
+    os = sys.platform
+    # to do
+#    gui = True
+    display = True
+    if linuxYl:
+        display = 'DISPLAY' in environ and environ['DISPLAY']
     
-if linuxYl or osxYl:
-    homeYl = os.getenv('HOME') + '/'
-    tmpYl = '/tmp/'
-elif windowsYl:
-    homeYl = os.path.expanduser("~")
-    tmpYl = os.getenv('TMP') + '\\'
-
-
-
-class __TmpboxxWithCall(str):
-    '''
-    the tmp dir for boxx 
-    use tmpboxx() to get tmpdir 
-    if not exist then will auto mkdir of boxxTmp in `/tmp`
-    '''
-    def __call__(self):
-        if not os.path.isdir(self):
-            os.makedirs(self)
-        return self
-tmpboxx = __TmpboxxWithCall(os.path.join(tmpYl,'boxxTmp/'))
-
-
+    @property
+    def ip(self):
+        return '127.0.0.1'
+    @property
+    def user(self):
+        import getpass
+        return getpass.getuser()
+    @property
+    def host(self):
+        import platform
+        return platform.node()
+sysi = SystemInfo()

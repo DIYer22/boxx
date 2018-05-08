@@ -96,7 +96,7 @@ def replaceAllInRoot(old, new, root='.', types='py'):
                     openwrite(code.replace(old,new),path)
     listdirWithFun(root, replace)
 
-def findinRoot(pattern, root='.', maxsize=1, types=None):
+def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, re=None):
     '''
     在root及子路径下的所有文件中 查找 pattern。存在 则打印出对应文件的那一行。
     
@@ -113,7 +113,14 @@ def findinRoot(pattern, root='.', maxsize=1, types=None):
     types : str or list, default None
         被查找文件的类型限制
         str:单个类型, list:多个类型 默认为所有文件
+    var : str or bool, default None
+        use re.compile('(^|[^a-zA-Z0-9_])%s([^a-zA-Z0-9_]|$)'%var) to find var name
+    up : str or bool, default None
+        Ignoring letter case of variable names
+    re : str or bool, default None
+        use re.compile(re) to search each line
     '''
+    from re import compile as recompile
     if types is not None :
         if not isinstance(types,(list,tuple)):
             types = [types]
@@ -122,25 +129,39 @@ def findinRoot(pattern, root='.', maxsize=1, types=None):
         if types is None:
             return True
         return '.' in path and path.split('.')[-1] in types
-    
+    if not pattern:
+        pattern = var or up or re
+    searchin = lambda strr: pattern in strr
+    if var:
+        pa = '''(^|[^a-zA-Z0-9_'"])%s([^a-zA-Z0-9_'"]|$)'''%pattern
+        pa = recompile(pa)
+        searchin = lambda strr: pa.search(strr)
+    elif up:
+        lower = pattern.lower()
+        searchin = lambda strr: lower in strr.lower()
+    elif re:
+        pa = recompile(pattern)
+        searchin = lambda strr: pa.search(strr)
     def find(path):
         if isfile(path):
             if (getsizem(path) <= maxsize or maxsize is None) and intypes(path):
                 try:
                     s = openread(path)
-                    if pattern in s:
-                        lines = [(i, l) for i,l in enumerate(s.split('\n'), 1) if pattern in l]
-                        print('"%s" in "%s" with %s'%('\x1b[31m%s\x1b[0m'%pattern, '\x1b[36m%s\x1b[0m'%path, '\x1b[35m%s Lines\x1b[0m'%len(lines)))
-                        for (i, l) in lines:
-                            if l.startswith('   '):
-                                l = '... '+l.strip()
-                            if len(l) > 83:
-                                l = l[:80] +' ...'
-                            print('\t%s:%s'%('\x1b[35m%s\x1b[0m'%i, '\x1b[31m%s\x1b[0m'%l))
-                        print()
+                    lines = [(i, l) for i,l in enumerate(s.split('\n'), 1) if searchin(l)]
+                    if not len(lines):
+                        return 
+                    print('"%s" in "%s" with %s'%('\x1b[31m%s\x1b[0m'%pattern, '\x1b[36m%s\x1b[0m'%path, '\x1b[35m%s Lines\x1b[0m'%len(lines)))
+                    for (i, l) in lines:
+                        if l.startswith('   '):
+                            l = '... '+l.strip()
+                        if len(l) > 83:
+                            l = l[:80] +' ...'
+                        print('\t%s:%s'%('\x1b[35m%s\x1b[0m'%i, '\x1b[31m%s\x1b[0m'%l))
+                    print()
                 except:
                     return 
     listdirWithFun(root, find)
+
     
 if __name__ == "__main__":
      

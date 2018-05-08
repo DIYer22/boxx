@@ -232,7 +232,6 @@ def logc(code, run=None):
                 dic[name] = local[name]
             else:
                 dic[name] = addCall(name)
-    import boxx.out
     coder = numr = code
     
     toNotVarName = lambda name: '$_%s_$'% ''.join([str(ord(c)) for c in name])
