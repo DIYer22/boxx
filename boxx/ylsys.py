@@ -16,7 +16,7 @@ class SystemInfo():
     '''
     os = sys.platform
     # to do
-    gui = True
+#    gui = True
     
     display = 'DISPLAY' in environ and environ['DISPLAY']
     
@@ -33,48 +33,78 @@ class SystemInfo():
         return platform.node()
 sysi = SystemInfo()
 
-def getIPytonConfig():
+
+def jupyterNotebookOrQtConsole():
+    env = 'Unknow'
+    cmd = 'ps -ef'
     try:
-        cfg = get_ipython().config
-        return cfg
-    # to do 
-        if cfg['IPKernelApp']['parent_appname'] == 'ipython-notebook':
-            return 'jn'
-        else:
-            return 'qt'
-    except (NameError,KeyError):
-        return None
+        with os.popen(cmd) as stream:
+            if not py2:
+                stream = stream._stream
+            s = stream.read()
+        pid = os.getpid()
+        ls = list(filter(lambda l:'jupyter' in l and str(pid) in l.split(' '), s.split('\n')))
+        if len(ls) == 1:
+            l = ls[0]
+            import re
+            pa = re.compile(r'kernel-([-a-z0-9]*)\.json')
+            rs = pa.findall(l)
+            if len(rs):
+                r = rs[0]
+                if len(r)<12:
+                    env = 'qtipython'
+                else :
+                    env = 'jn'
+        return env
+    except:
+        return env
+    print(r, env)
 
-class pyi():
-    config = getIPytonConfig()
-    
-    cmdipython = 'IPython' in sys.modules
-    gui = 'ipykernel' in sys.modules
-
-    ipython = cmdipython or gui
-    cmd = not ipython
-    
-    # to do
-    qt = jn = gui
 pyv = sys.version_info.major
 py3 = (pyv == 3)
 py2 = (pyv == 2)
+class pyi():
+    '''
+    python info
+    
+    plt : Bool
+        mean plt avaliable
+    env :
+        belong [cmd, cmdipython, qtipython, spyder, jn]
+    '''
+    pid = os.getpid()
+    gui = 'ipykernel' in sys.modules
+    cmdipython = 'IPython' in sys.modules and not gui
+    ipython = cmdipython or gui
+    spyder = 'spyder' in sys.modules
+    if gui:
+        env = 'spyder' if spyder else jupyterNotebookOrQtConsole()
+    else:
+        env = 'cmdipython' if ipython else 'cmd'
+    
+    cmd = not ipython
+    qtipython = env == 'qtipython'
+    jn = env == 'jn'
+    
+    plt = gui or 'DISPLAY' in os.environ 
+    
 
 linuxYl = sysi.os.startswith('linux')
 windowsYl = sysi.os.startswith('win')
+osxYl = sysi.os.startswith('darwin')
 
 import multiprocessing as __module
 cpun = __module.cpu_count()
 
 cloud = cpun > 16
 
-if linuxYl:
+if linuxYl or osxYl:
     cuda = not os.system('nvcc --version> /dev/null 2>&1')
 else:
     cuda = 'Not Implemented'
 usecuda = 'auto' # auto: auto, False: not use
     
-if linuxYl:
+if linuxYl or osxYl:
     homeYl = os.getenv('HOME') + '/'
     tmpYl = '/tmp/'
 elif windowsYl:

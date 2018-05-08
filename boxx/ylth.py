@@ -100,12 +100,14 @@ if usecpu:
             rawModule(self, para, strict)
             
     nn.Module.load_state_dict = tryLoad
-    
+
+_TensorBase = torch._TensorBase if '_TensorBase' in dir(torch) else torch._C._TensorBase
+
 def tht(t):
     '''
     anything t to torch.Tensor
     '''
-    if not isinstance(t, torch._C._TensorBase):
+    if not isinstance(t, _TensorBase):
         t = th.from_numpy(npa-t).cuda()
     return t.cuda()
 tht = FunAddMagicMethod(tht)

@@ -42,15 +42,15 @@ if ifTest(getArgvDic):
     getArgvDic(argv)
 
 
-#tests = heatMap    
-if ifTest(heatMap):    
+#tests = heatmap    
+if ifTest(heatmap):    
     code = '''
 n=1000
 b=map(pow,range(n),range(n))
 c=map(divmod,b,b)
     '''
-    heatMap(code)
-#    heatMap('ylimgTest.py')
+    heatmap(code)
+#    heatmap('ylimgTest.py')
     
 #tests = listdirWithFun
 if ifTest(listdirWithFun): 

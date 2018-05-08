@@ -158,7 +158,7 @@ class timeit():
         if self.log:
             print(self.s)
 
-def heatMap(pathOrCode):
+def heatmap(pathOrCode):
     '''显示python代码的时间热力图
     ps.会让代码里面的中文全部失效
     
@@ -248,6 +248,16 @@ def softInPath(softName):
         if os.path.isdir(p) and softName in os.listdir(p):
             return True
     return False
+
+def execmd(cmd):
+    '''
+    execuld cmd and reutrn str(stdout)
+    '''
+    with os.popen(cmd) as stream:
+        if not py2:
+            stream = stream._stream
+        s = stream.read()
+    return s
 
 def addPathToSys(_file_, pathToJoin='.'):
     '''

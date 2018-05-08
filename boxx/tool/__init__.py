@@ -17,12 +17,12 @@ from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, ge
                             nextiter, listToBatch, ll, FunAddMagicMethod, addCall)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
-                    loadData, fileJoinPath, BoxxException)
+                    loadData, fileJoinPath,  warn, BoxxException, BoxxWarning, OffScreenWarning,)
 save_data = saveData
 load_data = loadData
 
 from .toolSystem import (importAllFunCode, impt, tryImport, FakeModule, removeImportSelf,  crun, frun, 
-                        timeit, heatMap, getArgvDic, softInPath, addPathToSys)
+                        timeit, heatmap, getArgvDic, softInPath, execmd, addPathToSys)
 from .toolSystem import getRootFrame, getFatherFrames#, exceptionHook
 
 from .toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,

@@ -2,7 +2,8 @@
 
 from __future__ import unicode_literals
 
-import os
+import os, sys
+import warnings
 
 class BoxxException(Exception):
     '''
@@ -10,6 +11,25 @@ class BoxxException(Exception):
     '''
     pass
 
+class BoxxWarning(BoxxException):
+    pass
+
+class OffScreenWarning(BoxxWarning):
+    pass
+
+def warn(msg, warnType=BoxxWarning, filename=None, line=None, module='boxx', blue=False):
+    '''
+    log a warning of type warnType warn will auto fill filename and line 
+    '''
+    msg = '''%s
+    %s'''%(('\x1b[36m%s\x1b[0m' if blue else '%s')% 'warning from boxx', msg)
+    if filename is None or line is None:
+        f = sys._getframe(1)
+        c = f.f_code
+        filename = c.co_filename if filename is None else filename
+        line = c.co_firstlineno if line is None else line 
+    warnings.warn_explicit(msg, warnType, filename, line, module)
+    
 getsize = os.path.getsize
 
 def getsizem(path='.'):

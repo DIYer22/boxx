@@ -493,7 +493,7 @@ class HiddenForTree():
         s = half + mid + half
         return s 
     
-def tree(seq,deep=None,maxprint=50,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
+def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 
     直观地查看list, tuple, dict, numpy, tensor, dataset, dataloader 等组成的树的每一层结构   
@@ -506,11 +506,11 @@ def tree(seq,deep=None,maxprint=50,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
     ----------
     seq : list or tuple or dict or numpy or tensor or torch.Dataset or torch.Dataloader or any Object
         打印出 以树结构展开所有可迭代部分
-    deep : int, default None
-        能显示的最深深度, 默认不限制
     maxprint : int, default 50
         每个 seq 内部，最大允许的数目 默认最多展示 50 个   
         若 bool(maxprint) 为 False 则不做限制
+    deep : int, default None
+        能显示的最深深度, 默认不限制
     logLen : int, default 45
         能显示的最长字符数
     
@@ -548,7 +548,7 @@ def tree(seq,deep=None,maxprint=50,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
             seq = seq[:head] + [('HiddenForTree',HiddenForTree(lenn=lenn, maxprint=maxprint))] + seq[-head:]
     for i,kv in enumerate(seq):
         __key,v = kv
-        tree(v,deep=deep,maxprint=maxprint,logLen=logLen, dealStr=dealStr,leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
+        tree(v,maxprint=maxprint,deep=deep,logLen=logLen, dealStr=dealStr,leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
              __islast=(i==len(seq)-1),__deepNow=__deepNow+1,__sets=__sets)
     __leftStr.pop()
 tree = FunAddMagicMethod(tree)
@@ -800,6 +800,7 @@ def what(anything, full=False):
     print((colorFormat.b%'To Str: \n'+'└── "'+tabstr(tostr, 5)+'"\n'))
 
 what = FunAddMagicMethod(what)
+wtf = what
 
 def __readShape(n):
     return imread(n).shape

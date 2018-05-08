@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
-from .ylsys import py2
-import os, sys, warnings
+from .ylsys import py2, pyi
+import os
 from functools import reduce, wraps
 
 printf = print
@@ -61,13 +61,32 @@ def setDisplayEnv():
         os.environ["DISPLAY"] not found, may cuse error like this 
         [QXcbConnection Error](https://github.com/ipython/ipython/issues/10627)
         so, we auto set os.environ["QT_QPA_PLATFORM"] = "offscreen"    '''%'\x1b[36m%s\x1b[0m'% 'warning from boxx'
-    f = sys._getframe(0)
-    c = f.f_code
-    warnings, msg, c
-#    warnings.warn_explicit(msg, RuntimeWarning, c.co_filename, c.co_firstlineno, module='boxx')
+    msg = '''os.environ["DISPLAY"] is not found
+    plt.show() are redirect to plt.savefig(tmp)
+    funcation: show, loga, crun, heatmap, plot will be affected'''
+    
+    from .tool import warn
+    warn(msg)
     os.environ["QT_QPA_PLATFORM"] = "offscreen"
-if 'DISPLAY' not in os.environ:
+    os.environ['DISPLAY'] = ':0'
+    
+if not pyi.plt:
     setDisplayEnv()
+    import matplotlib.pyplot as plt
+    def savefig():
+        from .ylsys import tmpboxx
+        from .tool import increase, warn, OffScreenWarning
+        showtmp = os.path.join(tmpboxx(), 'showtmp')
+        if not os.path.isdir(showtmp):
+            os.makedirs(showtmp)
+        png = os.path.join(showtmp,'%d_show.png'%increase('showtmp'))
+        warn('''os.environ["DISPLAY"] is not found
+    plt.show() are redirect to plt.savefig("%s")'''%png, OffScreenWarning)
+        plt.savefig(png)
+        plt.cla()
+        plt.clf()
+    pltshow = plt.show
+    plt.show = savefig
 
 if not py2 and 0:
     __rawOpen__ = open
