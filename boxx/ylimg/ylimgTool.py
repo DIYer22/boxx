@@ -526,7 +526,10 @@ def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
         dealStr(seq.strr(__leftStr), end='')
         return 
 #    s = StructLogFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
-    s = discribOfInstance(seq,leafColor=leafColor,MAX_LEN=logLen)
+    try:
+        s = discribOfInstance(seq,leafColor=leafColor,MAX_LEN=logLen)
+    except Exception as e:
+        s = colorFormat.r%"【%s】"%e.__repr__()
     s = s.replace('\n','↳')
 #    dealStr ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
     dealStr('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))

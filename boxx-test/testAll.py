@@ -10,7 +10,7 @@ from __future__ import unicode_literals, print_function
 
 from boxx import *
 test = True
-#test = False
+test = False
 if test:
     from toolTest import *
     
@@ -43,12 +43,49 @@ kv={
 iterables = [ts,ts]
 fun = f
 if __name__ == '__main__':
-
     pass
-tree
+    from boxx.ylth import *
+    
+    def f(self,*l, **kv):
+        init = self.__init__
+        code = init.__code__
+        ca = code.co_argcount
+        cv = code.co_varnames
+#        type(self)()
+        
+#        log-prettyFrameStack()
+        frames = getFatherFrames(1)
+        for f in frames:
+            log-f.f_code.co_name
+            if f.f_code.co_name != '__init__':
+                break
+            loc = f.f_locals
+#        tree-loc
+        args = {k:loc[k] for k in cv}
+        tree-args
+        rawModuleInit(self)
+#        out()
+#        g.f = frames = getFatherFrames()
+#        p/map2(lambda f:f.f_locals.get('self'),frames[::])
+#        tree-locals()
+    nn.Module.__init__
+    
+#    class nnModule(nn.Module):
+#        def __init__(self, *l, **kv):
+#            log-prettyFrameStack()
+    if '__init__' in str(nn.Module.__init__):
+        rawModuleInit = nn.Module.__init__
+    nn.Module.__init__ = f
+#        nn.Module = nnModule
+#    conv = nn.Conv2d(1,2,(3,3))
+    class Mo(nn.Module):
+        def __init__(self,b='b',**l,):
+            super(Mo, self).__init__()
+    a= Mo('a')
+    
+#    what- a.__init__.__code__
 
 
-
-
+    fs=g.f
 
 

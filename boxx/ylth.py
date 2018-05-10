@@ -56,10 +56,10 @@ if usecpu:
     torch.Tensor.cuda = cudaAttri
     
     
-    class FakeDataParallel(torch.nn.DataParallel):
-        def __init__(self, x):
-            torch.nn.Module.__init__(self, x)
-    torch.nn.DataParallel = FakeDataParallel
+#    class FakeDataParallel(torch.nn.DataParallel):
+#        def __init__(self, x):
+#            super(FakeDataParallel, self).__init__()
+    torch.nn.DataParallel = cudaAttri
     
     class withh():
         def __init__(self, *l):

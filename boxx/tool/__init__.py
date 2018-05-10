@@ -7,7 +7,7 @@ from ..ylsys import py2
 
 from .toolLog import (stdout, log, logc, printt, logg, tounicode,
                       shortstr, shortDiscrib, discrib, getDoc, tabstr, ignoreWarning, LogException, 
-                      LogLoopTime, SuperG, g, cf, p, lc, out)
+                      LogLoopTime, SuperG, g, cf, p, pp, lc, out)
 from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo, decolor
 from .toolLog import strnum, percentStr, notationScientifique
 from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, withprint, wp
