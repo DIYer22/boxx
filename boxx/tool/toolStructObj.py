@@ -121,6 +121,11 @@ class dicto(dict):
         def items(self):
             return addCall(dict.items(self))
 SuperDict = dicto
+
+def _yield():
+    yield 0
+generator = type(_yield())
+
 def dicToObj(dic):  
     '''
     将 dict 转换为易于调用的 Object
@@ -162,7 +167,7 @@ def typestr(instance):
 
 def nextiter(iterr, raiseException=True):
     '''
-    do next(iter(iterr)) then return resoult
+    do next(iter(iterAble)) then return resoult
     
     while iterr is empty and raiseException is False, just return  '【Iterable is empty!】'
     '''
@@ -170,9 +175,10 @@ def nextiter(iterr, raiseException=True):
     for i in iterr:
         re = i
         break
-    if raiseException and re == default:
+    if raiseException and re is default:
         raise StopIteration('Iterable is empty!')
     return re
+nextiter = FunAddMagicMethod(nextiter)
 
 def getfathers(objOrType):
     '''

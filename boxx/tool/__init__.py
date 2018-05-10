@@ -13,7 +13,7 @@ from .toolLog import strnum, percentStr, notationScientifique
 from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, withprint, wp
 from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap
 
-from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather,
+from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather, generator,
                             nextiter, listToBatch, ll, FunAddMagicMethod, addCall)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 

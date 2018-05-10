@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals, print_function
 
-from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, nextiter, getfathers
+from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, generator, nextiter, getfathers
 from ..tool.toolLog import log, colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
 from ..tool.toolLog import tabstr, getDoc, shortDiscrib, discrib
 from ..tool.toolFuncation import mapmp, pipe
@@ -459,7 +459,7 @@ def unfoldTorchData(seq):
     else:
         return False
     return seq
-    
+
 def unfoldAble(seq):
     '''
     能展开的 object 
@@ -470,7 +470,7 @@ def unfoldAble(seq):
         elif isinstance(seq,(dict)):
             seq = list(seq.items())
         elif isinstance(seq, types.GeneratorType):
-            seq = [('Generator', nextiter(seq, raiseException=False))]
+            seq = [('Generator.next', nextiter(seq, raiseException=False))]
         return seq
     fathersStr = str(getfathers(seq))
     if ('torch.utils.data') in fathersStr or ('torchvision.datasets') in fathersStr:
