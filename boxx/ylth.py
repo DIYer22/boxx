@@ -7,8 +7,8 @@ from __future__ import unicode_literals
 
 from . import *
 from .ylsys import cpun, cloud, cuda, usecuda
-from .ylimg import npa
-from .tool import FunAddMagicMethod
+from .ylimg import npa, r
+from .tool import FunAddMagicMethod, nextiter
 
 from collections import OrderedDict
 from functools import wraps
@@ -27,6 +27,10 @@ from torch.autograd import Variable
 import torch.utils.data
 th = torch
 nn = th.nn
+from torch.nn import (Conv2d, ConvTranspose2d, BatchNorm2d, ReLU, Tanh, 
+                      Softmax2d, CrossEntropyLoss, DataParallel, MSELoss, 
+                      MaxPool2d, AvgPool2d, Module, functional, Sequential)
+F = functional
 
 
 # default whether choose cuda
@@ -41,7 +45,7 @@ nn = th.nn
 
 # add summary to torch.nn.Module
 from torchsummary import summary
-nn.Module.summary = lambda self, inputShape=(3,244,244):summary(self, inputShape)
+nn.Module.summary = lambda self, inputShape=None, group=None, gen=None:summary(self, inputShape or getDefaultInputShape(self, group, gen))
 
 
 def dedp(model):
@@ -82,7 +86,6 @@ if usecpu:
     th.cuda.FloatTensor = th.FloatTensor
     
     rawDataLoader = th.utils.data.DataLoader
-    from functools import wraps    
 #    def warp(f):
 #        @wraps(f)
 #        def DataLoader(*l, **kv):
@@ -161,6 +164,46 @@ def kaimingInit(model):
             nn.init.kaiming_normal(t)
 
 
+def getDefaultInputShape(model, group=None, gen=None):
+    para = nextiter(model.parameters())
+    shape = para.shape
+    if len(shape) == 4 and shape[-1]>2 :
+        default = (shape[1], 244, 244)
+    elif len(shape) == 4 and shape[-1] == shape[-2] == 1  :
+        default = (shape[1], 244, 244)
+        if gen:
+            default = (shape[1], 1, 1)
+    elif len(shape) == 2:
+        default = (shape[1],)
+    if group:
+        default = (shape[1]*group, 244, 244)
+    return default
+    
+class HookRegister():
+    def __init__(self, module, hook, direct='f'):
+        self.hook = hook
+        self.hooks = hooks = []
+        self.module = module
+        
+        def apply(module):
+            if direct == 'f':
+                hooks.append(module.register_forward_hook(hook))
+            elif direct == 'b':
+                hooks.append(module.register_backward_hook(hook))
+        module.apply(apply)
+    def remove(self):
+        for h in self.hooks:
+            h.remove()
+    def __enter__(self):
+        return self
+    def __exit__(self,*l):
+        self.remove()
+def removeAllHook(module):
+    def apply(module):
+        module._forward_hooks=OrderedDict()
+    module.apply(apply)
+    
+    
 if __name__ == '__main__':
     l = ['LongTensor',
      'DoubleTensor',
