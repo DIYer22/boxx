@@ -30,6 +30,7 @@ nn = th.nn
 from torch.nn import (Conv2d, ConvTranspose2d, BatchNorm2d, ReLU, Tanh, 
                       Softmax2d, CrossEntropyLoss, DataParallel, MSELoss, 
                       MaxPool2d, AvgPool2d, Module, functional, Sequential)
+Tensor = torch.Tensor
 F = functional
 
 
@@ -52,6 +53,21 @@ def dedp(model):
     '''get raw model instead of torch.nn.DataParallel '''
     return model.module if isinstance(model, torch.nn.DataParallel) else model
 
+if 'Module' in str(torch.nn.Module.load_state_dict):
+    torch.rawModule = rawModule = torch.nn.Module.load_state_dict
+else :
+    rawModule = torch.rawModule 
+def tryLoad(self, state_dict, strict=True):
+    try:
+        rawModule(self, state_dict, strict)
+    except (KeyError,RuntimeError) as e:
+        print('\x1b[31m%s\x1b[0m' % '\n"try strict=False! in Module.load_state_dict() " messge from boxx.ylth \n')
+        para = state_dict
+        para = OrderedDict(
+                    [(k.replace('module.', ''),v) for k,v in para.items()]
+            )
+        rawModule(self, para, strict)
+            
 usecpu = (not cuda and usecuda=='auto') or not usecuda
 if usecpu:
     cudaAttri =  lambda self,*l,**kv:self
@@ -106,20 +122,7 @@ if usecpu:
     def torchLoad(*l, **kv):
         return rawThLoad(*l,**(kv.update({'map_location':'cpu'}) or kv))
     torch.load = torchLoad
-    if 'Module' in str(torch.nn.Module.load_state_dict):
-        torch.rawModule = rawModule = torch.nn.Module.load_state_dict
-    else :
-        rawModule = torch.rawModule 
-    def tryLoad(self, state_dict, strict=True):
-        try:
-            rawModule(self, state_dict, strict)
-        except (KeyError,RuntimeError) as e:
-            print('\x1b[31m%s\x1b[0m' % '\n"try strict=False! in Module.load_state_dict() " messge from boxx.ylth \n')
-            para = state_dict
-            para = OrderedDict(
-                        [(k.replace('module.', ''),v) for k,v in para.items()]
-                )
-            rawModule(self, para, strict)
+
             
     nn.Module.load_state_dict = tryLoad
     torch.nn.modules.module.Module.load_state_dict = tryLoad
