@@ -810,7 +810,7 @@ def generaPAndLc():
                 print((colorFormat.b%'Stacks: '+colorFormat.r%s))
                 print((colorFormat.b%'Locals: '))
                 from boxx import tree
-                tree(local, deep=1, maxprint=None)
+                tree(local, deep=1, maxprint=40)
                 
             if saveOut[id(self)]:
                 print()

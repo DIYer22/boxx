@@ -539,7 +539,7 @@ def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
         return 
     else:
         if id(seq) in __sets:
-            seq=[(colorFormat.r%'【printed befor】','')]
+            seq=[(colorFormat.p%'【printed befor】','')]
         else:
             __sets.add(id(seq))
             seq = unfold
@@ -666,7 +666,7 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
     print('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',colorFormat.r%tounicode(__key),s))
     if isinstance(seq,(list,tuple,dict)) :
         if id(seq) in __sets:
-            seq=[(colorFormat.r%'【printed befor】','')]
+            seq=[(colorFormat.p%'【printed befor】','')]
         else:
             __sets.add(id(seq))
             if isinstance(seq,(list,tuple)):
@@ -680,12 +680,27 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
     else:
         return 
     __leftStr.append('    'if __islast else '│   ')
+    seq =  [(k,filterMethodName(k,v)) for k,v in seq]
     for i,kv in enumerate(seq):
         __key,v = kv
         __dira(v,maxDocLen=maxDocLen,deep=deep,__leftStr=__leftStr,__key=__key,
                __islast=(i==len(seq)-1), __deepNow=__deepNow+1,__sets=__sets)#leafColor=colorFormat.black)
     __leftStr.pop()
 
+def filterMethodName(attrName, attr):
+    typee = type(attr)
+    typn = typeNameOf(typee)
+    if typn in attrLogFuns:
+        return attrLogFuns[typn](attr)
+    if attrName in ('__globals__', 'func_globals'):
+        return colorFormat.b%('【globals-dict %d omitted】'%len(attr))
+    elif attrName in ('__builtins__', ):
+        return colorFormat.b%('【builtins-dict %d omitted】'%len(attr))
+    elif attrName in ('__all__',):
+        return colorFormat.b%('【all-list %d omitted】'%len(attr))
+    elif attrName == ('f_builtins'):
+        return colorFormat.b%('【f_builtins %d omitted】'%len(attr))
+    return attr
 
 def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=True):
     '''
@@ -708,7 +723,7 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=Tr
         能显示的最深深度, 默认不限制
         
     ps.可在__attrLogFuns中 新增常见类别
-    pps.不展开 ('__globals__', 'func_globals', __builtins__)
+    pps.不展开 ('__globals__', 'func_globals', __builtins__, __all__, f_builtins)
     '''
     if __printClassFathers:
         s = prettyClassFathers(instance)
@@ -749,18 +764,6 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=Tr
         except Exception as e:
             return colorFormat.p % '【"getAttr" fail, %s(%s)】'%(typestr(e),e)
     l = list(map(getAttr,dirs))
-    def filterMethodName(attrName, attr):
-        typee = type(attr)
-        typn = typeNameOf(typee)
-        if typn in attrLogFuns:
-            return attrLogFuns[typn](attr)
-        if attrName in ('__globals__', 'func_globals'):
-            return colorFormat.b%('globals-dict %d'%len(attr))
-        elif attrName in ('__builtins__', ):
-            return colorFormat.b%('builtins-dict %d'%len(attr))
-        elif attrName in ('__all__',):
-            return colorFormat.b%('all-list %d'%len(attr))
-        return attr
     l = list(map(filterMethodName,dirs,l))
     dic = dict(list(zip(dirs,l)))    
     __dira(dic,instance=instance, maxDocLen=maxDocLen, deep=deep,__key=typeNameOf(type(instance)), )

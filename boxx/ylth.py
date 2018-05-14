@@ -205,8 +205,16 @@ def removeAllHook(module):
     def apply(module):
         module._forward_hooks=OrderedDict()
     module.apply(apply)
-    
-    
+
+from boxx import log, ylimgTool, out
+ar= FunAddMagicMethod(lambda x: log-ylimgTool.prettyArray(x))
+
+def hasnan(t):
+    nan = th.isnan(t).sum()
+    if nan :
+        out(1)
+        ar(t)
+        raise LookupError('Has torch.nan')
 if __name__ == '__main__':
     l = ['LongTensor',
      'DoubleTensor',
