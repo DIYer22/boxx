@@ -129,6 +129,16 @@ typesToNumpyFuns = {
     
     "torch.autograd.variable.Variable":lambda x:__torchCudaToNumpy(x.data),
     "torch.nn.parameter.Parameter":lambda x:__torchCudaToNumpy(x.data),
+}
+
+__generatorToNumpy = lambda x:np.array(list(x))
+tryToNumpyFunsForNpa = {
+    "dict_values":__generatorToNumpy,
+    "dict_keys":__generatorToNumpy,
+    "dict_items":__generatorToNumpy,
+    "map":__generatorToNumpy,
+    "filter":__generatorToNumpy,
+    "zip":__generatorToNumpy,
     }
 def npa(array):
     '''
@@ -140,7 +150,9 @@ def npa(array):
         在 字典 typesToNumpyFuns 的中的类型
     '''
     typeName = typestr(array)
-    if typeName in typesToNumpyFuns:
+    if typeName in tryToNumpyFunsForNpa:
+        ndarray = tryToNumpyFunsForNpa[typeName](array)
+    elif typeName in typesToNumpyFuns:
         ndarray = typesToNumpyFuns[typeName](array)
     else:
         ndarray = np.array(array)

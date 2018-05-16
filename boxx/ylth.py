@@ -33,6 +33,8 @@ from torch.nn import (Conv2d, ConvTranspose2d, BatchNorm2d, ReLU, Tanh,
 Tensor = torch.Tensor
 F = functional
 
+import torchvision.transforms as transforms
+import torchvision.datasets as datasets
 
 # default whether choose cuda
 #th.long = torch.cuda.LongTensor 

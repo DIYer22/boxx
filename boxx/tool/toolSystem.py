@@ -132,12 +132,15 @@ class timeit():
 
     '''
     def __init__(self,namespace=''):
-        self.begin = time.time()
+        self.last = self.begin = time.time()
         self.log = isstr(namespace) or bool(namespace)
         self.key = namespace
     def __call__(self):
         '''返回时间差'''
-        return time.time()-self.begin
+        t = time.time()
+        r = t -self.last
+        self.last = t
+        return r
     def __enter__(self):
         return self
     def __exit__(self, typee, value, traceback):
