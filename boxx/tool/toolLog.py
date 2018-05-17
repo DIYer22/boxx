@@ -155,14 +155,18 @@ def shortstr(x):
     f = shortDiscrib
     if typee in fund:
         f = fund[typee]
+        if 'torch.' in typee and 'ensor' in typee and (not x.shape):
+            f = strnum
     elif '__float__' in dir(x):
         try:
-            float(x)
+            x = float(x)
             f = strnum
         except:
             pass
-    return decolor(f(x))
-
+    try:
+        return decolor(f(x))
+    except:
+        return str((x))
 
 def shortDiscrib(x, maxlen=60):
     '''
@@ -406,6 +410,8 @@ def notationScientifique(num, roundn=None, tuple=False):
 def strnum(num, roundn=4):
     '''
     my impletement of str(num)
+    
+    TODO: add support nan inf
     '''
     if isinstance(num, int):
         return str(num)
@@ -813,7 +819,6 @@ def generaPAndLc():
                 tree(local, deep=1, maxprint=40)
                 
             if saveOut[id(self)]:
-                print()
                 root = getRootFrame()
                 addDic = dict(
 #                        code=code,
@@ -828,11 +833,13 @@ def generaPAndLc():
                 addDic.update(local)
                 same = set(addDic).intersection(set(root.f_globals))
                 
-                addVarStr = ', '.join([colorFormat.p%k for k in addDic if k not in same])
-                if addVarStr:
-                    print(colorFormat.b% '\nVars add to Root Frame by out: '+'\n└── '+ addVarStr)
-                if len(same):
-                    print(colorFormat.r% '\nVars that replaced by out in Root Frame: '+'\n└── '+', '.join([colorFormat.p%k for k in same]))
+                if printt:
+                    print()
+                    addVarStr = ', '.join([colorFormat.p%k for k in addDic if k not in same])
+                    if addVarStr:
+                        print(colorFormat.b% '\nVars add to Root Frame by out: '+'\n└── '+ addVarStr)
+                    if len(same):
+                        print(colorFormat.r% '\nVars that replaced by out in Root Frame: '+'\n└── '+', '.join([colorFormat.p%k for k in same]))
                 root.f_globals.update(addDic)
                 lc.c = lc.code = code
                 lc.f = lc.frame = frame

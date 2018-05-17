@@ -112,10 +112,10 @@ def confusionMatrix(re,gt,classn=None):
     gt : np.ndarray 
         ground Truth, 值为每个像素的类别
     classn : int,  default None
-        总类别数目 默认为 max(re.max(), gt.max())
+        总类别数目 默认为 max(re.max(), gt.max())+1
     '''
     if classn is None:
-        classn = max(re.max(), gt.max())
+        classn = max(re.max(), gt.max())+1
     ma = np.zeros((classn,classn),int)
     for ind in range(classn):
         row = np.histogram(re[(gt==ind)],classn,range=(0,classn))[0]

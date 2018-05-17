@@ -27,7 +27,7 @@ from torch.autograd import Variable
 import torch.utils.data
 th = torch
 nn = th.nn
-from torch.nn import (Conv2d, ConvTranspose2d, BatchNorm2d, ReLU, Tanh, 
+from torch.nn import (Conv2d, Linear, ConvTranspose2d, BatchNorm2d, ReLU, Tanh, 
                       Softmax2d, CrossEntropyLoss, DataParallel, MSELoss, 
                       MaxPool2d, AvgPool2d, Module, functional, Sequential)
 Tensor = torch.Tensor
@@ -140,7 +140,7 @@ def tht(t):
     return t.cuda()
 tht = FunAddMagicMethod(tht)
 
-t = tht(r)
+t = tht(r).float()
 
 @wraps(torch.autograd.Variable)
 def var(t, *l,  **kv):
@@ -217,6 +217,22 @@ def hasnan(t):
         out(1)
         ar(t)
         raise LookupError('Has torch.nan')
+    
+def getpara(m):
+    '''get first parameter'''
+    return nextiter(m.parameters())
+
+def getpara0(m):
+    return getpara(m).view(-1)[0]
+def getgrad(m):
+    return getpara(m).grad
+def getgrad0(m):
+    grad = getpara(m).grad
+    return None if grad is None else grad.view(-1)[0]
+
+getpara, getpara0, getgrad, getgrad0 = map(FunAddMagicMethod, [getpara, getpara0, getgrad, getgrad0])
+
+    
 if __name__ == '__main__':
     l = ['LongTensor',
      'DoubleTensor',

@@ -74,8 +74,8 @@ class FunAddMagicMethodCore(dict):
     __repr__ = __str__
     __sub__ = __call__
     __truediv__ = __div__
+    __mul__ = __call__
 #    __add__ = __call__
-#    __mul__ = __call__
 #    __eq__ = __call__
 #    __pow__ = __call__
 #    __invert__ = __call__
