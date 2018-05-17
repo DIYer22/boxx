@@ -229,10 +229,16 @@ def getgrad(m):
 def getgrad0(m):
     grad = getpara(m).grad
     return None if grad is None else grad.view(-1)[0]
-
 getpara, getpara0, getgrad, getgrad0 = map(FunAddMagicMethod, [getpara, getpara0, getgrad, getgrad0])
 
-    
+def vizmodel(m, shape=None):
+    if shape is None:
+        shape = (1,) + getDefaultInputShape(m)
+    from torchviz import make_dot
+    x = th.rand(shape)
+    x.to(getpara(m))
+    graph = make_dot(m(x), params=dict(m.named_parameters()))
+    return graph
 if __name__ == '__main__':
     l = ['LongTensor',
      'DoubleTensor',

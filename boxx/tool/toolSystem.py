@@ -149,9 +149,11 @@ class timeit():
     @property
     def s(self):
         from .toolLog import strnum
+        if 't' not in self.__dict__:
+            self.t = self()
         return strnum(self.t,6)
     def __str__(self):
-        s='\x1b[36m%s spend time: %s\x1b[0m'%(self.key, self.s)
+        s='\x1b[36m"%s" spend time: %s\x1b[0m'%(self.key, self.s)
         return s
     @property
     def p(self):
