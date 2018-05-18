@@ -94,7 +94,14 @@ class FunAddMagicMethod(FunAddMagicMethodCore):
     
 class dicto(dict):
     '''
-    类似JavaScript对象的超级字典，可以动态添加属性
+    a subclass of dict for convenient, like object in JavaScript
+    
+    >>> d = dicto(a=0)
+    >>> d.b = 1
+    >>> print(d)
+    {'a': 0, 'b': 1}
+    
+    类似 JavaScript 对象的超级字典，可以动态添加属性
     其中 dicto.keys,dicto.values,dicto.items 添加了property
     这个反射机制是试出来的 原理还不清楚
     '''

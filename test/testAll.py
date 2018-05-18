@@ -19,6 +19,10 @@ if test:
     from ylmlTest import *
 
 
+pattern = 'to do'
+findinRoot(up=pattern,root='..')
+
+
 
 l = []
 def f(t, tt=0):
@@ -42,7 +46,7 @@ kv={
 
 iterables = [ts,ts]
 fun = f
-if __name__ == '__main__':
+if __name__ == '__main__0':
     pass
     from boxx.ylth import *
     
@@ -79,7 +83,7 @@ if __name__ == '__main__':
 #        nn.Module = nnModule
 #    conv = nn.Conv2d(1,2,(3,3))
     class Mo(nn.Module):
-        def __init__(self,b='b',**l,):
+        def __init__(self,b='b',**l):
             super(Mo, self).__init__()
     a= Mo('a')
     

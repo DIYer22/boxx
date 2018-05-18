@@ -6,7 +6,9 @@ from .tool.toolTools import filterList
 
 import numpy as np
 import matplotlib.pyplot as plt
-from numpy import e, pi
+from numpy import e, pi, nan, inf
+nan = nan * .22
+inf = inf * .22
 
 def savenp(path, arr=None):
     '''压缩存储 np.array 为path路径 

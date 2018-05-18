@@ -4,7 +4,7 @@ from __future__ import unicode_literals, print_function
 
 from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, generator, nextiter, getfathers
 from ..tool.toolLog import log, colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
-from ..tool.toolLog import tabstr, getDoc, shortDiscrib, discrib
+from ..tool.toolLog import tabstr, getDoc, shortDiscrib, discrib, strnum
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl
@@ -169,9 +169,10 @@ def discribArray(array):
     strr = (clf.r%tounicode(array.shape),
           clf.r%typeNameOf(array.dtype.type)[6:], 
           clf.r%typeName,
-          clf.r%( (array.max()) if (array.size) else 'Empty'), 
-          clf.r%( (array.min()) if (array.size) else 'Empty') )
-    return (('shape:%s type:(%s of %s) max: %s, min: %s'%tuple(strr)))
+          clf.r%( strnum(array.max()) if (array.size) else 'Empty'), 
+          clf.r%( strnum(array.min()) if (array.size) else 'Empty'), 
+          clf.r%( strnum(array.mean()) if (array.size) else 'Empty') )
+    return (('shape:%s type:(%s of %s) max: %s, min: %s, mean: %s'%tuple(strr)))
     
     
 def prettyArray(array):
@@ -192,7 +193,9 @@ def prettyArray(array):
         nans = clf.p%'"nan":%s (%.2f%%), '%(nan,100.*nan/size) if nan else ''
         inf = np.isinf(array).sum()
         infs = clf.p%'"inf":%s (%.2f%%), '%(inf,100.*inf/size) if inf else ''
-        discribNan = (clf.r%'\nNotice: ' + '%s%s finite max: %s, finite min: %s'%(nans,infs, len(finite) and (finite.max()), len(finite) and (finite.min())))
+        discribNan = (clf.r%'\nNotice: ' + '%s%s finite max: %s, finite min: %s, finite mean: %s'%(
+                nans,infs, len(finite) and strnum(finite.max()), len(finite) and strnum(finite.min()), 
+                len(finite) and strnum(finite.mean())))
     if len(unique)<10:
         dic = defaultdict(lambda : 0)
         for i in array.ravel():
@@ -210,10 +213,10 @@ def prettyArray(array):
     return discrib
 
 def plot(array, sort=False, maxline=10):
-    '''to do
-    plot line or lines
     '''
-    if callable(array):
+    plot line or top @maxline lines
+    '''
+    if callable(array) and '__iter__' not in dir(array):
         x = np.linspace(np.e*-1.5,np.e*1.5,100)
         array = array(x)
     discrib = prettyArray(array).replace('\n','\n\n')
@@ -234,7 +237,8 @@ plot = FunAddMagicMethod(plot)
  
 def loga(array):
     '''
-    Analysis np.array with a graph. include shape, max, min, distribute
+    Analysis any array like thing .
+    the shape, max, min, distribute of the array
     '''
     discrib = prettyArray(array)
     print(discrib.replace('\n','\n\n'))
@@ -805,14 +809,14 @@ def what(anything, full=False):
     
     print('-'*15+clf.b%'end of what(' + clf.p%('"%s"'%shortDiscrib(tostr, 20)) + clf.b%')'+'-'*15)
     dira(anything, deep=2, __printClassFathers=False)
-    print()
+    print("")
     print((colorFormat.b%'Document: \n'+'└── '+tabstr(doc, 5)+'\n'))    
 
     innerStruct = isinstance(anything, (list,tuple,dict)) or (typestr(anything) in StructLogFuns)
     if innerStruct:
         print((colorFormat.b%'Inner Struct:'))
         tree(anything, maxprint=not(full) and 12)
-        print()
+        print("")
         
     print((colorFormat.b%'Classes: \n'+'└── '+classes+'\n'))    
     print((colorFormat.b%'To Str: \n'+'└── "'+tabstr(tostr, 5)+'"\n'))

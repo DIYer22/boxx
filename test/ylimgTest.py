@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from boxx.ylimg.ylimgTool import *
+from boxx.ylimg.ylimgVideoAndGif import *
 from boxx import *
 '''
 使用`ifTest([funName]) or 0:`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
 '''
-imgGlob = 'imgForTest/*'
+dirr = dirname(__file__)
+imgGlob = pathjoin(dirr,'imgForTest/*')
 #imgGlob = ''
-jpg,png='imgForTest/0004.jpg','imgForTest/0004.png'
+jpg,png= pathjoin(dirr,'imgForTest/0004.jpg'), pathjoin(dirr,'imgForTest/0004.png')
 img,gt = imread(jpg),imread(png)
 gt = gt>0
 re = gt.copy()
@@ -72,7 +74,7 @@ tests = loga
 if ifTest(loga):
 #    loga([(np.inf,5,7,np.nan)]*10)
     loga([(np.inf,np.nan)]*10)
-
+    loga(npa-[r]*30+r**2.2+[nan,inf,0,0])
 #tests = tree
 if ifTest(tree):
     re = [{'a':1,'b':3},

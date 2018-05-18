@@ -109,11 +109,10 @@ class SystemInfo():
     sys info
     '''
     os = sys.platform
-    # to do
-#    gui = True
     display = True
     if linuxYl:
         display = 'DISPLAY' in environ and environ['DISPLAY']
+    gui = pyi.gui or display
     
     @property
     def ip(self):

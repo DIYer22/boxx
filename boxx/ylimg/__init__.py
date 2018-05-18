@@ -6,9 +6,8 @@ from .ylimgTool import (show, showb, shows, loga, tree, treem, treea, dira, what
 from .ylimgTool import (uint8, randomm , r, labelToColor,getDefaultColorList,
                        standImg, getMeanStd, boolToIndex, discribArray, prettyArray)
 
-from .ylimgVideoAndGif import gifSave, videoToImgs, base64Img, generateBigImgForPaper
-
-# Compatibility to old versions
+#from .ylimgVideoAndGif import gifSave, videoToImgs, base64Img, generateBigImgForPaper
+from . import ylimgVideoAndGif 
 
 
 if __name__ == '__main__':

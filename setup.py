@@ -7,7 +7,20 @@ from datetime import date
 from setuptools import setup, find_packages
 
 # --- import your package ---
-import boxx as package
+
+#import boxx as package
+packageName = 'boxx'
+
+pyPath = '%s/__init__.py'%packageName if os.path.isdir(packageName) else '%s.py'%packageName
+
+with open(pyPath) as f:
+    lines = f.readlines()
+code = ''.join(filter(lambda l: l.startswith('__') and '=' in l, lines))
+class Pack():
+    pass
+package = Pack()
+package.__name__ = packageName
+exec(code, package.__dict__)
 
 if __name__ == "__main__":
     # --- Automatically generate setup parameters ---

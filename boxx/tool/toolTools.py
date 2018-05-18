@@ -10,6 +10,7 @@ from collections import defaultdict
 from .toolIo import openread, openwrite, getsizem
 from .toolLog import log
 
+from ..ylsys import py2
 
 __increase_recording = defaultdict(lambda:-1)
 def increase(namespace=None):
@@ -96,7 +97,8 @@ def replaceAllInRoot(old, new, root='.', types='py'):
                     openwrite(code.replace(old,new),path)
     listdirWithFun(root, replace)
 
-def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, re=None):
+def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, re=None, 
+               exclude=['pyc', 'swp', 'swo', 'gz', 'whl']):
     '''
     在root及子路径下的所有文件中 查找 pattern。存在 则打印出对应文件的那一行。
     
@@ -119,6 +121,8 @@ def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, r
         Ignoring letter case of variable names
     re : str or bool, default None
         use re.compile(re) to search each line
+    exclude : list , default ['pyc', 'swp', 'swo',]
+        exclude file types in this list
     '''
     from re import compile as recompile
     if types is not None :
@@ -126,9 +130,10 @@ def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, r
             types = [types]
         types = [t.replace('.', '') for t in types]
     def intypes(path):
+        typee = '.' in path and path.split('.')[-1]
         if types is None:
-            return True
-        return '.' in path and path.split('.')[-1] in types
+            return typee not in exclude
+        return typee in types
     if not pattern:
         pattern = var or up or re
     searchin = lambda strr: pattern in strr
@@ -147,6 +152,9 @@ def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, r
             if (getsizem(path) <= maxsize or maxsize is None) and intypes(path):
                 try:
                     s = openread(path)
+                    if py2:
+                        from .toolLog import tounicode
+                        s = tounicode(s)
                     lines = [(i, l) for i,l in enumerate(s.split('\n'), 1) if searchin(l)]
                     if not len(lines):
                         return 
@@ -157,7 +165,7 @@ def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, r
                         if len(l) > 83:
                             l = l[:80] +' ...'
                         print('\t%s:%s'%('\x1b[35m%s\x1b[0m'%i, '\x1b[31m%s\x1b[0m'%l))
-                    print()
+                    print("")
                 except:
                     return 
     listdirWithFun(root, find)

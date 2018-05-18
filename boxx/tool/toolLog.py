@@ -409,21 +409,25 @@ def notationScientifique(num, roundn=None, tuple=False):
 
 def strnum(num, roundn=4):
     '''
-    my impletement of str(num)
-    
-    TODO: add support nan inf
+    better str(num) avoid to long round
+    support nan inf
     '''
-    if isinstance(num, int):
-        return str(num)
-    elif not isinstance(num, float) and '__float__' in dir(num):
-        num = float(num)
-    head, pow = notationScientifique(num, roundn=roundn, tuple=True)
-    if pow > roundn or pow < -min(3,roundn):
-        s = '%se%d'%(str(head),pow)
-    else:
-        s = str(round(num, -pow+roundn))
-    return s
-    
+    try:
+        if isinstance(num, int):
+            return str(num)
+        elif not isinstance(num, float) and '__float__' in dir(num):
+            num = float(num)
+        head, pow = notationScientifique(num, roundn=roundn, tuple=True)
+        if pow > roundn or pow < -min(3,roundn):
+            s = '%se%d'%(str(head),pow)
+        else:
+            s = str(round(num, -pow+roundn))
+        return s
+    except (OverflowError, ValueError) as e:
+        import numpy as np
+        if np.isnan(num) or np.isinf(num):
+            return str(num)
+        raise e
 def percentStr(num, roundn=2):
     '''
     float to percent sign
@@ -684,6 +688,7 @@ GlobalG = SuperG
 g = SuperG()
 config = dicto()
 cf = config
+boxxcf = dicto()
 
 def prettyClassFathers(obj):
     '''
@@ -764,6 +769,12 @@ def generaPAndLc():
     saveOut = {}
     class LocalAndGlobal(dicto):
         '''
+        your can use `out()`, `p()` in any function or module
+        exec `out()`, all vars that belong the function will transport to
+        Python interactive shell. and `globals()` will in `p` which is a dicto
+        
+        BTW, `import boxx.out`, `import boxx.p` is Convenient way to use `out()` without `from boxx import out`
+        
         在函数内运行`p()` or `lc()`  
         则此函数的global和local 变量会载入全局变量 p 中
         函数的 frame等其他信息 则放入全局变量 lc
@@ -778,9 +789,15 @@ def generaPAndLc():
             
         Effect
         ----------
-        p : dicto
+        out() : dicto
+            copy current frame's locals() and globals() to your 
+            Python interactive shell
+            That's mean any var befor `out()` will Transport to Python shell,
+            Even your are exec `out()` in Thearding
+            ps. `out(False)` will turn off the info print
+        p() : dicto
             将当前frame的locals()和globals()存入p
-            运行 `p()`, 等价于 p.update(globals());p.update(locals())
+            p.var_name is the var's value in locals() and globals()
         lc : callabel dicto
             lc则存储更多、更细致的信息 包含code, frame, frames栈
             lc 的 items：
@@ -834,7 +851,7 @@ def generaPAndLc():
                 same = set(addDic).intersection(set(root.f_globals))
                 
                 if printt:
-                    print()
+                    print("")
                     addVarStr = ', '.join([colorFormat.p%k for k in addDic if k not in same])
                     if addVarStr:
                         print(colorFormat.b% '\nVars add to Root Frame by out: '+'\n└── '+ addVarStr)
@@ -911,7 +928,7 @@ class withprint():
             else:
                 kvs.append((k, locs[k]))
                 newVars.append(k)
-        print()
+        print("")
         from .toolTools import increase
         count = increase('boxxx.withprint id:%s'%id(self))
         if count : 
