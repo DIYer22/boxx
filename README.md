@@ -6,7 +6,7 @@
 </div>
 
 <div align="center">
-  A Tool-box for Fast Build and Debug in Python. Especially for <code>Scientific Computing</code> and <code>Computer Vision</code>.
+  A Tool-box for Efficient Build and Debug in Python. Especially for <code>Scientific Computing</code> and <code>Computer Vision</code>.
 </div>
 
 

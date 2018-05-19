@@ -824,10 +824,9 @@ def what(anything, full=False):
 
     innerStruct = isinstance(anything, (list,tuple,dict)) or (typestr(anything) in StructLogFuns)
     if innerStruct:
-        doStr((colorFormat.b%'Inner Struct:'))
         treePrintf = PrintStrCollect()
         tree(anything, maxprint=not(full) and 12, printf=treePrintf)
-        doStr(treePrintf)
+        doStr((colorFormat.b%'Inner Struct:\n')+str(treePrintf))
         doStr("")
         
     doStr((colorFormat.b%'Classes: \n'+'└── '+classes+'\n'))    
