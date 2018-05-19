@@ -23,7 +23,14 @@ def listToBatch(listt, batch):
     return ziped
 
 class Ll(list):
-    '''to do
+    '''
+    a tool for convenient list operate
+    
+    1. quick exec `list(range(int))` buy ll*int:
+    >>> ll*4
+    [0, 1, 2, 3] 
+    
+    2. `ll-Iterable`, `ll/Iterable` is a convenient way to exec `list(Iterable)`
     '''
     def __init__(self):
         list.__init__(self, [0, 1])

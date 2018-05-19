@@ -81,13 +81,13 @@ def __multiprocessLogFun__(args):
     fun, args, ind, lenn, logf = args
     if ind is None:
         return fun(*args)
-    from .toolLog import timeit, percentStr, shortDiscrib
+    from .toolLog import timeit, percentStr, shortStr
     with timeit(None) as t:
         re = fun(*args)
     if logf:
         logf([fun, args, ind, lenn, logf])
     else:
-        print('%s/%s(%s) spend %s args[0]: %s'%(ind,lenn,isinstance(lenn, int) and percentStr(ind*1./lenn),t.s,shortDiscrib(args[0])), end='\n')
+        print('%s/%s(%s) spend %s args[0]: %s'%(ind,lenn,isinstance(lenn, int) and percentStr(ind*1./lenn),t.s,shortStr(args[0])), end='\n')
     return re
 
 def mapmp(fun, *iterables, **kv):

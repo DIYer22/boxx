@@ -158,6 +158,10 @@ if ifTest(strnum):
     tree-[strnum(i) for i in (0., 1, .99, 100., e*1e9,-pi*1e-9,)]
     tree-[percentStr(i) for i in (0., 1.,  e/10, pi)]
 
+#tests = getExcept
+if ifTest(getExcept):
+    re = getExcept(lambda x=1:1/0)
+    assert re[-1].f_locals.get('x') == 1
 if __name__ == '__main__':
     pass
 

@@ -12,11 +12,50 @@ class BoxxException(Exception):
     pass
 
 class BoxxWarning(BoxxException):
+    '''
+    root warninng for boxx
+    '''
     pass
 
 class OffScreenWarning(BoxxWarning):
     pass
 
+class Except():
+    '''
+    get traceback frame in with 
+    
+    >>> with excep:
+    >>>     1/0
+    >>> dira(excep)
+    '''
+    def __init__(self, deep=0):
+        self.deep = deep
+    def __enter__(self):
+        pass
+    def __exit__(self, typee, value, traceback):
+        deep = self.deep
+        while deep:
+            deep -= 1
+            traceback = traceback.tb_next
+        self.type = typee
+        self.value = self.v = value
+        self.traceback = self.t = traceback
+        self.frame = self.f = traceback.tb_frame
+excep = Except()
+
+
+def getExcept(fun):
+    '''
+    exec `fun()` and return (Exception, trace, frame)
+    '''
+    try:
+        exc = Except(1) 
+        with exc:
+            fun()
+    except Exception as ee:
+        e = ee
+        return e, exc.traceback, exc.frame
+    
 def warn(msg, warnType=BoxxWarning, filename=None, line=None, module='boxx', blue=False):
     '''
     log a warning of type warnType warn will auto fill filename and line 

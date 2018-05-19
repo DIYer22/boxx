@@ -3,11 +3,11 @@
 from __future__ import unicode_literals, print_function
 
 from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, generator, nextiter, getfathers
-from ..tool.toolLog import log, colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
-from ..tool.toolLog import tabstr, getDoc, shortDiscrib, discrib, strnum
+from ..tool.toolLog import log, PrintStrCollect, colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
+from ..tool.toolLog import tabstr, getDoc, shortStr, discrib, strnum
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
-from ..ylsys import tmpYl
+from ..ylsys import tmpYl, pyi
 from ..ylnp import isNumpyType
 
 import skimage as sk
@@ -401,8 +401,8 @@ def shows(*imgs):
 shows = FunAddMagicMethod(shows)
 
 
-
-__torchShape = lambda x:colorFormat.r%'%s %s'%(str(x.shape),x.type())
+    
+__torchShape = lambda x:colorFormat.r%'%s %s'%(str(x.shape or ('%s of'%x)) ,x.type())
 StructLogFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
@@ -456,7 +456,7 @@ def discribOfInstance(instance,leafColor=None,MAX_LEN=45):
         typen = 'dictoSub'
     if typen in StructLogFuns:
         s = StructLogFuns[typen](instance)
-        return shortDiscrib(s, MAX_LEN+18)
+        return shortStr(s, MAX_LEN+18)
     s = tounicode(instance)
     if len(s) > MAX_LEN:
         s = s[:MAX_LEN-3]+'...'
@@ -509,7 +509,7 @@ class HiddenForTree():
         s = half + mid + half
         return s 
     
-def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
+def tree(seq,maxprint=50,deep=None,logLen=45,printf=log,leafColor='\x1b[31m%s\x1b[0m',__key='/',__leftStr=None, __islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 
     直观地查看list, tuple, dict, numpy, tensor, dataset, dataloader 等组成的树的每一层结构   
@@ -529,6 +529,8 @@ def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
         能显示的最深深度, 默认不限制
     logLen : int, default 45
         能显示的最长字符数
+    printf : funcation, default print funcation
+        a funcation that could replace print 
     
     ps.可在StructLogFuns中 新增类别
     '''
@@ -539,7 +541,7 @@ def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
         __islast = 1
         __sets = set()
     if maxprint and isinstance(seq, HiddenForTree):
-        dealStr(seq.strr(__leftStr), end='')
+        printf(seq.strr(__leftStr), end='')
         return 
 #    s = StructLogFuns.get(type(seq),lambda x:colorFormat.r%tounicode(x)[:60])(seq)
     try:
@@ -547,8 +549,8 @@ def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
     except Exception as e:
         s = colorFormat.r%"【%s】"%e.__repr__()
     s = s.replace('\n','↳')
-#    dealStr ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
-    dealStr('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))
+#    printf ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
+    printf('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))
     
     unfold = unfoldAble(seq)
     if unfold is False :
@@ -567,7 +569,7 @@ def tree(seq,maxprint=50,deep=None,logLen=45,dealStr=log,leafColor='\x1b[31m%s\x
             seq = seq[:head] + [('HiddenForTree',HiddenForTree(lenn=lenn, maxprint=maxprint))] + seq[-head:]
     for i,kv in enumerate(seq):
         __key,v = kv
-        tree(v,maxprint=maxprint,deep=deep,logLen=logLen, dealStr=dealStr,leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
+        tree(v,maxprint=maxprint,deep=deep,logLen=logLen, printf=printf,leafColor=leafColor, __key=__key, __leftStr=__leftStr, 
              __islast=(i==len(seq)-1),__deepNow=__deepNow+1,__sets=__sets)
     __leftStr.pop()
 tree = FunAddMagicMethod(tree)
@@ -656,7 +658,7 @@ attrLogFuns = {
 'buffer':lambda x:'buffer : %s'%(colorFormat.b%tounicode(x)),
 }
 
-def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',__islast=None,__deepNow=0, __sets=None):
+def __dira(seq,instance=None, maxDocLen=50, deep=None, printf=print, __leftStr=None,__key='/',__islast=None,__deepNow=0, __sets=None):
     '''
     类似bash中的tree命令 简单查看instance的 __attrs__ 组成的树的结构
     attr name用红色；str(instance.attr)用蓝色；
@@ -678,8 +680,8 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
         if len(doc) > maxDocLen:
             doc = doc[:maxDocLen-3]+'...'
         s=colorFormat.b%('%d attrs%s'%(len(seq), doc.replace('\n','↳').replace(' :',',',1)))
-#    print ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
-    print('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',colorFormat.r%tounicode(__key),s))
+#    printf ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
+    printf('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',colorFormat.r%tounicode(__key),s))
     if isinstance(seq,(list,tuple,dict)) :
         if id(seq) in __sets:
             seq=[(colorFormat.p%'【printed befor】','')]
@@ -699,7 +701,7 @@ def __dira(seq,instance=None, maxDocLen=50, deep=None, __leftStr=None,__key='/',
     seq =  [(k,filterMethodName(k,v)) for k,v in seq]
     for i,kv in enumerate(seq):
         __key,v = kv
-        __dira(v,maxDocLen=maxDocLen,deep=deep,__leftStr=__leftStr,__key=__key,
+        __dira(v,maxDocLen=maxDocLen,deep=deep, printf=printf,__leftStr=__leftStr,__key=__key,
                __islast=(i==len(seq)-1), __deepNow=__deepNow+1,__sets=__sets)#leafColor=colorFormat.black)
     __leftStr.pop()
 
@@ -710,7 +712,7 @@ def filterMethodName(attrName, attr):
         return attrLogFuns[typn](attr)
     if attrName in ('__globals__', 'func_globals'):
         return colorFormat.b%('【globals-dict %d omitted】'%len(attr))
-    elif attrName in ('__builtins__', ):
+    elif attrName in ('__builtins__', ) and isinstance(attr, dict):
         return colorFormat.b%('【builtins-dict %d omitted】'%len(attr))
     elif attrName in ('__all__',):
         return colorFormat.b%('【all-list %d omitted】'%len(attr))
@@ -718,7 +720,7 @@ def filterMethodName(attrName, attr):
         return colorFormat.b%('【f_builtins %d omitted】'%len(attr))
     return attr
 
-def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=True):
+def dira(instance, pattern=None, deep=None, maxDocLen=50, printf=print, __printClassFathers=True):
     '''
     以树的结构 分析instance的所有 attrs, 并展示父类的继承链
     attr name用红色；str(instance.attr)用蓝色；
@@ -737,15 +739,17 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=Tr
         若有文档显示文档的字数长度
     deep : int, default None
         能显示的最深深度, 默认不限制
+    printf : funcation, default print funcation
+        a funcation that could replace print 
         
     ps.可在__attrLogFuns中 新增常见类别
     pps.不展开 ('__globals__', 'func_globals', __builtins__, __all__, f_builtins)
     '''
     if __printClassFathers:
         s = prettyClassFathers(instance)
-        print((colorFormat.b%'Classes: \n'+'└── '+s+''))
+        printf((colorFormat.b%'Classes: \n'+'└── '+s+''))
     
-    print((colorFormat.b%'Attrs: '))
+    printf((colorFormat.b%'Attrs: '))
     if isinstance(pattern, int):
         deep = pattern
         pattern = None
@@ -753,7 +757,7 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=Tr
     if pattern is not None:
         import re
         dirs = [name for name in dirs if re.search(pattern,name)]
-        print('Filter by pattern: "%s"'%(colorFormat.r%pattern))
+        printf('Filter by pattern: "%s"'%(colorFormat.r%pattern))
     def getAttr(attr):
         try:
             try :
@@ -782,7 +786,7 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50, __printClassFathers=Tr
     l = list(map(getAttr,dirs))
     l = list(map(filterMethodName,dirs,l))
     dic = dict(list(zip(dirs,l)))    
-    __dira(dic,instance=instance, maxDocLen=maxDocLen, deep=deep,__key=typeNameOf(type(instance)), )
+    __dira(dic,instance=instance, maxDocLen=maxDocLen, deep=deep,__key=typeNameOf(type(instance)), printf=printf, )
 
 dira = FunAddMagicMethod(dira)
 treea = dira
@@ -806,21 +810,30 @@ def what(anything, full=False):
     doc = getDoc(anything) or clf.p%"【Not found document】"
     doc = discrib(doc, maxline=not(full) and 15)
     classes = prettyClassFathers(anything)
-    
-    print('-'*15+clf.b%'end of what(' + clf.p%('"%s"'%shortDiscrib(tostr, 20)) + clf.b%')'+'-'*15)
-    dira(anything, deep=2, __printClassFathers=False)
-    print("")
-    print((colorFormat.b%'Document: \n'+'└── '+tabstr(doc, 5)+'\n'))    
+    doStr = print
+    if pyi.jn:
+        strs = []
+        doStr = strs.append
+        
+    doStr('-'*10+clf.b%'end of what(' + clf.p%('"%s"'%shortStr(tostr, 30)) + clf.b%')'+'-'*10)
+    diraPrintf = PrintStrCollect()
+    dira(anything, deep=2, __printClassFathers=False, printf=diraPrintf)
+    doStr(diraPrintf)
+    doStr("")
+    doStr((colorFormat.b%'Document: \n'+'└── '+tabstr(doc, 5)+'\n'))    
 
     innerStruct = isinstance(anything, (list,tuple,dict)) or (typestr(anything) in StructLogFuns)
     if innerStruct:
-        print((colorFormat.b%'Inner Struct:'))
-        tree(anything, maxprint=not(full) and 12)
-        print("")
+        doStr((colorFormat.b%'Inner Struct:'))
+        treePrintf = PrintStrCollect()
+        tree(anything, maxprint=not(full) and 12, printf=treePrintf)
+        doStr(treePrintf)
+        doStr("")
         
-    print((colorFormat.b%'Classes: \n'+'└── '+classes+'\n'))    
-    print((colorFormat.b%'To Str: \n'+'└── "'+tabstr(tostr, 5)+'"\n'))
-
+    doStr((colorFormat.b%'Classes: \n'+'└── '+classes+'\n'))    
+    doStr((colorFormat.b%'To Str: \n'+'└── "'+tabstr(tostr, 5)+'"\n'))
+    if pyi.jn:
+        [print(s) for s in strs[::-1]]
 what = FunAddMagicMethod(what)
 wtf = what
 

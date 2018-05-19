@@ -144,15 +144,27 @@ def tounicode(strr):
         if isinstance(strr,str):
             return strr.decode('utf-8','replace')
         return unicode(strr)
-        
-def shortstr(x):
+
+def tostrpy2(x):
     '''
-    to do: batter for matria
+    only work py2 return a str to avoid 
+    UnicodeEncodeError when `str(u'中文')`
+    '''
+    if not py2:
+        return str(x)
+    if isinstance(x,unicode):
+        return x.encode('utf-8','replace')
+    s = str(x)
+    return s
+
+def shortDiscrib(x):
+    '''
+    short Discrib of anything for logc number is better 
     '''
     typee = typestr(x)
     from ..ylimg import StructLogFuns
     fund = StructLogFuns
-    f = shortDiscrib
+    f = shortStr
     if typee in fund:
         f = fund[typee]
         if 'torch.' in typee and 'ensor' in typee and (not x.shape):
@@ -168,7 +180,7 @@ def shortstr(x):
     except:
         return str((x))
 
-def shortDiscrib(x, maxlen=60):
+def shortStr(x, maxlen=60):
     '''
     genrate one line discrib str shorter than maxlen.
     if len(s)> maxlen then slice additional str and append '...' 
@@ -211,10 +223,10 @@ def discrib(x, maxline=20):
 
 def logc(code, run=None):
     '''
-    to do:
+    TODO:
         1. use re to replace vars name avoid the same names
         2. use Abstract Syntax Tree and re 
-           to distinguish .attr and funcation call
+           to distinguish .attr, funcation call []
     '''
     frame = sys._getframe(2)
     local = frame.f_locals
@@ -242,7 +254,7 @@ def logc(code, run=None):
     addSpaceBothSide = lambda s, n: (n//2)*' ' + str(s) + (n-n//2)*' '
     
     for k, v in sorted(dic.items(), key=lambda x:-len(x[0])):
-        vstr = shortstr(v)
+        vstr = shortDiscrib(v)
         if callable(v):
             vstr = k
         maxs = max(len(vstr), len(k))
@@ -324,10 +336,31 @@ class Log():
 log = FunAddMagicMethod(printf)
 printt = log
 
-class printToStr():
-    # to do
-    def __call__(self):
-        pass
+def printToStr(value='', *l, **kv):
+#def printToStr(value='', *l, sep=' ', end='\n', file=None, flush=False): # for py version < 2.7.16
+    '''
+    same usage to print funcation, but replace stdout to return str
+    '''
+    sep=' '
+    end='\n'
+    file=None
+    flush=False
+    locals().update(kv)
+    l = (value,)+l
+    s = sep.join([tounicode(v) for v in l]) + end
+    return s
+
+class PrintStrCollect():
+    from functools import wraps
+    def __init__(self, ):
+        self.s = ''
+    @wraps(printToStr)
+    def __call__(self, *l, **kv):
+        s = printToStr(*l, **kv)
+        self.s += s
+    def __str__(self):
+        s = self.s
+        return tostrpy2(s)
     pass
 
 class LogAndSaveToList(list):
@@ -762,7 +795,7 @@ def prettyFrameStack(frame=0, endByMain=True, maxprint=None):
         ns = ns[:ns.index('_call_with_frames_removed')]
         
     s = ' <-'.join(ns)
-    s = shortDiscrib(s, maxlen=maxprint)
+    s = shortStr(s, maxlen=maxprint)
     return s
 
 def generaPAndLc():

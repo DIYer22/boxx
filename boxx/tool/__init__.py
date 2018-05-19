@@ -5,8 +5,8 @@ from __future__ import unicode_literals
 import os, sys, time
 from ..ylsys import py2
 
-from .toolLog import (stdout, log, logc, printt, logg, tounicode,
-                      shortstr, shortDiscrib, discrib, getDoc, tabstr, ignoreWarning, LogException, 
+from .toolLog import (stdout, log, logc, printt, PrintStrCollect, printToStr, logg, tounicode, tostrpy2,
+                      shortDiscrib, shortStr, discrib, getDoc, tabstr, ignoreWarning, LogException, 
                       LogLoopTime, SuperG, g, cf, p, pp, lc, out)
 from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo, decolor
 from .toolLog import strnum, percentStr, notationScientifique
@@ -17,7 +17,8 @@ from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, ge
                             nextiter, listToBatch, ll, FunAddMagicMethod, addCall)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
-                    loadData, fileJoinPath,  warn, BoxxException, BoxxWarning, OffScreenWarning,)
+                    loadData, fileJoinPath,  warn, BoxxException, BoxxWarning, OffScreenWarning,
+                    Except, excep, getExcept)
 save_data = saveData
 load_data = loadData
 
