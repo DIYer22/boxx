@@ -18,14 +18,12 @@ if test:
     
     from ylmlTest import *
 
-tool
+
+
 ylimgTool
-pattern = 'todo'
+pattern = 'globalg'
 findinRoot(up=pattern,root='..')
-
-#replaceAllInRoot(pattern,'shortDiscrib',root='..')
-
-
+#replaceAllInRoot(pattern,'printfreq',root='..')
 
 
 if __name__ == '__main__0':

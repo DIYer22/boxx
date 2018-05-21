@@ -121,20 +121,20 @@ def frun(pyFileName=None):
 
 class timeit():
     '''
-    记时1 :
+    usage 1 :
         >>> with timeit():
         >>>     fun()
-    记时2 :
+    usage 2 :
         >>> ti = timeit()
         # run your code
         >>> print ti()
-        加个 0 即可方便地关闭计时，即 with timeit(0)
-
+        
+    P.S `with timeit(0)` will convenient stop print 
     '''
-    def __init__(self,namespace=''):
+    def __init__(self,name=''):
         self.last = self.begin = time.time()
-        self.log = isstr(namespace) or bool(namespace)
-        self.key = namespace
+        self.log = isstr(name) or bool(name)
+        self.key = name
     def __call__(self):
         '''返回时间差'''
         t = time.time()
@@ -304,6 +304,7 @@ def getFatherFrames(frame=0, endByMain=True):
         frame = frame.f_back
     return fs
 
+rootFrame = []
 def getRootFrame(frame=0, endByMain=True):
     '''
     返还 frame 的root frame 即 interactive 所在的 frame
@@ -316,9 +317,13 @@ def getRootFrame(frame=0, endByMain=True):
         为 True 则在第一个 frame.f_locals['__name__'] == '__main__' 处停止搜寻
         目的是去除 IPython 自身多余的 Call Stack
     '''
+    if len(rootFrame):
+        return rootFrame[0]
     fs = getFatherFrames(frame=frame+1, endByMain=endByMain)
-    return fs[-1]
-
+    root = fs[-1]
+    rootFrame.append(root)
+    return root
+getRootFrame()
 
 if __name__ == "__main__":
 

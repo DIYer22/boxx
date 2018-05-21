@@ -115,10 +115,10 @@ class dicto(dict):
     def __init__(self, *l, **kv):
         dict.__init__(self,*l,**kv)
     def __getattribute__(self, name=None):
-        if name in self:
-            return self[name]
         if name in dir(dict):
             return dict.__getattribute__(self,name)
+        if name in self:
+            return self[name]
         return self[name]
     def __setattr__(self, name, v):
         if name in dir(dict):

@@ -81,7 +81,8 @@ def __multiprocessLogFun__(args):
     fun, args, ind, lenn, logf = args
     if ind is None:
         return fun(*args)
-    from .toolLog import timeit, percentStr, shortStr
+    from .toolLog import percentStr, shortStr
+    from .toolSystem import timeit
     with timeit(None) as t:
         re = fun(*args)
     if logf:
@@ -109,16 +110,20 @@ def mapmp(fun, *iterables, **kv):
     Parameters
     ----------
     fun : function
-        *多进程*只支持`def`定义的函数 不能是lambda 和 内部函数 
+        *mulit processing* only support`def`定义的函数 can't be lambda 和 内部函数 
         否则 PicklingError: Can't pickle 
     *iterables : list 
         用于fun的参数list, fun需要N个参数则有N个列表
     pool : int, default None
+        the number of Process or Threading
+        the default is the number of CPUs in the system
         进程数目，默认为CPU进程数
-    logfreq : int, default None
+    printfreq : int or float, default None
+        short of `print frequent`, auto print program progress in `mapmt` and `mapmp`   
+        if `printfreq < 1` then `printfreq = len(iterables[0])*printfreq`
         打印进度的频次 默认不打印
     logf : funcation, default None
-        Hook Funcation For log , every logfreq
+        Hook Funcation For log , every printfreq
         do logf([fun, args, ind, lenn, logf])
     thread : bool, default False
         是否以*多线程*形式替换多进程
@@ -131,16 +136,19 @@ def mapmp(fun, *iterables, **kv):
     pooln = kv['pool'] if 'pool' in kv else cpun
     logf = kv['logf'] if 'logf' in kv else None
     
-    if 'logfreq' in kv and kv['logfreq']:
-        logfreq = kv['logfreq']
+    iterables = list(iterables)
+    if 'printfreq' in kv and kv['printfreq']:
+        printfreq = kv['printfreq']
         l = iterables[-1] = list(iterables[-1])
         lenn = len(l)
+        if printfreq < 1:
+            printfreq = int(round(lenn*printfreq))
         
-        def yieldWithIndFun(fun, iterables, lenn, logf, logfreq):
+        def yieldWithIndFun(fun, iterables, lenn, logf, printfreq):
             for i,args in enumerate(zip(*iterables)):
-                yield (fun, args, None if i%logfreq else i, lenn, logf)
-        chunksize = kv['chunksize'] if 'chunksize' in kv else min(max(1, logfreq*2//3), lenn//pooln)
-        re = pool.map(__multiprocessLogFun__, yieldWithIndFun(fun, iterables, lenn, logf, logfreq), chunksize=chunksize)
+                yield (fun, args, None if i%printfreq else i, lenn, logf)
+        chunksize = kv['chunksize'] if 'chunksize' in kv else min(max(1, printfreq*2//3), lenn//pooln)
+        re = pool.map(__multiprocessLogFun__, yieldWithIndFun(fun, iterables, lenn, logf, printfreq), chunksize=chunksize)
     else:
         def yieldWithFun(fun, iterables):
             for args in zip(*iterables):

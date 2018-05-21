@@ -718,7 +718,49 @@ class SuperG(Gs):
             return addCall(dict.items(self))
 
 GlobalG = SuperG
-g = SuperG()
+
+class TransportToRootFrame():
+    def __init__(self, name=None, log=False):
+        self.name = name
+        self.log = log
+    def __call__(self, value):
+        frame = getRootFrame()
+        frame.f_globals[self.name] = value
+        if self.log:
+            name = str(self.name)
+            s = (clf.r%'gg.%s:"'+'%s'+clf.r%'"')%(name, tabstr(str(value), len(name)+5))
+            print(s)
+        return value
+    __sub__ = __truediv__ = __div__ = __mul__ = __add__ = __eq__ = __pow__ = __call__
+    def __str__(self):
+        return 'TransportToRootFrame(name=%s)'%self.name
+    __repr__ = __str__
+    
+__GlobalG__ = {}
+
+class GlobalG(object):
+    '''
+    TODO:
+    '''
+    def __init__(self, log=False):
+        idd = id(self)
+        __GlobalG__[idd] = log
+    def __getattribute__(self, name=None, *l):
+        if name.startswith('__') and name.endswith('__') and name in dir(object):
+            return object.__getattribute__(self, name)
+        idd = id(self)
+        log = __GlobalG__[idd]
+        return TransportToRootFrame(name,log)
+    def __setattr__(self, name, v):
+        idd = id(self)
+        log = __GlobalG__[idd]
+        transport = TransportToRootFrame(name,log)
+        transport(v)
+        return v
+
+g = GlobalG()
+gg = GlobalG(log=True)
+
 config = dicto()
 cf = config
 boxxcf = dicto()
@@ -921,6 +963,7 @@ def generaPAndLc():
         __lshift__ = printt
         __rshift__ = printt
         __truediv__ = __div__ = printt
+        __pow__ = printt
     p = Pdicto()
     lc = LocalAndGlobal()
     out = LocalAndGlobal(out = True)
