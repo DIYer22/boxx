@@ -826,7 +826,7 @@ def what(anything, full=False):
     if innerStruct:
         treePrintf = PrintStrCollect()
         tree(anything, maxprint=not(full) and 12, printf=treePrintf)
-        doStr((colorFormat.b%'Inner Struct:\n')+str(treePrintf))
+        doStr((colorFormat.b%'Inner Struct:\n')+tounicode(treePrintf))
         doStr("")
         
     doStr((colorFormat.b%'Classes: \n'+'└── '+classes+'\n'))    

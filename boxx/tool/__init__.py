@@ -7,14 +7,14 @@ from ..ylsys import py2
 
 from .toolLog import (stdout, log, logc, printt, PrintStrCollect, printToStr, logg, tounicode, tostrpy2,
                       shortDiscrib, shortStr, discrib, getDoc, tabstr, ignoreWarning, LogException, 
-                      LogLoopTime, SuperG, g, gg, cf, p, pp, lc, out)
+                      LogLoopTime, SuperG, sg, g, gg, cf, p, pp, lc, out)
 from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo, decolor
 from .toolLog import strnum, percentStr, notationScientifique
 from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, withprint, wp
 from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather, generator,
-                            nextiter, listToBatch, ll, FunAddMagicMethod, addCall)
+                            nextiter, listToBatch, ll, FunAddMagicMethod, mf, addCall)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
                     loadData, fileJoinPath,  warn, BoxxException, BoxxWarning, OffScreenWarning,

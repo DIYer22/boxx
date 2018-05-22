@@ -3,7 +3,9 @@
 from __future__ import unicode_literals
 from ..ylsys import py2
 from ..ylcompat import istype
+
 import inspect
+from collections import defaultdict
 
 def listToBatch(listt, batch):
     '''
@@ -56,49 +58,73 @@ def addCall(instance):
         CALL_CLASS_CACHE[t]=T
     return CALL_CLASS_CACHE[t](instance)
 
-class FunAddMagicMethodCore(dict):
+
+fun_add_magic_paras = defaultdict(lambda :{})
+class FunAddMagicMethodCore(object):
     '''magic 未解之谜 疑惑
     
     >>> z=FunAddMagicMethod(zip)
     >>> isinstance(z,type(zip)) => True
-    >>> isinstance(z,dict) => True
+    >>> isinstance(z,object) => True
     '''
     def __init__(self, fun, returnArg=False):
-        self[0] = fun
-        self[1] = returnArg
+        fun_add_magic_paras[id(self)]['fun'] = fun
+        fun_add_magic_paras[id(self)]['returnArg'] = returnArg
     def __call__(self, *args, **kv):
-        resoult = self[0]( *args, **kv)
-        if self[1] and len(args)==1:
+        resoult = fun_add_magic_paras[id(self)]['fun']( *args, **kv)
+        if fun_add_magic_paras[id(self)]['returnArg'] and len(args)==1:
             return args[0]
         return resoult
+    __sub__ = __call__
+    __mul__ = __call__
+    __pow__ = __call__
+#    __add__ = __call__
+#    __eq__ = __call__
+#    __invert__ = __call__
     def __div__(self, *args, **kv):
-        self[0]( *args, **kv)
+        fun_add_magic_paras[id(self)]['fun']( *args, **kv)
         if len(args)==1:
             return args[0]
         return args
-    def __str__(self):
-        return 'FunAddMagicMethod(%s)'%self[0].__str__()
-    __repr__ = __str__
-    __sub__ = __call__
     __truediv__ = __div__
-    __mul__ = __call__
-#    __add__ = __call__
-#    __eq__ = __call__
-#    __pow__ = __call__
-#    __invert__ = __call__
+    def __str__(self):
+        return 'FunAddMagicMethod(%s)'%fun_add_magic_paras[id(self)]['fun']
+    __repr__ = __str__
 class FunAddMagicMethod(FunAddMagicMethodCore):
     '''
+    add magic method to any callable instance or types,
+    then you can call they buy sub, mul, pow operator to call they conveniently
+    
+    >>> from math import sqrt
+    >>> magic_sqrt = mf - sqrt
+    >>> (magic_sqrt-9, magic_sqrt*9, magic_sqrt**9) 
+    (3.0, 3.0, 3.0)
+    
+    >>> magic_sqrt/9
+    9
+    
+    the div operator is speacial, cause use div will return arg self
+    
+    magic_fun (- | * | **) arg => return fun(arg) 
+    
+    magic_fun / arg = exec fun(arg) but return arg itself
+    
+    
+    
     将函数变为带有魔法函数 且可以__call__的对象
     fun : 需要增加为魔法对象的函数
-    returnArg : 是否返回输入值本身
     self - arg = fun(arg)
     self / arg = fun(arg) return arg
     '''
     def __getattribute__(self, name=None, *l):
-        if name in dir(self[0]):
-            return self[0].__getattribute__(name)
-        return FunAddMagicMethodCore.__getattribute__(self,name)
-    
+        fun = fun_add_magic_paras[id(self)]['fun']
+#        from boxx import gg, tree
+        if name in dir(fun):
+#            tree-[gg.n/name ,gg.f/fun, gg.l/l]
+            return getattr(fun,name, *l)
+        return FunAddMagicMethodCore.__getattribute__(self, name, *l)
+mf = FunAddMagicMethod(FunAddMagicMethod)
+
 class dicto(dict):
     '''
     a subclass of dict for convenient, like object in JavaScript

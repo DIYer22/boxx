@@ -717,7 +717,7 @@ class SuperG(Gs):
         def items(self):
             return addCall(dict.items(self))
 
-GlobalG = SuperG
+sg = SuperG()
 
 class TransportToRootFrame():
     def __init__(self, name=None, log=False):
@@ -733,31 +733,45 @@ class TransportToRootFrame():
         return value
     __sub__ = __truediv__ = __div__ = __mul__ = __add__ = __eq__ = __pow__ = __call__
     def __str__(self):
-        return 'TransportToRootFrame(name=%s)'%self.name
+        return 'TransportToRootFrame(name=%s, log=%s)'%(self.name, self.log)
     __repr__ = __str__
     
-__GlobalG__ = {}
-
-class GlobalG(object):
+global_g_paras = {}
+class GlobalGCore(object):
+    def __init__(self, log=False):
+        object.__init__(self)
+        global_g_paras[id(self)] = log
+    def __call__(self, deep=0):
+        log = global_g_paras[id(self)]
+        out(depth=deep+1, printt=log)
+    def __del__(self):
+        idd = id(self)
+        if global_g_paras and idd in global_g_paras:
+            del global_g_paras[idd]
+        
+class GlobalG(GlobalGCore):
     '''
     TODO:
+        
+    for dev-tips:
+        after every operating in IPython@spyder, will read this instance 10+ times
+        some times will read attr like "__xx__" but not in dir(object): in this case
+        don't return anything just raise the Exception
+        
+        if is instance.__getattribute__(name) try to use getattr(instance, name) instead
     '''
     def __init__(self, log=False):
-        idd = id(self)
-        __GlobalG__[idd] = log
-    def __getattribute__(self, name=None, *l):
-        if name.startswith('__') and name.endswith('__') and name in dir(object):
-            return object.__getattribute__(self, name)
-        idd = id(self)
-        log = __GlobalG__[idd]
+        GlobalGCore.__init__(self, log)
+    def __getattribute__(self, name='x', *l):
+#        print(id(self),name)
+        if name.startswith('__') and name.endswith('__') or name in dir(GlobalGCore): 
+            return GlobalGCore.__getattribute__(self, name, *l)
+        log = global_g_paras[id(self)]
         return TransportToRootFrame(name,log)
     def __setattr__(self, name, v):
-        idd = id(self)
-        log = __GlobalG__[idd]
+        log = global_g_paras[id(self)]
         transport = TransportToRootFrame(name,log)
         transport(v)
-        return v
-
 g = GlobalG()
 gg = GlobalG(log=True)
 

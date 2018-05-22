@@ -18,10 +18,11 @@ if test:
     
     from ylmlTest import *
 
+from collections import defaultdict
 
 
 ylimgTool
-pattern = 'globalg'
+pattern = '[id(self)]'
 findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'printfreq',root='..')
 
