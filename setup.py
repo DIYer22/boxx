@@ -148,7 +148,8 @@ if __name__ == "__main__":
     setup(
         name=PKG_NAME,
         description=SHORT_DESCRIPTION,
-        long_description=LONG_DESCRIPTION,
+#        long_description=LONG_DESCRIPTION,
+        long_description=SHORT_DESCRIPTION+'\nMore information on github: https://github.com/DIYer22/boxx',
         version=VERSION,
         author=AUTHOR,
         author_email=AUTHOR_EMAIL,

@@ -122,7 +122,9 @@ class FunAddMagicMethod(FunAddMagicMethodCore):
         if name in dir(fun):
 #            tree-[gg.n/name ,gg.f/fun, gg.l/l]
             return getattr(fun,name, *l)
-        return FunAddMagicMethodCore.__getattribute__(self, name, *l)
+        if name in ['__call__', '__class__', '__delattr__', '__dict__', '__dir__', '__div__', '__doc__', '__eq__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__mul__', '__ne__', '__new__', '__pow__', '__reduce__', '__repr__', '__setattr__', '__str__', '__sub__', '__truediv__']:
+            return FunAddMagicMethodCore.__getattribute__(self, name, *l)
+        return getattr(fun,name, *l)
 mf = FunAddMagicMethod(FunAddMagicMethod)
 
 class dicto(dict):

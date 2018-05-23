@@ -6,8 +6,8 @@ from __future__ import unicode_literals
 Box-X is a develop-time Toolbox for Python.
 Espacially for Scientific Computing and Computer Vision.
 '''
-__version__ = "0.8.113"
-__short_description__ = "Box-X is a develop-time Toolbox for Python. Espacially for Scientific Computing and Computer Vision."
+__version__ = "0.8.114"
+__short_description__ = "Box-X is a tool-box for efficient build and debug in Python. Especially for Scientific Computing and Computer Vision."
 __license__ = "MIT"
 __author__ = "DIYer22"
 __author_email__ = "ylxx@live.com"

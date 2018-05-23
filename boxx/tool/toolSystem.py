@@ -99,6 +99,12 @@ def removeImportSelf(modelName='boxx.out'):
     if 'spec' in f.f_locals:
         f.f_locals['spec'].name = 'sys'
 
+def removeimp(modulesName='boxx'):
+    '''
+    remove all module by name
+    '''
+    [sys.modules.pop(k) for k,v in list(sys.modules.items()) if k.startswith(modulesName + '.') or k == modulesName]
+
 def crun(pycode, snakeviz=True):
     '''测试代码pycode的性能'''
     from cProfile import run

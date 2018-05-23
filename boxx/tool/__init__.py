@@ -22,8 +22,8 @@ from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, 
 save_data = saveData
 load_data = loadData
 
-from .toolSystem import (importAllFunCode, impt, tryImport, FakeModule, removeImportSelf,  crun, frun, 
-                        timeit, heatmap, getArgvDic, softInPath, execmd, addPathToSys)
+from .toolSystem import (crun, frun, timeit, heatmap, getArgvDic, softInPath, execmd, addPathToSys)
+from .toolSystem import importAllFunCode, impt, tryImport, FakeModule, removeImportSelf,  removeimp
 from .toolSystem import getRootFrame, getFatherFrames#, exceptionHook
 
 from .toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
