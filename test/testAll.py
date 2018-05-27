@@ -20,6 +20,11 @@ if test:
 
 from collections import defaultdict
 
+def f(a=10):
+    pass
+    return a
+
+f()
 
 ylimgTool
 pattern = '[id(self)]'
