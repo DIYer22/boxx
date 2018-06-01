@@ -20,15 +20,20 @@ if test:
 
 from collections import defaultdict
 
-def f(a=10):
-    pass
-    return a
+d = {}
 
-f()
+def f(a=npa):
+    import torch
+#    log-(npa)
+#    log-(npa-[9])
+#    d[a] = a
+    print(id(torch))
+list(mapmp(f,ll*9))
 
-ylimgTool
+pred-d
+
 pattern = '[id(self)]'
-findinRoot(up=pattern,root='..')
+#findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'printfreq',root='..')
 
 
