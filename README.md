@@ -34,7 +34,7 @@
   </a>
   <!-- Version -->
   <a href="https://pypi.python.org/pypi/boxx">
-    <img src=" https://img.shields.io/pypi/v/boxx.svg" alt="PyPI">
+    <img src="https://img.shields.io/pypi/v/boxx.svg" alt="PyPI">
   </a>
   <!-- Binder -->
   <a href="https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb">

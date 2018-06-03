@@ -407,6 +407,7 @@ StructLogFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
     'dict':lambda x:colorFormat.b%('dict  %s'%len(x)),
+    'mappingproxy':lambda x:colorFormat.b%('mappingproxy  %s'%len(x)),
     'set':lambda x:(colorFormat.r%'set %s = '%len(x) + colorFormat.b%str(x)),
     'collections.defaultdict':lambda x:colorFormat.b%('defaultDict  %s'%len(x)),
     'dicto':lambda x:colorFormat.b%('dicto  %s'%len(x)),
@@ -483,7 +484,7 @@ def unfoldAble(seq):
     if isinstance(seq,(list,tuple,dict,types.GeneratorType)) :
         if isinstance(seq,(list,tuple)):
             seq = list(enumerate(seq))
-        elif isinstance(seq,(dict)):
+        elif isinstance(seq,(dict, types.MappingProxyType)):
             seq = list(seq.items())
         elif isinstance(seq, types.GeneratorType):
             seq = [('Generator.next', nextiter(seq, raiseException=False))]

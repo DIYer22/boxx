@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from ..ylsys import py2
 from ..ylcompat import istype
 
+import sys
 import inspect
 from collections import defaultdict
 
@@ -205,7 +206,7 @@ def typestr(instance):
     u'dict'
     '''
     return typeNameOf(type(instance))
-
+typestr = FunAddMagicMethod(typestr)
 
 def nextiter(iterr, raiseException=True):
     '''
@@ -247,9 +248,48 @@ def getfather(objOrType):
     '''
     return getfathers(objOrType)[0]
 getfather = FunAddMagicMethod(getfather)
-
     
-typestr = FunAddMagicMethod(typestr)
+
+def setself(self=None):
+    '''
+    set all method(*args)  to self.__dict__ 
+    
+    >>> class A():
+    ...     def __init__(self, attr='attr'):
+    ...         setself()
+    >>> a=A()
+    >>> a.attr
+    'attr'
+    '''
+    local = sys._getframe(1).f_locals
+    if self is None:
+        self = local['self']
+    self.__dict__.update(local)
+#    tree-local
+
+def unfoldself(self=None):
+    '''
+    set all self.__dict__ to locals()
+    
+    >>> class A():
+    ...     def __init__(self):
+    ...         self.attr='attr'
+    ...     def get_attr(self):
+    ...         unfoldself()
+    ...         return attr
+    >>> a=A()
+    >>> a.get_attr()
+    'attr'
+    
+    ps. if vars name in locals(), the vars won't be cover
+    '''
+    local = sys._getframe(1).f_locals
+    if self is None:
+        self = local['self']
+    for k, v in self.__dict__.items():
+        if k not in local:
+            local[k] = v
+
 if __name__ == "__main__":
 
     pass
