@@ -352,7 +352,7 @@ class withattr(withfun):
             else:
                 for k, v in self.old.items():
                     sett(d, k, v)
-        super(withattr, self).__init__(enterFun, exitFun)
+        withfun.__init__(self,enterFun, exitFun)
     
 if __name__ == "__main__":
 

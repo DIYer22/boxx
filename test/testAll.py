@@ -17,7 +17,7 @@ if test:
     from ylimgTest import *
     
     from ylmlTest import *
-''' 兼容 python 2 的 classobj'''
+
 pattern = 'sda'
 #findinRoot(var=pattern,root='..')
 #replaceAllInRoot(pattern,'printfreq',root='..')
