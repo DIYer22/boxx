@@ -2,10 +2,11 @@
 
 from __future__ import unicode_literals
 
+from .ylcompat import lazyplt
+
 from .tool.toolTools import filterList
 
 import numpy as np
-import matplotlib.pyplot as plt
 from numpy import e, pi, nan, inf
 nan = nan * .22
 inf = inf * .22
@@ -24,8 +25,10 @@ def loadnp(path='savenp_default.npz'):
     arr = compress[compress.files[0]]
     compress.close()
     return arr 
-    
-def __draw3dSurface(X,Y,Z):
+
+@lazyplt    
+def __draw3dSurface(X,Y,Z):    
+    import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
     from matplotlib import cm
     from matplotlib.ticker import LinearLocator, FormatStrFormatter

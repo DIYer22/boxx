@@ -14,7 +14,8 @@ from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, 
 from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather, generator,
-                            nextiter, listToBatch, ll, FunAddMagicMethod, mf, addCall)
+                            nextiter, listToBatch, ll, FunAddMagicMethod, mf, addCall,
+                            setself, unfoldself, withfun, withattr)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
                     loadData, fileJoinPath,  warn, BoxxException, BoxxWarning, OffScreenWarning,
@@ -41,7 +42,7 @@ dictd = defaultdict
 odict = OrderedDict
 
 from time import sleep
-from functools import reduce
+from functools import reduce, wraps
 from operator import add, sub, mul
 if py2:
     from operator import div

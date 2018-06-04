@@ -7,25 +7,56 @@ from ..tool.toolLog import log, PrintStrCollect, colorFormat, clf, tounicode, Lo
 from ..tool.toolLog import tabstr, getDoc, shortStr, discrib, strnum
 from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
-from ..ylsys import tmpYl, pyi
+from ..ylsys import tmpYl, pyi, py2
 from ..ylnp import isNumpyType
+from ..ylcompat import lazyplt, beforImportPlt
 
 import skimage as sk
-from skimage import io as sio
-from skimage import data as sda
-from skimage.io import imread
-from skimage.io import imsave
 from skimage.transform import resize 
-
+from skimage.exposure import equalize_hist
 import os
 import glob
 import numpy as np
-import matplotlib.pyplot as plt
 import types
 from functools import reduce
 from collections import defaultdict
 from operator import add
 #cv2 = tryImport('cv2')
+
+#from skimage import io as sio
+#from skimage.io import imread
+#from skimage.io import imsave
+#from skimage import data as sda
+
+def imsave(fname, arr, plugin=None, **plugin_args):
+    '''
+    same usage of skimage.io.imsave, for lazy import skimage.io and matplotlib.pyplot
+    '''
+    beforImportPlt()
+    from skimage.io import imsave
+    return imsave(fname, arr, plugin, **plugin_args)
+
+def imread(fname, as_grey=False, plugin=None, flatten=None, **plugin_args):
+    '''
+    same usage of skimage.io.imread, for lazy import skimage.io and matplotlib.pyplot
+    '''
+    beforImportPlt()
+    from skimage.io import imread
+    return imread(fname, as_grey, plugin, flatten, **plugin_args)
+
+class FakeSkimageData(types.ModuleType):
+    __all__ = ['load', 'astronaut', 'camera', 'checkerboard', 'chelsea', 'clock', 'coffee', 'coins', 'horse', 'hubble_deep_field', 'immunohistochemistry', 'logo', 'moon', 'page', 'text', 'rocket', 'stereo_motorcycle']
+    def __init__(self):
+        pass
+    def __getattr__(self, k, *l):
+        beforImportPlt()
+        from skimage import data as sda
+        return getattr(sda, k)
+    def __call__(self):
+        beforImportPlt()
+        from skimage import data as sda
+        return sda.astronaut()
+sda = FakeSkimageData()
 
 # randomm((m, n), max) => m*n matrix
 # randomm(n, max) => n*n matrix
@@ -48,7 +79,7 @@ def uint8(img):
 
 greyToRgb = lambda grey:grey.repeat(3).reshape(grey.shape+(3,)) 
 
-histEqualize = FunAddMagicMethod(sk.exposure.equalize_hist)
+histEqualize = FunAddMagicMethod(equalize_hist)
 
 boolToIndex = lambda boolMa1d:np.arange(len(boolMa1d))[npa(boolMa1d).squeeze()>0]
 boolToIndex = FunAddMagicMethod(boolToIndex)
@@ -208,14 +239,18 @@ def prettyArray(array):
         elif len(x) == 1:
             discrib += (clf.p%'\nAll value is %s' % x[0])
         else:
-            discrib += ('\nOlny %s unique values are %s'%(len(x), ', '.join([clf.p%v for v in x])))
+            discrib += ('\nOnly %s unique values are %s'%(len(x), ', '.join([clf.p%v for v in x])))
     discrib += discribNan
     return discrib
 
+#lazyplt = lambda x:x
+@lazyplt
 def plot(array, sort=False, maxline=10):
     '''
     plot line or top @maxline lines
-    '''
+    '''    
+    import matplotlib.pyplot as plt
+    plt.figure()
     if callable(array) and '__iter__' not in dir(array):
         x = np.linspace(np.e*-1.5,np.e*1.5,100)
         array = array(x)
@@ -234,12 +269,15 @@ def plot(array, sort=False, maxline=10):
         plt.plot(arr)
     plt.show()        
 plot = FunAddMagicMethod(plot)
- 
+
+@lazyplt
 def loga(array):
     '''
     Analysis any array like thing .
     the shape, max, min, distribute of the array
     '''
+    import matplotlib.pyplot as plt
+    plt.figure()
     discrib = prettyArray(array)
     print(discrib.replace('\n','\n\n'))
     
@@ -315,7 +353,9 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
             if seq is not False:
                 listToImgLists(seq,res=res,doNumpy=doNumpy)
     return res
+@lazyplt
 def showImgLists(imgs,**kv):
+    import matplotlib.pyplot as plt
     n = len(imgs)
     if n == 4:
         showImgLists(imgs[:2],**kv)
@@ -477,11 +517,14 @@ def unfoldTorchData(seq):
         return False
     return seq
 
+if py2:
+    types.MappingProxyType = dict
+iterAbleTypes = (list,tuple,dict,types.GeneratorType, types.MappingProxyType)
 def unfoldAble(seq):
     '''
     能展开的 object 
     '''
-    if isinstance(seq,(list,tuple,dict,types.GeneratorType)) :
+    if isinstance(seq,iterAbleTypes) :
         if isinstance(seq,(list,tuple)):
             seq = list(enumerate(seq))
         elif isinstance(seq,(dict, types.MappingProxyType)):

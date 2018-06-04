@@ -290,6 +290,70 @@ def unfoldself(self=None):
         if k not in local:
             local[k] = v
 
+class withfun():
+    '''
+    Convenient way to use `with statement` without build a Class
+    
+    enterFun and exitFun are no parameter function
+    '''
+    def __init__(self, enterFun=None, exitFun=None):
+        self.enterFun = enterFun
+        self.exitFun = exitFun
+    def __enter__(self):
+        if self.enterFun:
+            return self.enterFun()
+    def __exit__(self,*l):
+        if self.exitFun:
+            self.exitFun()
+
+class withattr(withfun):
+    '''
+    set attr or item in `with statement`, after __exit__ the obj or dict will recovery like befor 
+    
+    Parameters
+    ----------
+    obj : obj or dict
+        the thing that will change attr or item in with statement
+    attrs : dict
+        the attrs or items that will change during with statement
+    
+    Usage
+    ----------
+    
+    >>> with withattr(dict(), {'attr':'value'}) as d:
+    ...     print(d['attr'])
+    value
+    >>> 'attr' in d
+    False
+    
+    ps. `withattr` will detecat whther the obj is dict, then choose setattr or setitem.
+    '''
+    def __init__(self, obj, attrs):
+        self.obj = obj
+        self.attrs = attrs
+        d = obj 
+        
+        sett = (lambda d, k, v: d.__setitem__(k, v)) if isinstance(obj, dict) else setattr
+        get = (lambda d, k: d[k]) if isinstance(obj, dict) else getattr
+        pop = (lambda d, k: d.pop(k)) if isinstance(obj, dict) else delattr
+        has = (lambda d, k: k in d) if isinstance(obj, dict) else hasattr
+        def enterFun():
+            self.old = {}
+            for k,v in attrs.items():
+                if has(d, k) :
+                    self.old[k] = get(d, k)
+                sett(d, k, v)
+            return d
+        def exitFun():
+            for k in attrs.keys():
+                pop(d, k)
+            if isinstance(d, dict):
+                d.update(self.old)
+            else:
+                for k, v in self.old.items():
+                    sett(d, k, v)
+        super(withattr, self).__init__(enterFun, exitFun)
+    
 if __name__ == "__main__":
 
     pass

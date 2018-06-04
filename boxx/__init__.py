@@ -14,7 +14,8 @@ __author_email__ = "ylxx@live.com"
 __maintainer__ = "DIYer22"
 __maintainer_email__ = "ylxx@live.com"
 __github_username__ = "DIYer22"
-
+#import sys
+#sys.modules['matplotlib.pyplot'] = 9
 from . import ylsys
 from . import ylcompat
 from . import tool

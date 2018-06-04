@@ -11,7 +11,7 @@ class BoxxException(Exception):
     '''
     pass
 
-class BoxxWarning(BoxxException):
+class BoxxWarning(Warning):
     '''
     root warninng for boxx
     '''

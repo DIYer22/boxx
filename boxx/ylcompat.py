@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 from .ylsys import py2, pyi
-import os
+import os, sys
 from functools import reduce, wraps
 
 printf = print
@@ -56,7 +56,7 @@ def setFuncation2ForAutoList():
 setFuncation2ForAutoList()
 
 
-def setDisplayEnv():
+def __setDisplayEnv():
     msg = '''%s
         os.environ["DISPLAY"] not found, may cuse error like this 
         [QXcbConnection Error](https://github.com/ipython/ipython/issues/10627)
@@ -70,8 +70,8 @@ def setDisplayEnv():
     os.environ["QT_QPA_PLATFORM"] = "offscreen"
     os.environ['DISPLAY'] = ':0'
     
-if not pyi.plt:
-    setDisplayEnv()
+def __noDisplayEnv():
+    __setDisplayEnv()
     import matplotlib.pyplot as plt
     def savefig(*l, **kv):
         from .ylsys import tmpboxx
@@ -85,9 +85,51 @@ if not pyi.plt:
         plt.savefig(png)
         plt.cla()
         plt.clf()
-    pltshow = plt.show
+#    pltshow = plt.show
     plt.show = savefig
+def beforImportPlt():
+    '''
+    if os.environ["DISPLAY"] is not found, then  we auto set os.environ["QT_QPA_PLATFORM"] = "offscreen"
+    and plt.show() are redirect to plt.savefig('/tmp/boxxTmp/showtmp')
+    
+    this would avoid exit error.
+    '''
+    if not pyi.plt and not pyi.reloadplt:
+        __noDisplayEnv()
+        import matplotlib.pyplot as plt
+        pyi.reloadplt = plt
 
+class SetPltActivateInWith():
+    '''
+    set plt to interactivate mode while use plt.show() inner boxx
+    '''
+    def __enter__(self):
+        if pyi.gui or not pyi.plt:
+            return 
+        import matplotlib.pyplot as plt
+        self.interact = plt.rcParams['interactive']
+        if not self.interact and pyi.ipython:
+            plt.ion()
+    def __exit__(self, *l):
+        if pyi.gui or not pyi.plt:
+            return 
+        import matplotlib.pyplot as plt
+        if not self.interact and pyi.ipython:
+            plt.ioff()
+    
+def lazyplt(fun):
+    '''
+    cause `import matplotlib.pyplot` often lead to Exit Error
+    I do `import plt` when funcation need 
+    Farther more, if pyi.gui is False, the plt.show() are replace to plt.savefig('/tmp/boxxTmp/showtmp')
+    '''
+    @wraps(fun)
+    def innerf(*l, **kv):
+        beforImportPlt()
+        with SetPltActivateInWith():
+            r = fun(*l, **kv)
+        return r
+    return innerf
 if not py2 and 0:
     __rawOpen__ = open
     open = lambda *l:__rawOpen__(l[0],'r',-1,'utf8') if len(l) == 1 else __rawOpen__(l[0],l[1],-1,'utf8')

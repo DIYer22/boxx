@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import sys, os, time
 from ..ylsys import py2, tmpYl
-from ..ylcompat import isstr
+from ..ylcompat import isstr, beforImportPlt
 
 
 def importAllFunCode(mod=None):
@@ -167,34 +167,59 @@ class timeit():
         if self.log:
             print(self)
 
+
 def heatmap(pathOrCode):
-    '''显示python代码的时间热力图
-    ps.会让代码里面的中文全部失效
+    '''show the heatmap of code or python file
+    if raise UnicodeDecodeError in Python 2 which may cause by Chinese, Japaneses
+    then will replace all symbol not belong ascii to "?$"
     
     Parameters
     ----------
-    path : str of code or path of .py
+    pathOrCode : str
+        .py file path or Python code
+    
+    Chinese:
+    会让代码里面的中文全部失效
+    
+    Parameters
+    ----------
+    pathOrCode : str of code or path of .py
         .py文件路径或着python代码
     '''
+    beforImportPlt()
     from pyheat import PyHeat
-    path = os.path.join(tmpYl, 'pyheat-tmp.py')
-    code = pathOrCode
+    import matplotlib.pyplot as plt
+    tmppath = 'code-tmp-pyheat-boxx.py'
+    
+    ispath = os.path.isfile(pathOrCode)
+    path = pathOrCode if ispath else tmppath
     try :
-        if os.path.isfile(pathOrCode):
-            path = pathOrCode+'_HEAT_MAP_TMP.py'
-            with open(pathOrCode) as f:
-                code = f.read()
-        if py2:
-            code = code.decode('ascii','replace').replace('\ufffd','$?')
-        with open(path,'w') as f:
-            f.write(code)
+        if not ispath:
+            from boxx import tounicode
+            with open(tmppath,'w') as f:
+                f.write(pathOrCode)
         ph = PyHeat(path)
         ph.create_heatmap()
         ph.show_heatmap()
-    finally:
-        if os.path.isfile(path):
-            os.remove(path)
+    except UnicodeDecodeError:
+        plt.show()
+        msg = '''UnicodeDecodeError! try to replace not ascii symbol to '$?' and retry'''
+        from boxx import warn
+        warn(msg)
         
+        with open(path) as f:
+            code = f.read()
+        code = code.decode('ascii','replace').replace('\ufffd','$?')
+        with open(tmppath,'w') as f:
+            f.write(code.encode('utf-8'))
+        
+        ph = PyHeat(tmppath)
+        ph.create_heatmap()
+        ph.show_heatmap()
+    finally:
+        if os.path.isfile(tmppath):
+            os.remove(tmppath)
+
 def strIsInt(s):
     '''判断字符串是不是整数型'''
     s = s.replace(' ','')

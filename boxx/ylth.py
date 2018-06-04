@@ -4,12 +4,13 @@
 sysc.py: system config
 '''
 from __future__ import unicode_literals
-
 from . import *
 from .ylsys import cpun, cloud, cuda, usecuda
 from .ylimg import npa, r
 from .tool import FunAddMagicMethod, nextiter
 
+import matplotlib.pyplot as plt
+import skimage.io as sio
 from collections import OrderedDict
 from functools import wraps
 
@@ -69,9 +70,7 @@ def tryLoad(self, state_dict, strict=True):
                     [(k.replace('module.', ''),v) for k,v in para.items()]
             )
         rawModule(self, para, strict)
-            
-usecpu = (not cuda and usecuda=='auto') or not usecuda
-if usecpu:
+def toCpu():            
     cudaAttri =  lambda self,*l,**kv:self
     nn.Module.cuda = cudaAttri
     Variable.cuda = cudaAttri
@@ -129,6 +128,9 @@ if usecpu:
     nn.Module.load_state_dict = tryLoad
     torch.nn.modules.module.Module.load_state_dict = tryLoad
 
+usecpu = (not cuda and usecuda=='auto') or not usecuda
+if usecpu:
+    toCpu()
 _TensorBase = torch._TensorBase if '_TensorBase' in dir(torch) else torch._C._TensorBase
 
 def tht(t):

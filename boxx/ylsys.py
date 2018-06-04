@@ -103,7 +103,7 @@ class pyi():
     plt = True
     if not gui and linuxYl and 'DISPLAY' not in os.environ :
         plt =  False
-    
+    reloadplt = False
 class SystemInfo():
     '''
     sys info

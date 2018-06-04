@@ -3,13 +3,12 @@
 from __future__ import unicode_literals
 
 import os
+from ..ylcompat import lazyplt
 from ..tool.toolLog import LogLoopTime,log
 from ..tool import pathjoin, getFunName
 from ..ylnp import savenp, loadnp
-
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def accEvalu(re, gt):
@@ -299,6 +298,7 @@ e = Evalu(accEvalu,
         '''
         df = self._sorted(key)
         return df.head(n)
+    @lazyplt
     def distr(self, key=None):
         '''分析key 的分布，describe + 分布图
         
@@ -307,6 +307,7 @@ e = Evalu(accEvalu,
         key : str or int, default self.sortkey
             当为int 时 key=df.columns[int]
         '''
+        import matplotlib.pyplot as plt
         if isinstance(key,int) and key not in self.columns:
             key = self.columns[key]
         key = self.sortkey if key is None else key 

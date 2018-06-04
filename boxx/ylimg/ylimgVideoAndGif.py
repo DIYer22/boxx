@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 
-from .ylimgTool import sk, sio, np, plt, sda
+from .ylimgTool import sk, np, sda
 from .ylimgTool import (show, loga, mapp, normalizing, imsave, imread,
                        standImg, resize)
 
