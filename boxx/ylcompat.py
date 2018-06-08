@@ -7,6 +7,11 @@ from .ylsys import py2, pyi
 import os, sys
 from functools import reduce, wraps
 
+if py2:
+    import __builtin__ as builtins
+else:
+    import builtins
+    
 printf = print
 
 
@@ -89,10 +94,12 @@ def __noDisplayEnv():
     plt.show = savefig
 def beforImportPlt():
     '''
+    cause `import matplotlib.pyplot` often lead to Exit Error
+    I do `import plt` when funcation need, this would avoid exit error.
     if os.environ["DISPLAY"] is not found, then  we auto set os.environ["QT_QPA_PLATFORM"] = "offscreen"
     and plt.show() are redirect to plt.savefig('/tmp/boxxTmp/showtmp')
     
-    this would avoid exit error.
+    Farther more, if pyi.gui is False, the plt.show() are replace to plt.savefig('/tmp/boxxTmp/showtmp')
     '''
     if not pyi.plt and not pyi.reloadplt:
         __noDisplayEnv()
@@ -107,21 +114,19 @@ class SetPltActivateInWith():
         if pyi.gui or not pyi.plt:
             return 
         import matplotlib.pyplot as plt
-        self.interact = plt.rcParams['interactive']
-        if not self.interact and pyi.ipython:
+        self.interactivePlot = plt.rcParams['interactive']
+        if not self.interactivePlot and pyi.interactive:
             plt.ion()
     def __exit__(self, *l):
         if pyi.gui or not pyi.plt:
             return 
         import matplotlib.pyplot as plt
-        if not self.interact and pyi.ipython:
+        if not self.interactivePlot and pyi.interactive:
             plt.ioff()
     
-def lazyplt(fun):
+def interactivePlot(fun):
     '''
-    cause `import matplotlib.pyplot` often lead to Exit Error
-    I do `import plt` when funcation need 
-    Farther more, if pyi.gui is False, the plt.show() are replace to plt.savefig('/tmp/boxxTmp/showtmp')
+    turn interactive plot mode if enviroment is interactive
     '''
     @wraps(fun)
     def innerf(*l, **kv):
@@ -130,6 +135,41 @@ def lazyplt(fun):
             r = fun(*l, **kv)
         return r
     return innerf
+
+if py2:
+    execfile = builtins.execfile
+else:
+    def execfile(filename, globals=None, locals=None):
+        '''
+        same usage as python2 execfile
+        '''
+        frame = sys._getframe(1)
+        if globals is None:
+            globals = frame.f_globals
+        if locals is None:
+            locals = frame.f_locals
+        with open(filename) as f:
+            code = f.read()
+        exec(code, globals, locals)
+
+def runpyfile(filename, main=True, globals=None, locals=None):
+    '''
+    add __file__ and __name__ to globals then runpyfile
+    like runfile in spyder 
+    '''
+    default = {
+            '__file__':os.path.abspath(filename),
+            '__name__':main and '__main__',
+            }
+    if globals is None:
+        globals = {}
+    if locals is None:
+        locals = {}
+    default.update(globals)
+    execfile(filename, default, locals)
+    
+    
+    
 if not py2 and 0:
     __rawOpen__ = open
     open = lambda *l:__rawOpen__(l[0],'r',-1,'utf8') if len(l) == 1 else __rawOpen__(l[0],l[1],-1,'utf8')

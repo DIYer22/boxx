@@ -9,7 +9,7 @@ from ..tool.toolFuncation import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl, pyi, py2
 from ..ylnp import isNumpyType
-from ..ylcompat import lazyplt, beforImportPlt
+from ..ylcompat import interactivePlot, beforImportPlt
 
 import skimage as sk
 from skimage.transform import resize 
@@ -243,8 +243,8 @@ def prettyArray(array):
     discrib += discribNan
     return discrib
 
-#lazyplt = lambda x:x
-@lazyplt
+#interactivePlot = lambda x:x
+@interactivePlot
 def plot(array, sort=False, maxline=10):
     '''
     plot line or top @maxline lines
@@ -270,7 +270,7 @@ def plot(array, sort=False, maxline=10):
     plt.show()        
 plot = FunAddMagicMethod(plot)
 
-@lazyplt
+@interactivePlot
 def loga(array):
     '''
     Analysis any array like thing .
@@ -353,7 +353,7 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
             if seq is not False:
                 listToImgLists(seq,res=res,doNumpy=doNumpy)
     return res
-@lazyplt
+@interactivePlot
 def showImgLists(imgs,**kv):
     import matplotlib.pyplot as plt
     n = len(imgs)

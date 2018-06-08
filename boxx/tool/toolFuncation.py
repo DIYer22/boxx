@@ -3,7 +3,7 @@
 from __future__ import unicode_literals, print_function
 import time
 
-from ..ylsys import cpun
+from ..ylsys import cpun, winYl
 from .toolStructObj import typestr
 
 from functools import reduce
@@ -128,6 +128,9 @@ def mapmp(fun, *iterables, **kv):
     thread : bool, default False
         是否以*多线程*形式替换多进程
     '''    
+    if winYl and not kv.get('thread'):
+        from boxx import warn1time
+        warn1time("""detection your Platform is windows,   multiprocessing maybe slower cause os.fork is disable.""")
     Pool = PoolMp
     if 'thread' in kv and kv['thread']:
         Pool = PoolThread

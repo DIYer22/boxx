@@ -18,11 +18,12 @@ if test:
     
     from ylmlTest import *
 
-pattern = 'sda'
+pattern = 'webbrowser'
+findinRoot(pattern,root='..')
 #findinRoot(var=pattern,root='..')
-#replaceAllInRoot(pattern,'printfreq',root='..')
+#replaceAllInRoot(pattern,'winYl',root='..')
 
-        
+show
 
 if __name__ == '__main__0':
     pass

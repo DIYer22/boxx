@@ -44,7 +44,7 @@ py2 = (pyv == 2)
 
 
 linuxYl = sys.platform.startswith('linux')
-windowsYl = sys.platform.startswith('win')
+winYl = sys.platform.startswith('win')
 osxYl = sys.platform.startswith('darwin')
 
 import multiprocessing as __module
@@ -61,7 +61,7 @@ usecuda = 'auto' # auto: auto, False: not use
 if linuxYl or osxYl:
     homeYl = os.getenv('HOME') + '/'
     tmpYl = '/tmp/'
-elif windowsYl:
+elif winYl:
     homeYl = os.path.expanduser("~")
     tmpYl = os.getenv('TMP') + '\\'
 
@@ -99,6 +99,8 @@ class pyi():
     cmd = not ipython
     qtipython = env == 'qtipython'
     jn = env == 'jn'
+    
+    interactive = bool(getattr(sys, 'ps1', sys.flags.interactive))
     
     plt = True
     if not gui and linuxYl and 'DISPLAY' not in os.environ :

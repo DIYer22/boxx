@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import os, sys
 import warnings
+from functools import wraps
 
 class BoxxException(Exception):
     '''
@@ -68,6 +69,18 @@ def warn(msg, warnType=BoxxWarning, filename=None, line=None, module='boxx', blu
         filename = c.co_filename if filename is None else filename
         line = c.co_firstlineno if line is None else line 
     warnings.warn_explicit(msg, warnType, filename, line, module)
+
+warn1timeCache = {}
+@wraps(warn)
+def warn1time(msg, *l, **kv):
+    '''
+    log a warning of type warnType warn will auto fill filename and line 
+    
+    warn only one time
+    '''
+    if not warn1timeCache.get(msg):
+        warn(msg, *l, **kv)
+        warn1timeCache[msg] = True
     
 getsize = os.path.getsize
 

@@ -18,7 +18,7 @@ from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, ge
                             setself, unfoldself, withfun, withattr)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
-                    loadData, fileJoinPath,  warn, BoxxException, BoxxWarning, OffScreenWarning,
+                    loadData, fileJoinPath,  warn, warn1time, BoxxException, BoxxWarning, OffScreenWarning,
                     Except, excep, getExcept)
 save_data = saveData
 load_data = loadData

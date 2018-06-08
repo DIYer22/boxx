@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 import os
-from ..ylcompat import lazyplt
+from ..ylcompat import interactivePlot
 from ..tool.toolLog import LogLoopTime,log
 from ..tool import pathjoin, getFunName
 from ..ylnp import savenp, loadnp
@@ -298,7 +298,7 @@ e = Evalu(accEvalu,
         '''
         df = self._sorted(key)
         return df.head(n)
-    @lazyplt
+    @interactivePlot
     def distr(self, key=None):
         '''分析key 的分布，describe + 分布图
         

@@ -2,7 +2,7 @@
 
 from __future__ import unicode_literals
 
-from .ylcompat import lazyplt
+from .ylcompat import interactivePlot
 
 from .tool.toolTools import filterList
 
@@ -26,7 +26,7 @@ def loadnp(path='savenp_default.npz'):
     compress.close()
     return arr 
 
-@lazyplt    
+@interactivePlot    
 def __draw3dSurface(X,Y,Z):    
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
