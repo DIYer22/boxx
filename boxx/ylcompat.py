@@ -166,7 +166,9 @@ def runpyfile(filename, main=True, globals=None, locals=None):
     if locals is None:
         locals = {}
     default.update(globals)
-    execfile(filename, default, locals)
+    with open(filename) as f:
+        code = f.read()
+    exec(code, default, locals)
     
     
     

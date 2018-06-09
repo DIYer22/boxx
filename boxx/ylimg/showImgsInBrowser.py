@@ -19,8 +19,8 @@ def showImgsInBrowser(paths):
     htmlp = os.path.join(tmpYl, 'shows-%s.html') %len(glob.glob(os.path.join(tmpYl, 'shows-*.html')))
     with open(htmlp,'w') as f:
         f.write(html)
-    import webbrowser 
-    webbrowser.open_new_tab(htmlp)
+    from boxx import browserOpen
+    browserOpen(htmlp)
 
 def getShowsHtml():
     return '''

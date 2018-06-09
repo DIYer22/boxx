@@ -19,11 +19,11 @@ from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, ge
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
                     loadData, fileJoinPath,  warn, warn1time, BoxxException, BoxxWarning, OffScreenWarning,
-                    Except, excep, getExcept)
+                    Except, excep, getExcept, browserOpen)
 save_data = saveData
 load_data = loadData
 
-from .toolSystem import (crun, frun, timeit, heatmap, getArgvDic, softInPath, execmd, addPathToSys)
+from .toolSystem import (crun, performance, timeit, heatmap, getArgvDic, softInPath, execmd, addPathToSys)
 from .toolSystem import importAllFunCode, impt, tryImport, FakeModule, removeImportSelf,  removeimp
 from .toolSystem import getRootFrame, getFatherFrames#, exceptionHook
 

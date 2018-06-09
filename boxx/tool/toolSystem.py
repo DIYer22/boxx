@@ -106,7 +106,18 @@ def removeimp(modulesName='boxx'):
     [sys.modules.pop(k) for k,v in list(sys.modules.items()) if k.startswith(modulesName + '.') or k == modulesName]
 
 def crun(pycode, snakeviz=True):
-    '''测试代码pycode的性能'''
+    '''
+    use snakeviz and cProfile to analyse the code performance
+    a visualization flame graph web page will be opened in your web browser
+    
+    Parameters
+    ----------
+    pycode : str
+        Python code
+    snakeviz : bool, default True
+        use snakeviz to get flame graph in web page
+        otherwise, print cProfile result sorted by time
+    '''
     from cProfile import run
     if not snakeviz:
         return run(pycode,sort='time')
@@ -116,14 +127,24 @@ def crun(pycode, snakeviz=True):
     os.system('snakeviz %s &'% os.path.join(tmpYl,'snakeviz.result'))
     
     
-def frun(pyFileName=None):
-    '''在spyder中 测试pyFileName的性能'''
-    if pyFileName:
-        if '.py' not in pyFileName:
-            pyFileName += '.py'
-        crun("runfile('%s',wdir='.')"%pyFileName)
+def performance(pyfileOrCode, snakeviz=True):
+    '''
+    use snakeviz and cProfile to analyse the python file or python code performance
+    a visualization flame graph web page will be opened in your web browser
+    
+    Parameters
+    ----------
+    pyfileOrCode : str
+        Python file's path or python code
+    snakeviz : bool, default True
+        use snakeviz to get flame graph in web page
+        otherwise, print cProfile result sorted by time
+    '''
+    if os.path.isfile(pyfileOrCode):
+        from boxx import runpyfile
+        crun("runpyfile('%s')"%pyfileOrCode)
     else:
-        crun("runfile(__file__,wdir='.')")
+        crun(pyfileOrCode)
 
 class timeit():
     '''
@@ -195,7 +216,6 @@ def heatmap(pathOrCode):
     path = pathOrCode if ispath else tmppath
     try :
         if not ispath:
-            from boxx import tounicode
             with open(tmppath,'w') as f:
                 f.write(pathOrCode)
         ph = PyHeat(path)

@@ -165,6 +165,16 @@ def loadData(name='pickle_of_boxx', log=False):  #载入数据
         print('文件:“'+name+'”读取成功！')
     return data
 
+def browserOpen(url):
+    '''
+    open url with browser
+    if can't open browser raise warn
+    '''
+    import webbrowser
+    if not webbrowser.open_new_tab(url):
+        from boxx import warn
+        warn('''can't open url with web browser, plaese open url:"%s" in your browser'''%url)
+        
 if __name__ == "__main__":
 
     pass
