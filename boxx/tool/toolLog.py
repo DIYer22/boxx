@@ -963,8 +963,8 @@ def generaPAndLc():
             lc(depth+1, printt)
         def printt(self, x=None):
             pretty = False
-            root = getRootFrame()
-            root.f_globals['pp'] = x
+#            root = getRootFrame()
+#            root.f_globals['pp'] = x
             if pretty:
                 loc = prettyFrameLocation(1)
                 pblue('Print by p from %s:'%loc)

@@ -68,4 +68,10 @@
 
 [**Tutorial for mobile device**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb): Just view the Tutorial.
 
+## Acknowledgments
+ * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
+ * `performance` is supported by [SnakeViz](https://jiffyclub.github.io/snakeviz/)
+ * `heatmap` is supported by [csurfer/pyheat](https://github.com/csurfer/pyheat)
+
+
 
