@@ -4,7 +4,7 @@ from boxx import *
 使用`ifTest([funName]):`来判断是否执行测试
 这样 在测试过程中可以在iPython 查看每一个变量
 '''
-img,gt = imread(pathjoin(dirname(__file__),'imgForTest/0004.jpg')),imread(pathjoin(dirname(__file__),'imgForTest/0004.png'))
+img,gt = imread(pathjoin(dirname(__file__),'imgForTest/img.jpg')),imread(pathjoin(dirname(__file__),'imgForTest/gt_seg.png'))
 gt = gt>0
 # 多分类数据
 gtm = np.zeros(img.shape[:2],img.dtype)

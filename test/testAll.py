@@ -18,9 +18,9 @@ if test:
     
     from ylmlTest import *
 
-pattern = 'webbrowser'
+pattern = '0004'
 #findinRoot(pattern,root='..')
-#findinRoot(var=pattern,root='..')
+findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'winYl',root='..')
 
 

@@ -845,11 +845,11 @@ def prettyFrameStack(frame=0, endByMain=True, maxprint=None):
         frame = sys._getframe(1 + frame)
     fs = getFatherFrames(frame, endByMain=endByMain)
     ns = [getNameFromCodeObj(f.f_code) for f in fs]
-    if 'execfile' in ns:
-        ns = ns[:ns.index('execfile')]
-    if '_call_with_frames_removed' in ns:
-        ns = ns[:ns.index('_call_with_frames_removed')]
-        
+    if endByMain:
+        if 'execfile' in ns:
+            ns = ns[:ns.index('execfile')]
+        if '_call_with_frames_removed' in ns:
+            ns = ns[:ns.index('_call_with_frames_removed')]
     s = ' <-'.join(ns)
     s = shortStr(s, maxlen=maxprint)
     return s

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import sys, os, time
 from ..ylsys import py2, tmpYl
-from ..ylcompat import isstr, beforImportPlt
+from ..ylcompat import isstr, beforImportPlt, ModuleNotFoundError
 
 
 def importAllFunCode(mod=None):
@@ -55,13 +55,11 @@ def tryImport(moduleName):
     '''
     try `import @moduleName`. if @moduleName is not installed, return a FakeModule to placeholder the module name
     '''
-    
-    notFoundError = ModuleNotFoundError if not py2 else ImportError
     module = None
     try:
         exec('import %s as module' % moduleName)
         return module
-    except (notFoundError, ImportError):
+    except (ModuleNotFoundError, ImportError):
         return  '''"%s" is not install in your Python Enveroment! 
 This is a fake one. Please install "%s" and retry''' % (moduleName, moduleName)
         return FakeModule(moduleName)
@@ -141,8 +139,7 @@ def performance(pyfileOrCode, snakeviz=True):
         otherwise, print cProfile result sorted by time
     '''
     if os.path.isfile(pyfileOrCode):
-        from boxx import runpyfile
-        crun("runpyfile('%s')"%pyfileOrCode)
+        crun("from boxx import runpyfile;runpyfile('%s')"%pyfileOrCode)
     else:
         crun(pyfileOrCode)
 
@@ -355,23 +352,43 @@ def getFatherFrames(frame=0, endByMain=True):
         frame = frame.f_back
     return fs
 
-rootFrame = []
-def getRootFrame(frame=0, endByMain=True):
+
+
+mainFrame = []
+def getMainFrame(frame=0):
     '''
-    返还 frame 的root frame 即 interactive 所在的 frame
+    return a main frame from father frames that first frame.f_locals['__name__'] == '__main__' 
     
     Parameters
     ----------
     frame : frame or int, default 0
         if int:相对于调用此函数frame的 int 深度的对应frame
-    endByMain : bool, default True
-        为 True 则在第一个 frame.f_locals['__name__'] == '__main__' 处停止搜寻
-        目的是去除 IPython 自身多余的 Call Stack
+    '''
+    if len(mainFrame):
+        return mainFrame[0]
+    fs = getFatherFrames(frame=frame+1, endByMain=True)
+    main = fs[-1]
+    mainFrame.append(main)
+    return main
+getMainFrame()
+
+
+rootFrame = []
+def getRootFrame():
+    '''
+    return interactive frame
     '''
     if len(rootFrame):
         return rootFrame[0]
+    frame=0
+    endByMain=False
     fs = getFatherFrames(frame=frame+1, endByMain=endByMain)
-    root = fs[-1]
+    root = getMainFrame()
+    
+    for f in fs:
+        if f.f_code.co_filename.startswith('<ipython-input-'):
+            root = f
+            break
     rootFrame.append(root)
     return root
 getRootFrame()

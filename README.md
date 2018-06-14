@@ -57,7 +57,41 @@
   </sub>
 </div>
 
-<br />
+<br/>
+
+
+---
+
+## Examples
+
+<table  style="">
+  <tr>
+    <td valign="top" width="50%">
+        <h3> General Python Tool </h3>
+        <hr></hr>
+        <h4 id="▶-use-p/x-instead-of-print(x)">▶ Use <code>p/x</code> instead of <code>print(x)</code></h4>
+  
+  [![](./other/gif/p.gif)](./other/gif/p.gif)
+  💡 **Note:** `p/x` will `print(x)` and return `x`, `p/x` is easy to print value in expression.
+        <br><br>
+        <hr></hr>
+        <h4 id="▶-Use-g.name-=-x-or-g.name/x-to-transport-var-to-Python-interactive-console">▶ Use <code>g.name = x</code> or <code>g.name/x</code> to transport var to Python interactive console</h4>
+        ![](./other/gif/g.gif)    
+        <hr></hr>
+    </td>
+    <td valign="top">
+        <h3> Scientific Computing and Computer Vision </h3>
+        <hr></hr>
+        <h4 id="▶-loga-visualization-matrix-and-tensor">▶ <code>loga</code> visualization matrix and tensor</h4>
+        [![](./other/gif/loga.gif)](./other/gif/loga.gif)
+        💡 **Note:** `loga` support other array-like types include `list`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image`.etc
+        <br><br>
+        <hr></hr>
+    </td>
+  </tr>
+</table> 
+
+
 
 ---
 
@@ -72,6 +106,7 @@
  * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
  * `performance` is supported by [SnakeViz](https://jiffyclub.github.io/snakeviz/)
  * `heatmap` is supported by [csurfer/pyheat](https://github.com/csurfer/pyheat)
+
 
 
 

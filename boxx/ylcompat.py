@@ -170,8 +170,8 @@ def runpyfile(filename, main=True, globals=None, locals=None):
         code = f.read()
     exec(code, default, locals)
     
-    
-    
+ModuleNotFoundError = ModuleNotFoundError if not py2 else ImportError
+
 if not py2 and 0:
     __rawOpen__ = open
     open = lambda *l:__rawOpen__(l[0],'r',-1,'utf8') if len(l) == 1 else __rawOpen__(l[0],l[1],-1,'utf8')

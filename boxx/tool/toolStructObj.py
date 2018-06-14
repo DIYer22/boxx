@@ -293,18 +293,30 @@ def unfoldself(self=None):
 class withfun():
     '''
     Convenient way to use `with statement` without build a Class
-    
     enterFun and exitFun are no parameter function
+    
+    Parameters
+    ----------
+    enterFun : funcation, default None
+        No parameter function
+    exitFun : funcation, default None
+        No parameter function or parameter are (exc_type, exc_value, exc_traceback)
+    exception : bool, default False
+        Whether send (exc_type, exc_value, exc_traceback) to exitFun
     '''
-    def __init__(self, enterFun=None, exitFun=None):
+    def __init__(self, enterFun=None, exitFun=None, exception=False):
         self.enterFun = enterFun
         self.exitFun = exitFun
+        self.exception = exception
     def __enter__(self):
         if self.enterFun:
             return self.enterFun()
-    def __exit__(self,*l):
+    def __exit__(self, exc_type, exc_value, exc_traceback):
         if self.exitFun:
-            self.exitFun()
+            if self.exception:
+                self.exitFun(exc_type, exc_value, exc_traceback)
+            else:
+                self.exitFun()
 
 class withattr(withfun):
     '''

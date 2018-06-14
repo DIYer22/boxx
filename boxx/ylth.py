@@ -7,17 +7,26 @@ from __future__ import unicode_literals
 from . import *
 from .ylsys import cpun, cloud, cuda, usecuda
 from .ylimg import npa, r
-from .tool import FunAddMagicMethod, nextiter
+from .tool import FunAddMagicMethod, nextiter, withfun, pred
+
+from .ylcompat import py2, ModuleNotFoundError
+
+def importYlthRequire(exc_type, exc_value, exc_traceback):
+    if exc_type is ModuleNotFoundError:
+        pred('''\n\nMesage from boxx:\n\tTo use boxx.ylth, you should run: \n\t`pip install torch torchsummary torchviz`\n''')
+with withfun(exitFun=importYlthRequire, exception=True):
+    from torchsummary import summary
+#    import torchviz
 
 import matplotlib.pyplot as plt
 import skimage.io as sio
+import skimage.data as sda
 from collections import OrderedDict
 from functools import wraps
 
 #if 'torch' in sys.modules:
 #    del sys.modules[('torch')]
 #    sys.modules.pop('torch')
-import torch
 #from imp import reload  
 #reload(torch)
 #reload(torch.nn)
@@ -48,7 +57,6 @@ import torchvision.datasets as datasets
 #th.float = torch.cuda.FloatTensor 
 
 # add summary to torch.nn.Module
-from torchsummary import summary
 nn.Module.summary = lambda self, inputShape=None, group=None, gen=None:summary(self, inputShape or getDefaultInputShape(self, group, gen))
 
 

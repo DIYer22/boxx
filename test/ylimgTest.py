@@ -9,7 +9,7 @@ from boxx import *
 dirr = dirname(__file__)
 imgGlob = pathjoin(dirr,'imgForTest/*')
 #imgGlob = ''
-jpg,png= pathjoin(dirr,'imgForTest/0004.jpg'), pathjoin(dirr,'imgForTest/0004.png')
+jpg,png= pathjoin(dirr,'imgForTest/img.jpg'), pathjoin(dirr,'imgForTest/gt_seg.png')
 img,gt = imread(jpg),imread(png)
 gt = gt>0
 re = gt.copy()
