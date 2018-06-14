@@ -18,7 +18,7 @@ if test:
     
     from ylmlTest import *
 
-pattern = '0004'
+pattern = 'import mat'
 #findinRoot(pattern,root='..')
 findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'winYl',root='..')

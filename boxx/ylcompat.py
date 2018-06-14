@@ -104,6 +104,7 @@ def beforImportPlt():
     if not pyi.plt and not pyi.reloadplt:
         __noDisplayEnv()
         import matplotlib.pyplot as plt
+#        import seaborn
         pyi.reloadplt = plt
 
 class SetPltActivateInWith():
