@@ -110,6 +110,10 @@ class SystemInfo():
     '''
     sys info
     '''
+    linux = linuxYl
+    win = winYl
+    osx = osxYl
+    
     os = sys.platform
     display = True
     if linuxYl:

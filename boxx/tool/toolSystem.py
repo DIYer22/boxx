@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import sys, os, time
-from ..ylsys import py2, tmpYl
+from ..ylsys import py2, tmpYl, sysi
 from ..ylcompat import isstr, beforImportPlt, ModuleNotFoundError
 
 
@@ -120,10 +120,13 @@ def crun(pycode, snakeviz=True):
     if not snakeviz:
         return run(pycode,sort='time')
     run(pycode, os.path.join(tmpYl, "snakeviz.result"))
-    from . import softInPath
-    assert softInPath('snakeviz'),'run `pip install snakeviz`'
-    os.system('snakeviz %s &'% os.path.join(tmpYl,'snakeviz.result'))
-    
+    if not sysi.win:
+        from . import softInPath
+        assert softInPath('snakeviz'),'run `pip install snakeviz`'
+        os.system('snakeviz %s &'% os.path.join(tmpYl,'snakeviz.result'))
+    elif sysi.win:
+        os.system('snakeviz.exe %s &'% os.path.join(tmpYl,'snakeviz.result'))
+        
     
 def performance(pyfileOrCode, snakeviz=True):
     '''
