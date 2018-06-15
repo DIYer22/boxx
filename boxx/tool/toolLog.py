@@ -1002,14 +1002,18 @@ pp = "registered `pp` var name that will be used by `p/x`"
 
 class withprint():
     '''
-    使用with结构来打印变量值
-    仍旧处于实验阶段
-    In interactive mod,var may not detected in following cases：
-        1. var is int and < 256
-        2. 变量名存在过 而且`id(var)` 也没有变化
+    `wp` is short of "With Print"   
+    pretty print assignment variables with their variable name in with statement
     
         >>> with withprint():
         >>>     a = 3.14
+    
+    If var's name in locals() ,var may not detected in following cases：
+        1. var is int and < 256
+        2. `id(var)` not change
+        
+    使用with结构来打印变量值
+    仍旧处于实验阶段
     '''
     def __init__(self):
         self.locs = defaultdict(lambda:[])

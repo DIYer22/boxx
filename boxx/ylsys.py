@@ -55,6 +55,7 @@ cloud = cpun > 16
 if linuxYl or osxYl:
     cuda = not os.system('nvcc --version> /dev/null 2>&1')
 else:
+    # TODO:
     cuda = 'Not Implemented'
 usecuda = 'auto' # auto: auto, False: not use
     
@@ -110,6 +111,11 @@ class SystemInfo():
     '''
     sys info
     '''
+    pyv = pyv
+    cpun = cpun
+    cuda = cuda
+    tmp = tmpYl
+    
     linux = linuxYl
     win = winYl
     osx = osxYl
@@ -119,10 +125,13 @@ class SystemInfo():
     if linuxYl:
         display = 'DISPLAY' in environ and environ['DISPLAY']
     gui = pyi.gui or display
-    
-    @property
-    def ip(self):
-        return '127.0.0.1'
+    if 0:
+        @property
+        def ip(self):
+            '''
+            TODO:
+            '''
+            return '127.0.0.1'
     @property
     def user(self):
         import getpass

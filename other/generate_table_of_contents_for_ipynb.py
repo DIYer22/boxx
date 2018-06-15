@@ -22,12 +22,13 @@ heads = filter2(lambda x:x.strip().startswith('##'), firstLines)
     '''
 
 md = '''
-<h2>Table of Contents</h2>
+
 
 <!-- START `./other/generate_table_of_contents_for_ipynb.py` generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN `./other/generate_table_of_contents_for_ipynb.py` TO UPDATE -->
 
 
+<h2>Table of Contents</h2>
 '''
 for h in heads:
     if h[-1] == '\n':
@@ -39,13 +40,16 @@ for h in heads:
     s = h[h.index('#') + bais:]
     href = s.replace('`', '').replace(' ', '-')
     mds = '[%s](#%s)\n'%(s, href)
-    if ')' in href:
-        mds = s+'\n'
+#    if ')' in href:
+#        mds = s+'\n'
     md += (bais-2)*'  ' + '- ' + mds
     
-printt-md
-
-
+#printt-md
+    
+import markdown2
+html = markdown2.markdown(md) 
+html = html.replace('&lt;','<').replace('&gt;','>')
+print(html)
 
 
 

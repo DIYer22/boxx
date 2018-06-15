@@ -44,7 +44,8 @@ def imread(fname, as_grey=False, plugin=None, flatten=None, **plugin_args):
     from skimage.io import imread
     return imread(fname, as_grey, plugin, flatten, **plugin_args)
 
-class FakeSkimageData(types.ModuleType):
+#class FakeSkimageData(types.ModuleType): # raise SystemError: nameless module when dir(sda)
+class FakeSkimageData():
     __all__ = ['load', 'astronaut', 'camera', 'checkerboard', 'chelsea', 'clock', 'coffee', 'coins', 'horse', 'hubble_deep_field', 'immunohistochemistry', 'logo', 'moon', 'page', 'text', 'rocket', 'stereo_motorcycle']
     def __init__(self):
         pass
@@ -787,6 +788,29 @@ def filterMethodName(attrName, attr):
 
 def dira(instance, pattern=None, deep=None, maxDocLen=50, printf=print, __printClassFathers=True):
     '''
+    `dira(x)` is supplement of `dir(x)`. 
+    `dira(x)` will pretty print `x`'s all attribute in tree struct.    
+    And `dira(x)` will print `x`'s Father Classes too.    
+    
+    Parameters
+    ----------
+    instance : Anything
+        Anything, Instance better
+    pattern : re.pattern
+        use re.search to filter attrs
+    deep : int, default None
+        max deep of struct object
+    maxDocLen : int, default 50
+        max len of doc
+    printf : funcation, default print funcation
+        a funcation that could replace print 
+        
+    P.S.unfold ('__globals__', 'func_globals', __builtins__, __all__, f_builtins)
+    
+    
+    Old Chinese
+    ---------
+    
     以树的结构 分析instance的所有 attrs, 并展示父类的继承链
     attr name用红色；str(instance.attr)用蓝色；
     如果attr 为instancemethod，builtin_function_or_method，method-wrapper之一

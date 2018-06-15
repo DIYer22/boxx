@@ -117,8 +117,19 @@ def crun(pycode, snakeviz=True):
         otherwise, print cProfile result sorted by time
     '''
     from cProfile import run
+
     if not snakeviz:
         return run(pycode,sort='time')
+    import webbrowser
+    if not webbrowser.open(''):
+        from boxx import warn
+        msg = '''**Can't detect browser** in operating environment.
+so, we use cProfile.run(pycode,sort='time'),
+instead of using snakeviz to visualization code perfomance in web page'''
+        warn(msg)
+        run(pycode,sort='time')
+        print('\n\n'+msg)
+        return 
     run(pycode, os.path.join(tmpYl, "snakeviz.result"))
     if not sysi.win:
         from . import softInPath
