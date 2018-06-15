@@ -64,32 +64,72 @@
 
 ## Examples
 
+All Tools are divided into 2 parts by wether the tool is general:    
+ * Left Part: [**General Python Tool**](#1.-General-Python-Tool). The tools could be used anywhere in Python
+
+ * Right Part: [**Scientific Computing and Computer Vision Tool**](#2.-Scientific-Computing-and-Computer-Vision-Tool). Those tools are useful in Scientific Computing and Computer Vision field
+
+*P.S. click the GIF picture to see more clearer GIF*
+
 <table  style="">
   <tr>
     <td valign="top" width="50%">
-        <h3> General Python Tool </h3>
-        <hr></hr>
+    
+  ### General Python Tool 
+  <hr></hr>
         
   #### ▶ Use `p/x` instead of `print(x)`   
-  💡 **Note:** `p/x` will `print(x)` and return `x`, `p/x` is easy to print value in expression.
+  `p/x` will `print(x)` and return `x`
   [![](./other/gif/p.gif)](./other/gif/p.gif)
+  💡 **Note:** `p/x` is easy to print value in expression.
         <hr></hr>
+        <br><br>
         <br><br>
         
   #### ▶ Use `g.name = x` or `g.name/x` to transport var to Python interactive console
-  [![](./other/gif/g.gif) ](./other/gif/g.gif)    
+  [![](./other/gif/g.gif) ](./other/gif/g.gif)   
+  💡 **Note:** `gg` is same usage as `g`, but `gg` will pretty print all vars in `locals()`. 
         <hr></hr>
+        <br><br>
+        <br><br>
+        
+  #### ▶ `g()` to transport all vars that in the function to Python interactive console
+  [![](./other/gif/g_call.gif) ](./other/gif/g_call.gif)
+  💡 **Note:** `g()` is a useful tool for debug. `import boxx.g` is convenient way to use `g()` instead of `from boxx import g;g()`(`import boxx.gg` is avaliable too)
+        <hr></hr>
+        <br><br>
+        <br><br>
     </td>
     <td valign="top">
-        <h3> Scientific Computing and Computer Vision </h3>
-        <hr></hr>
+    
+  ### Scientific Computing and Computer Vision
 
-  Useful tools in **Scientific Computing** and **Computer Vision** field. Support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
+  Useful tools in **Scientific Computing** and **Computer Vision** field. All tools support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
+        <hr></hr>
+        <br><br>
+        <br><br>
 
   #### ▶ `loga` to visualization matrix and tensor   
-  💡 **Note:** `loga` will show many attributes of array-like object.
+  `loga` will show many attributes of array-like object.
   [![](./other/gif/loga.gif)](./other/gif/loga.gif)
         <hr></hr>
+        <br><br>
+        <br><br>
+
+  #### ▶ `show` every image in complex struct
+  `show` could find every image in complex struct and imshow they.
+  [![](./other/gif/show.gif)](./other/gif/show.gif)
+  💡 **Note:** if args inculde funcation. those funcations will process all numpys befor imshow.
+        <hr></hr>
+        <br><br>
+        <br><br>
+
+  #### ▶ `tree` for visualization complex struct
+  like `tree` command in shell that could visualization any struct in tree struct view.
+  [![](./other/gif/tree.gif)](./other/gif/tree.gif)
+  💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`， `mxnet.ndarray`, `PIL.Image`.etc
+        <hr></hr>
+        <br><br>
         <br><br>
     </td>
   </tr>

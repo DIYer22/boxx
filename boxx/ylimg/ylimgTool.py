@@ -99,9 +99,13 @@ tprgb = FunAddMagicMethod(tprgb)
 
 def torgb(img):
     '''
-    将被处理过给网络用的图片 转换回 RGB 图像。
-    即自动 Normalization 到 [0,1], 并transpose 到 W*H*3
+    try to transfer a tensor to normalized RGB image
+    
+    normalizing img value to 0~1
+    and transpose (..., 3, w, h) to (..., w, h, 3)
+    
     '''
+    img = npa(img)
     if img.min() < 0:
         img = norma(img)
     return tprgb(img)
@@ -180,6 +184,8 @@ def npa(array):
     array : list/tuple, torch.Tensor, mxnet.NDArray 
         在 字典 typesToNumpyFuns 的中的类型
     '''
+    if isinstance(array, np.ndarray):
+        return array
     typeName = typestr(array)
     if typeName in tryToNumpyFunsForNpa:
         ndarray = tryToNumpyFunsForNpa[typeName](array)
@@ -275,6 +281,8 @@ def loga(array):
     '''
     Analysis any array like thing .
     the shape, max, min, distribute of the array
+    
+    support numpy, torch.tensor, mxnet.ndarray, PIL.Image .etc
     '''
     import matplotlib.pyplot as plt
     plt.figure()
@@ -317,11 +325,11 @@ def ndarrayToImgLists(arr):
     '''
     arr = np.squeeze(arr)
     ndim = arr.ndim
-    if not ndim:
+    if ndim <= 1:
         return []
     if arr.ndim==2 or (arr.ndim ==3 and arr.shape[-1] in [3,4]):
          return [arr]
-    if arr.shape[-1] == 2: # 二分类情况下自动转换
+    if arr.shape[-1] == 2 and arr.ndim >= 3: # 二分类情况下自动转换
         arr = arr.transpose(list(range(ndim))[:-3]+[ndim-1,ndim-3,ndim-2])
     imgdim = 3 if arr.shape[-1] in [3,4] else 2
     ls = list(arr)
@@ -349,7 +357,7 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
         elif isinstance(x,np.ndarray):
             res.extend(doNumpy(x))
         elif ('torch.utils.data') in fathersStr or ('torchvision.datasets') in fathersStr:
-            seq = unfoldTorchData(x)
+            seq = unfoldTorchData(x, fathersStr)
             if seq is not False:
                 listToImgLists(seq,res=res,doNumpy=doNumpy)
     return res
@@ -374,11 +382,19 @@ def showImgLists(imgs,**kv):
     plt.show()
 def show(*imgsAndFuns,**kv):
     '''
-    找出一个复杂结构中的所有numpy 转换为对应的图片并plt.show()出来
+    show could find every image in complex struct and show they
+    could sample images from torch.DataLoader and DataSet
+    
+    if imgsAndFuns inculde funcation. those funcations will process all numpys befor imshow
     
     Parameters
     ----------
-    imgsAndFuns : list/tuple/dict 
+    imgsAndFuns : numpy/list/tuple/dict/torch.tensor/PIL.Image/funcation
+        if imgsAndFuns inculde funcation . 
+        those funcations will process all numpys befor imshow
+    kv : args
+        args for plt.imshow
+    找出一个复杂结构中的所有numpy 转换为对应的图片并plt.show()出来
     '''
     if 'cmap' not in kv:
         kv['cmap'] = 'gray'
@@ -442,7 +458,12 @@ shows = FunAddMagicMethod(shows)
 
 
     
-__torchShape = lambda x:colorFormat.r%'%s %s'%(str(x.shape or ('%s of'%x)) ,x.type())
+def __torchShape(x):
+    if x.shape:
+        s = '%s of %s'%(tuple(x.shape), x.type())
+    else:
+        s = '%s of %s'%(strnum(float(x)), x.type())
+    return colorFormat.r%s
 StructLogFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
@@ -504,14 +525,14 @@ def discribOfInstance(instance,leafColor=None,MAX_LEN=45):
     return (leafColor or '%s')%s
 
 
-def unfoldTorchData(seq):
+def unfoldTorchData(seq, fathersStr=''):
     '''
     unfold torch.Dataset and Dataloader use next(iter()) for tree  
     '''
     import torch
-    if isinstance(seq, torch.utils.data.DataLoader):
+    if isinstance(seq, torch.utils.data.DataLoader) or 'DataLoader' in fathersStr:
         seq = [('DataLoader.next', nextiter(seq, raiseException=False))]
-    elif isinstance(seq, torch.utils.data.Dataset):
+    elif isinstance(seq, torch.utils.data.Dataset) or 'Dataset' in fathersStr:
         seq = [(colorFormat.b%'Dataset[0/%d]'%len(seq), seq[0])]
     else:
         return False
@@ -534,7 +555,7 @@ def unfoldAble(seq):
         return seq
     fathersStr = str(getfathers(seq))
     if ('torch.utils.data') in fathersStr or ('torchvision.datasets') in fathersStr:
-        return unfoldTorchData(seq)
+        return unfoldTorchData(seq, fathersStr)
     return False
 
 class HiddenForTree():
