@@ -221,8 +221,22 @@ def discrib(x, maxline=20):
     return s
 
 
-def logc(code, run=None):
+def logc(code, exe=None):
     '''
+    short of log code
+    pretty print expression by show every var's value in expression
+    
+    Parameters
+    ----------
+    code : str
+        the expression code that want to print
+    exe : bool, default None
+        wether exec(code) befor print
+        when exe is None:
+            try not exec(code)
+            but if some var in expression can't find in locals() and globls()
+                then exec(code)
+    
     TODO:
         1. use re to replace vars name avoid the same names
         2. use Abstract Syntax Tree and re 
@@ -232,7 +246,7 @@ def logc(code, run=None):
     local = frame.f_locals
     glob = frame.f_globals
     
-    if run:
+    if exe:
         exec(code, local, glob)
     
     varss = re.findall('[a-zA-Z_][a-zA-Z0-9_]*',code)
@@ -242,7 +256,7 @@ def logc(code, run=None):
             dic[name] = local[name]
         elif name in glob:
             dic[name] = glob[name]
-        elif run is None:
+        elif exe is None:
             exec(code, local, glob)
             if name in local:
                 dic[name] = local[name]

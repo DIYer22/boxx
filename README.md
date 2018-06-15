@@ -65,11 +65,11 @@
 ## Examples
 
 All Tools are divided into 2 parts by wether the tool is general:    
- * Left Part: [**General Python Tool**](#1.-General-Python-Tool). The tools could be used anywhere in Python
+ * Left Part: **General Python Tool**, Tools could be used anywhere in Python
 
- * Right Part: [**Scientific Computing and Computer Vision Tool**](#2.-Scientific-Computing-and-Computer-Vision-Tool). Those tools are useful in Scientific Computing and Computer Vision field
+ * Right Part: **Scientific Computing and Computer Vision Tool**, Those tools are useful in Scientific Computing and Computer Vision field
 
-*P.S. click the GIF picture to see more clearer GIF*
+*P.S. click the GIF picture will restart GIF and see more clearer GIF*
 
 <table  style="">
   <tr>
@@ -78,23 +78,23 @@ All Tools are divided into 2 parts by wether the tool is general:
   ### General Python Tool 
   <hr></hr>
         
-  #### ▶ Use `p/x` instead of `print(x)`   
+  #### ▶  `p/x` is better way to `print(x)`    
   `p/x` will `print(x)` and return `x`
-  [![](./other/gif/p.gif)](./other/gif/p.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/p.gif)](./other/gif/p.gif)
   💡 **Note:** `p/x` is easy to print value in expression.
         <hr></hr>
         <br><br>
         <br><br>
         
   #### ▶ Use `g.name = x` or `g.name/x` to transport var to Python interactive console
-  [![](./other/gif/g.gif) ](./other/gif/g.gif)   
+  [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)   
   💡 **Note:** `gg` is same usage as `g`, but `gg` will pretty print all vars in `locals()`. 
         <hr></hr>
         <br><br>
         <br><br>
         
   #### ▶ `g()` to transport all vars that in the function to Python interactive console
-  [![](./other/gif/g_call.gif) ](./other/gif/g_call.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/g_call.gif) ](./other/gif/g_call.gif)
   💡 **Note:** `g()` is a useful tool for debug. `import boxx.g` is convenient way to use `g()` instead of `from boxx import g;g()`(`import boxx.gg` is avaliable too)
         <hr></hr>
         <br><br>
@@ -110,15 +110,15 @@ All Tools are divided into 2 parts by wether the tool is general:
         <br><br>
 
   #### ▶ `loga` to visualization matrix and tensor   
-  `loga` will show many attributes of array-like object.
-  [![](./other/gif/loga.gif)](./other/gif/loga.gif)
+  `loga` is short of "log array", `loga` will show many attributes of array-like object.
+  [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)
         <hr></hr>
         <br><br>
         <br><br>
 
   #### ▶ `show` every image in complex struct
   `show` could find every image in complex struct and imshow they.
-  [![](./other/gif/show.gif)](./other/gif/show.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/show.gif)](./other/gif/show.gif)
   💡 **Note:** if args inculde funcation. those funcations will process all numpys befor imshow.
         <hr></hr>
         <br><br>
@@ -126,7 +126,7 @@ All Tools are divided into 2 parts by wether the tool is general:
 
   #### ▶ `tree` for visualization complex struct
   like `tree` command in shell that could visualization any struct in tree struct view.
-  [![](./other/gif/tree.gif)](./other/gif/tree.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)
   💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`， `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
         <br><br>
