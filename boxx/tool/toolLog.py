@@ -920,8 +920,6 @@ def generaPAndLc():
             p.clear()
             glob = frame.f_globals
             local = frame.f_locals
-            p.update(glob)
-            p.update(local)
                 
             self.c = self.code = code
             self.f = self.frame = frame
@@ -939,6 +937,8 @@ def generaPAndLc():
                 tree(local, deep=1, maxprint=40)
                 
             if saveOut[id(self)]:
+                p.update(glob)
+                p.update(local)
                 root = getRootFrame()
                 addDic = dict(
 #                        code=code,

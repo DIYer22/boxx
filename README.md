@@ -69,7 +69,7 @@ All Tools are divided into 2 parts by wether the tool is general:
 
  * Right Part: **Scientific Computing and Computer Vision Tool**, Those tools are useful in Scientific Computing and Computer Vision field
 
-*P.S. click the GIF picture will restart GIF and see more clearer GIF*
+💡 **Note:** *Click the GIF picture will restart GIF and see more clearer GIF image*
 
 <table  style="">
   <tr>

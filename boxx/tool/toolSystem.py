@@ -169,7 +169,7 @@ class timeit():
         
     P.S `with timeit(0)` will convenient stop print 
     '''
-    def __init__(self,name=''):
+    def __init__(self,name='timeit'):
         self.last = self.begin = time.time()
         self.log = isstr(name) or bool(name)
         self.key = name

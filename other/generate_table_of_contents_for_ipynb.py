@@ -14,7 +14,7 @@ ipynb = json.loads(openread('../tutorial_for_boxx.ipynb'))
 
 firstLines = [d['source'][0] for d in ipynb['cells'] if d['cell_type'] == 'markdown' and len(d['source'])]
 
-heads = filter2(lambda x:x.strip().startswith('##'), firstLines)
+heads = filter2(lambda x:x.strip().startswith('##') and x.strip()[3] != '#' , firstLines)
 
 '''
 - [👀 Examples](#-examples)
