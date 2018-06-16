@@ -161,6 +161,8 @@ def shortDiscrib(x):
     '''
     short Discrib of anything for logc number is better 
     '''
+    if isinstance(x, int):
+        return str(x)
     typee = typestr(x)
     from ..ylimg import StructLogFuns
     fund = StructLogFuns
@@ -1000,23 +1002,31 @@ p, lc, out = generaPAndLc()
 pp = "registered `pp` var name that will be used by `p/x`"
 #pp, lcc, outt = generaPAndLc()
 
-class withprint():
+class withOperation():
     '''
-    `wp` is short of "With Print"   
-    pretty print assignment variables with their variable name in with statement
+    `w{operation}` is mulitple variables version of "{operation}/x", and work in "with statement".
+    {usage}
+    `w{operation}` only act on assignment variables that under `with w{operation}:` statement.
     
-        >>> with withprint():
-        >>>     a = 3.14
+    Usage
+    --------
+        >>> with w{operation}:
+        >>>     pi = 3.14
+        >>>     e = 2.71
     
-    If var's name in locals() ,var may not detected in following cases：
-        1. var is int and < 256
-        2. `id(var)` not change
-        
-    使用with结构来打印变量值
-    仍旧处于实验阶段
+    Note
+    --------
+        If var's name in locals() and `id(var)` not change ,var may not be detected 
+        Especially following cases：
+            1. var is int and < 256
+            2. `id(var)` not change
+
     '''
-    def __init__(self):
+    def __init__(self, operation='p', printt=False, transport=False):
         self.locs = defaultdict(lambda:[])
+        self.operation = operation
+        self.printt = printt
+        self.transport = transport
     def __enter__(self):
         f = sys._getframe(1)
         ind = id(f)
@@ -1036,28 +1046,69 @@ class withprint():
             else:
                 kvs.append((k, locs[k]))
                 newVars.append(k)
-        print("")
-        from .toolTools import increase
-        count = increase('boxxx.withprint id:%s'%id(self))
-        if count : 
-            print(colorFormat.p%(str(count+1)+'st')+colorFormat.b%' times ', end='')
-        print(colorFormat.b%'withprint from %s'%prettyFrameLocation(f))
+        if self.transport:
+            root = getRootFrame()
+            root.f_locals.update(kvs)
+        
+        printf = lambda *l, **kv: 0
+        if self.printt:
+            printf = log
+        printf("")
+        printf(colorFormat.b%'withprint from %s'%prettyFrameLocation(f))
 
         if len(kvs):
-            print(colorFormat.b% 'New Vars: ', end='')
-            if len(newVars):
-                print((', '.join([colorFormat.p%k for k in newVars])))
-            else:
-                print((colorFormat.b% 'None'))
-            print((colorFormat.b% "All Vars's Values (ps.some base object may not detected):"))
-            from boxx import tree
-            tree(dict(kvs))
+            tag = ''
+            if locs.get('__name__') == '__main__':
+                printf(colorFormat.b% 'New Vars: ', end='')
+                if len(newVars):
+                    printf((', '.join([colorFormat.p%k for k in newVars])))
+                else:
+                    printf((colorFormat.b% 'None'))
+                    
+                tag = ("\nP.S. code run in __main__, some vars may not detected if id(var) not change.")
+            printf((colorFormat.b% "All Vars's Values :"))#(P.S.some base object may not detected):"))
+            if self.printt:
+                from boxx import tree
+                tree(dict(kvs))
+                tag and printf(tag)
+            
         else:
-            print((colorFormat.r% 'No detected any Vars:'+
+            print((colorFormat.r% '\n\nNot detected any Vars:'+
                    '\n    id(var) may not change in interactive mod if var is int and < 256 \n'+
-                   '    `help(withprint)` for more infomation'))
-wp = withprint()
+                   '    `help(withprint)` for more infomation\n'+
+                   '     P.S assignment self is not work for with statement.\n'+
+                   '     Instead, `new_var = old_var` is OK!'))
+    def __str__(self):
+        return self.__doc__
+    __repr__ = __str__
 
-if __name__ == "__main__":
-    colorFormat.pall()
-    pass
+class withPrint(withOperation):
+    operation = 'p'
+    usage = '''
+    pretty print variables with their variable name.
+    '''
+    __doc__ = withOperation.__doc__.format(operation=operation, usage=usage)
+    def __init__(self):
+        withOperation.__init__(self, self.operation, True, False)
+    
+class withTransport(withOperation):
+    operation = 'g'
+    usage = '''
+    `wg` will transport variable to Python interactive console.
+    '''
+    __doc__ = withOperation.__doc__.format(operation=operation, usage=usage)
+    def __init__(self):
+        withOperation.__init__(self, self.operation, False, True)
+
+class withPrintAndTransport(withOperation):
+    operation = 'gg'
+    usage = '''
+    `wgg` will transport variable to Python interactive console and pretty print they.
+    '''
+    __doc__ = withOperation.__doc__.format(operation=operation, usage=usage)
+    def __init__(self):
+        withOperation.__init__(self, self.operation, True, True)
+
+wp = withPrint()
+wg = withTransport()
+wgg = withPrintAndTransport()

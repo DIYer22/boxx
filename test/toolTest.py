@@ -16,7 +16,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-#TEST_ALL = False
+TEST_ALL = False
  
 
 testFun = None
@@ -25,6 +25,14 @@ tests = [testFun]
 df=pd.DataFrame([{'a':5,'b':3},{1:1}]*20)
     
 
+tests = wgg    
+if ifTest(wgg):
+    def funForWgg():
+        with wgg:
+            ia = 517
+            ib = 222
+    funForWgg()
+    
 #tests = withattr    
 if ifTest(withattr):
     with withattr(dict(), {'attr':1}) as d:

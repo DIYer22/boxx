@@ -62,14 +62,55 @@
 
 ---
 
-## Examples
+## 1. Install
+
+#### From source
+```bash
+git clone https://github.com/DIYer22/boxx
+cd boxx/
+python setup.py install
+```
+💡 **Note:** Recommended to install from source because PyPI mirrors may has a big delay.
+
+#### Linux or macOS
+```
+pip install git+https://github.com/DIYer22/boxx
+```
+
+#### Windows
+```
+pip install boxx -U
+```
+
+## 2. Tutorial
+
+#### Executable Interactive Online Tutorial: 
+We use [Binder](https://mybinder.org) to run Tutorial Notebook in  an executable interactive online jupyer environment.    
+That's mean you can **run code in notebook rightnow** in your browser without download or install anything.    
+* [**=> Executable Interactive Online Tutorial**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb)
+
+#### Download and Run at Local:
+
+```bash
+git clone https://github.com/DIYer22/boxx
+cd boxx/
+python setup.py install
+jupyter notebook
+```
+Then open `./tutorial_for_boxx.ipynb` in notebook.
+
+#### Static Tutorial:
+ Just view the Tutorial Notebook.
+* [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
+
+## 3. Examples
 
 All Tools are divided into 2 parts by wether the tool is general:    
  * Left Part: **General Python Tool**, Tools could be used anywhere in Python
 
  * Right Part: **Scientific Computing and Computer Vision Tool**, Those tools are useful in Scientific Computing and Computer Vision field
 
-💡 **Note:** *Click the GIF picture will restart GIF and see more clearer GIF image*
+💡 **Note:** *Click the GIF image will restart GIF and see more clearer GIF image*
 
 <table  style="">
   <tr>
@@ -139,14 +180,7 @@ All Tools are divided into 2 parts by wether the tool is general:
 
 ---
 
-## Box-X Tutorial
-
-[**Tutorial for computer device**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb): We use [Binder](https://mybinder.org) to run this Tutorial in an executable environment. That's mean you can **run tutorial cells rightnow** in your browser without download repository.
-
-
-[**Tutorial for mobile device**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb): Just view the Tutorial.
-
-## Acknowledgments
+## 4. Acknowledgments
  * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
  * `performance` is supported by [SnakeViz](https://jiffyclub.github.io/snakeviz/)
  * `heatmap` is supported by [csurfer/pyheat](https://github.com/csurfer/pyheat)

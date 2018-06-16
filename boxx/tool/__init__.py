@@ -10,7 +10,7 @@ from .toolLog import (stdout, log, logc, printt, PrintStrCollect, printToStr, lo
                       LogLoopTime, SuperG, sg, g, gg, cf, p, pp, lc, out)
 from .toolLog import colorFormat, clf, pblue, pred, pdanger, perr, pinfo, decolor
 from .toolLog import strnum, percentStr, notationScientifique
-from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, withprint, wp
+from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, wp, wg, wgg
 from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather, generator,
