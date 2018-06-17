@@ -7,7 +7,7 @@
 </div>
 
 <div align="center">
-  A Tool-box for Efficient Build and Debug in Python. Especially for <strong>Scientific Computing</strong> and <strong>Computer Vision</strong>.
+  **`Box-X`** 是一个旨在提高 Python 代码开发和调试效率的工具库，尤其是在  <strong>科学计算</strong> 和 <strong>计算机视觉</strong> 领域.
 </div>
 
 <br/>
@@ -61,31 +61,31 @@
 
 
 ---
-## 1. Introduce
+## 一. 简介
 
-**`Box-X`** is a Tool-box for Efficient Build and Debug in Python.   
+**`Box-X`** 的目标是提高 Python 代码的开发和调试效率.    
 
-Especially, have done a lot of optimization for **Scientific Computing** and **Computer Vision**. 
+尤其在 **科学计算** 和 **计算机视觉** 领域有良好的支持. 
 
-So, all Tools are divided into 2 parts by wether the tool is general used:    
- * **General Python Tool**: Tools could be used anywhere in Python
+因此，工具库的所用功能 会根据该功能是否为通用功能 而被分为了两个部分:    
+ * **通用功能**: 这些功能（工具）可以在任何 Python 开发中发挥作用
 
- * **Scientific Computing and Computer Vision Tool**: Those tools are useful in Scientific Computing and Computer Vision field
+ * **科学计算和计算机视觉功能**: 这些功能（工具）主要用于科学计算和计算机视觉领域
  
-You can jump to [=> Examples](#4-examples) to have a glance.
+可以去 [=> 例子](#四-例子) 处瞥一眼效果.
 
-P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
+P.S. **`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 操作系统.
 
-## 2. Install
+## 二. 安装
 
 
-#### From source
+#### 源码安装
 ```bash
 git clone https://github.com/DIYer22/boxx
 cd boxx/
 python setup.py install
 ```
-💡 **Note:** Recommended to install from source because PyPI mirrors may has a big delay.
+💡 **Note:** 由于国内的 `pip` 镜像平均有好几天的延迟，强烈推荐从 GitHub 安装.
 
 #### Linux or macOS
 ```
@@ -96,19 +96,18 @@ pip install git+https://github.com/DIYer22/boxx
 ```
 pip install boxx -U
 ```
+💡 **Note:** 确保 `pip` 镜像的 `boxx` 版本大于 `0.9`，否则请源码安装。
+## 三. 教程
 
-## 3. Tutorial
+**`boxx`** 的教程是一个 Jupyter Notebook 文件，可以边看边运行，Notebook 文件在 [`./tutorial_for_boxx.ipynb`](./tutorial_for_boxx.ipynb)
 
-**`Box-X`**'s Tutorial is a Jupyter Notebook file that allows run examples while view Tutorial. The Notebook file is in [`./tutorial_for_boxx.ipynb`](./tutorial_for_boxx.ipynb)
+有三种方式来查看/运行此教程
+#### 方式一：可直接执行的在线 Notebook: 
+Notebook 文件被运行在 [Binder](https://mybinder.org) 上。[Binder](https://mybinder.org) 提供了可执行、可交互的在线 Notebook 环境.    
+也就是说，无需下载和运行任何代码，只需浏览器打开链接，就可以执行任何 Notebook 中的代码块。  
+* [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb)
 
-There are 3 methods to view/run this Tutorial
-
-#### Method 1: Executable Interactive Online Notebook
-We use [Binder](https://mybinder.org) to run Tutorial Notebook in  an executable interactive online jupyer environment.    
-That's mean you can **run code in notebook rightnow** in your browser without download or install anything.    
-* [**=> Executable Interactive Online Tutorial**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb)
-
-#### Method 2: Download and Run at Local
+#### 方式二：下载并在本地打开教程:
 
 ```bash
 git clone https://github.com/DIYer22/boxx
@@ -116,14 +115,14 @@ cd boxx/
 python setup.py install
 jupyter notebook
 ```
-Then open `./tutorial_for_boxx.ipynb` in notebook.
+在 Notebook 中打开 `./tutorial_for_boxx.ipynb` 即可.
 
-#### Method 3: Static Noetbook
- Just view the Tutorial Notebook.
-* [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
+#### 方式三：静态的 Notebook:
+ 只能看 不能交互的 Notebook.
+* [**=> 静态的 Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
 
 
-## 4. Examples
+## 四. 例子
 
 Examples are divided into 2 parts too.   
 
