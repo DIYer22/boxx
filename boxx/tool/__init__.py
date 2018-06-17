@@ -13,7 +13,8 @@ from .toolLog import strnum, percentStr, notationScientifique
 from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, wp, wg, wgg
 from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap
 
-from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, getfathers, getfather, generator,
+from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, strMethodForDiraAttrs, 
+                            getfathers, getfather, generator,
                             nextiter, listToBatch, ll, FunAddMagicMethod, mf, addCall,
                             setself, unfoldself, withfun, withattr)
 
@@ -27,7 +28,7 @@ from .toolSystem import (crun, performance, timeit, heatmap, getArgvDic, softInP
 from .toolSystem import importAllFunCode, impt, tryImport, FakeModule, removeImportSelf,  removeimp
 from .toolSystem import getMainFrame, getRootFrame, getFatherFrames#, exceptionHook
 
-from .toolFuncation import (getFunName, dynamicWraps, setTimeOut, pipe,
+from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, retry)
 
 from .toolTools import (increase, filterList, findints, randint, randfloat, randchoice,

@@ -34,7 +34,7 @@ class timeGap:
     ----------
     gap : float
         隔多少秒返回一个 True
-    fun : funcation, default None
+    fun : function, default None
         每一次要执行fun()
     quickBegin : bool, default True
         First time call will return True
@@ -186,7 +186,7 @@ def shortStr(x, maxlen=60):
     '''
     genrate one line discrib str shorter than maxlen.
     if len(s)> maxlen then slice additional str and append '...' 
-    BTW. funcation will replace '\n' to '↳'
+    BTW. function will replace '\n' to '↳'
     
     if bool(maxlen) is False, not be short
     '''
@@ -242,7 +242,7 @@ def logc(code, exe=None):
     TODO:
         1. use re to replace vars name avoid the same names
         2. use Abstract Syntax Tree and re 
-           to distinguish .attr, funcation call []
+           to distinguish .attr, function call []
     '''
     frame = sys._getframe(2)
     local = frame.f_locals
@@ -355,7 +355,7 @@ printt = log
 def printToStr(value='', *l, **kv):
 #def printToStr(value='', *l, sep=' ', end='\n', file=None, flush=False): # for py version < 2.7.16
     '''
-    same usage to print funcation, but replace stdout to return str
+    same usage to print function, but replace stdout to return str
     '''
     sep=' '
     end='\n'

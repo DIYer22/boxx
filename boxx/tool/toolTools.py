@@ -60,7 +60,7 @@ def listdirWithFun(root='.',fun=None):
     ----------
     root : str, default '.'
         路径
-    fun : funcation
+    fun : function
         对每个子路径执行fun(path)
     '''
     paths = glob(join(root,'*'))

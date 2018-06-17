@@ -231,7 +231,7 @@ def autoSegmentWholeImg(img,simgShape,handleSimg,step=None,weightCore=None):
         需要被分割处理的图片
     simgShape : int or tuple
         小图片的shape,为int时候 自动转换为(simgShape, simgShape)
-    handleSimg : funcation
+    handleSimg : function
         用于处理shape为simgShape的小图片的函数 
         此函数需要接受一个ndarray作为参数并返回shape[:2]同为为(h,w)的ndarray
         即：handleSimg(simg)=>ndarray，比如 net.pridict(simg)
@@ -309,7 +309,7 @@ def autoFindBestParams(c, args,evaluFun,sortkey=None, savefig=False):
         包含args，数据配置，各类函数等
     args : dicto
         predict的参数，但需要包含 ArgList 类 将遍历ArgList的所有参数组合 并找出最佳参数组合
-    evaluFun : Funcation
+    evaluFun : Function
         用于评测的函数，用于Evalu类 需要返回dict对象
     sortkey : str, default None
         用于筛选时候的key 默认为df.columns[-1]
@@ -404,7 +404,7 @@ def autoFindBestEpoch(c, evaluFun,sortkey=None,epochs=None, savefig=False):
     c : dicto
         即configManager 生成的测试集的所有环境配置 c
         包含args，数据配置，各类函数等
-    evaluFun : Funcation
+    evaluFun : Function
         用于评测的函数，用于Evalu类 需要返回dict对象
     sortkey : str, default None
         用于筛选时候的key 默认为df.columns[-1]

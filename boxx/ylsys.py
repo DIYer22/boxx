@@ -78,7 +78,7 @@ class __TmpboxxWithCall(str):
         return self
 tmpboxx = __TmpboxxWithCall(os.path.join(tmpYl,'boxxTmp/'))
 
-class pyi():
+class PythonInfo():
     '''
     python info
     
@@ -107,6 +107,12 @@ class pyi():
     if not gui and linuxYl and 'DISPLAY' not in os.environ :
         plt =  False
     reloadplt = False
+    def __str__(self):
+        from boxx import strMethodForDiraAttrs
+        return strMethodForDiraAttrs(self)
+    __repr__ = __str__
+pyi = PythonInfo()
+
 class SystemInfo():
     '''
     sys info
@@ -140,4 +146,8 @@ class SystemInfo():
     def host(self):
         import platform
         return platform.node()
+    def __str__(self):
+        from boxx import strMethodForDiraAttrs
+        return strMethodForDiraAttrs(self)
+    __repr__ = __str__
 sysi = SystemInfo()

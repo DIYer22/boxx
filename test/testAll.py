@@ -18,10 +18,13 @@ if test:
     
     from ylmlTest import *
 
-pattern = 'funcation'
-#findinRoot(pattern,root='..')
-findinRoot(up=pattern,root='..')
-#replaceAllInRoot(pattern,'winYl',root='..')
+pattern = 'MappingProxyType'
+findinRoot(pattern,root='..')
+#findinRoot(up=pattern,root='..')
+#replaceAllInRoot(pattern,'Function',root='..')
+
+
+
 
 
 if __name__ == '__main__0':

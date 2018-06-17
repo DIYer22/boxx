@@ -5,7 +5,7 @@ from __future__ import unicode_literals, print_function
 from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, generator, nextiter, getfathers
 from ..tool.toolLog import log, PrintStrCollect, colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
 from ..tool.toolLog import tabstr, getDoc, shortStr, discrib, strnum
-from ..tool.toolFuncation import mapmp, pipe
+from ..tool.toolFunction import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl, pyi, py2
 from ..ylnp import isNumpyType
@@ -386,13 +386,13 @@ def show(*imgsAndFuns,**kv):
     show could find every image in complex struct and show they
     could sample images from torch.DataLoader and DataSet
     
-    if imgsAndFuns inculde funcation. those funcations will process all numpys befor imshow
+    if imgsAndFuns inculde function. those functions will process all numpys befor imshow
     
     Parameters
     ----------
-    imgsAndFuns : numpy/list/tuple/dict/torch.tensor/PIL.Image/funcation
-        if imgsAndFuns inculde funcation . 
-        those funcations will process all numpys befor imshow
+    imgsAndFuns : numpy/list/tuple/dict/torch.tensor/PIL.Image/function
+        if imgsAndFuns inculde function . 
+        those functions will process all numpys befor imshow
     kv : args
         args for plt.imshow
     找出一个复杂结构中的所有numpy 转换为对应的图片并plt.show()出来
@@ -403,7 +403,7 @@ def show(*imgsAndFuns,**kv):
     doNumpy = pipe(funs+[ndarrayToImgLists])
     imgls = listToImgLists(imgsAndFuns,doNumpy=doNumpy)
     imgls = [img for img in imgls if img.ndim >= 2 and min(img.shape) > 2]
-    assert len(imgls)!=0,"funcation `show`'s args `imgs`  has no any np.ndarray that ndim >= 2! "
+    assert len(imgls)!=0,"function `show`'s args `imgs`  has no any np.ndarray that ndim >= 2! "
     showImgLists(imgls,**kv)
 show = FunAddMagicMethod(show)
 
@@ -539,9 +539,9 @@ def unfoldTorchData(seq, fathersStr=''):
         return False
     return seq
 
-if py2:
-    types.MappingProxyType = dict
-iterAbleTypes = (list,tuple,dict,types.GeneratorType, types.MappingProxyType)
+MappingProxyType = dict if py2 else types.MappingProxyType 
+    
+iterAbleTypes = (list,tuple,dict,types.GeneratorType, MappingProxyType)
 def unfoldAble(seq):
     '''
     能展开的 object 
@@ -549,7 +549,7 @@ def unfoldAble(seq):
     if isinstance(seq,iterAbleTypes) :
         if isinstance(seq,(list,tuple)):
             seq = list(enumerate(seq))
-        elif isinstance(seq,(dict, types.MappingProxyType)):
+        elif isinstance(seq,(dict, MappingProxyType)):
             seq = list(seq.items())
         elif isinstance(seq, types.GeneratorType):
             seq = [('Generator.next', nextiter(seq, raiseException=False))]
@@ -595,8 +595,8 @@ def tree(seq,maxprint=50,deep=None,logLen=45,printf=log,leafColor='\x1b[31m%s\x1
         能显示的最深深度, 默认不限制
     logLen : int, default 45
         能显示的最长字符数
-    printf : funcation, default print funcation
-        a funcation that could replace print 
+    printf : function, default print function
+        a function that could replace print 
     
     ps.可在StructLogFuns中 新增类别
     '''
@@ -786,7 +786,7 @@ def filterMethodName(attrName, attr):
         return colorFormat.b%('【f_builtins %d omitted】'%len(attr))
     return attr
 
-def dira(instance, pattern=None, deep=None, maxDocLen=50, printf=print, __printClassFathers=True):
+def dira(instance, pattern=None, deep=None, maxDocLen=50, printf=print, printClassFathers=True):
     '''
     `dira(x)` is supplement of `dir(x)`. 
     `dira(x)` will pretty print `x`'s all attribute in tree struct.    
@@ -802,8 +802,8 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50, printf=print, __printC
         max deep of struct object
     maxDocLen : int, default 50
         max len of doc
-    printf : funcation, default print funcation
-        a funcation that could replace print 
+    printf : function, default print function
+        a function that could replace print 
         
     P.S.unfold ('__globals__', 'func_globals', __builtins__, __all__, f_builtins)
     
@@ -828,13 +828,13 @@ def dira(instance, pattern=None, deep=None, maxDocLen=50, printf=print, __printC
         若有文档显示文档的字数长度
     deep : int, default None
         能显示的最深深度, 默认不限制
-    printf : funcation, default print funcation
-        a funcation that could replace print 
+    printf : function, default print function
+        a function that could replace print 
         
     ps.可在__attrLogFuns中 新增常见类别
     pps.不展开 ('__globals__', 'func_globals', __builtins__, __all__, f_builtins)
     '''
-    if __printClassFathers:
+    if printClassFathers:
         s = prettyClassFathers(instance)
         printf((colorFormat.b%'Classes: \n'+'└── '+s+''))
     
@@ -906,7 +906,7 @@ def what(anything, full=False):
         
     doStr('-'*10+clf.b%'end of what(' + clf.p%('"%s"'%shortStr(tostr, 30)) + clf.b%')'+'-'*10)
     diraPrintf = PrintStrCollect()
-    dira(anything, deep=2, __printClassFathers=False, printf=diraPrintf)
+    dira(anything, deep=2, printClassFathers=False, printf=diraPrintf)
     doStr(diraPrintf)
     doStr("")
     doStr((colorFormat.b%'Document: \n'+'└── '+tabstr(doc, 5)+'\n'))    

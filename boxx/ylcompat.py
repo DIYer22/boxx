@@ -38,9 +38,9 @@ def istype(objOrType):
     return isinstance(objOrType, (type, classobj))
 
 
-def setFuncation2ForAutoList():
+def setFunction2ForAutoList():
     '''
-    add funcation 'range2', 'map2', 'reduce2', 'zip2' that retrun a list like python2
+    add function 'range2', 'map2', 'reduce2', 'zip2' that retrun a list like python2
     '''
     funForAutoList = ['range', 'map', 'reduce', 'filter', 'zip', 'enumerate']
     if py2:
@@ -58,7 +58,7 @@ def setFuncation2ForAutoList():
         rawf = glob[name] if name in glob else  __builtins__[name]
         glob[name+'2'] = addListAfter(rawf)
 
-setFuncation2ForAutoList()
+setFunction2ForAutoList()
 
 
 def __setDisplayEnv():
@@ -68,7 +68,7 @@ def __setDisplayEnv():
         so, we auto set os.environ["QT_QPA_PLATFORM"] = "offscreen"    '''%'\x1b[36m%s\x1b[0m'% 'warning from boxx'
     msg = '''os.environ["DISPLAY"] is not found
     plt.show() are redirect to plt.savefig(tmp)
-    funcation: show, loga, crun, heatmap, plot will be affected'''
+    function: show, loga, crun, heatmap, plot will be affected'''
     
     from .tool import warn
     warn(msg)
@@ -95,7 +95,7 @@ def __noDisplayEnv():
 def beforImportPlt():
     '''
     cause `import matplotlib.pyplot` often lead to Exit Error
-    I do `import plt` when funcation need, this would avoid exit error.
+    I do `import plt` when function need, this would avoid exit error.
     if os.environ["DISPLAY"] is not found, then  we auto set os.environ["QT_QPA_PLATFORM"] = "offscreen"
     and plt.show() are redirect to plt.savefig('/tmp/boxxTmp/showtmp')
     

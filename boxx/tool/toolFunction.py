@@ -36,7 +36,7 @@ def pipe(*funList):
     
     Parameters
     ----------
-    funList : Funcation or list of Funcation
+    funList : Function or list of Function
         函数list
     '''
     if len(funList) == 1 and  '__iter__' in dir(funList[0]):
@@ -122,8 +122,8 @@ def mapmp(fun, *iterables, **kv):
         short of `print frequent`, auto print program progress in `mapmt` and `mapmp`   
         if `printfreq < 1` then `printfreq = len(iterables[0])*printfreq`
         打印进度的频次 默认不打印
-    logf : funcation, default None
-        Hook Funcation For log , every printfreq
+    logf : function, default None
+        Hook Function For log , every printfreq
         do logf([fun, args, ind, lenn, logf])
     thread : bool, default False
         是否以*多线程*形式替换多进程
@@ -236,7 +236,7 @@ def retry(fun, times=None, exception=Exception, timeGap=0, log=True):
     
     Parameters
     ----------
-    fun : funcation
+    fun : function
         没有参数的过程函数
     times : int, default None
         try 的次数 默认为无限次

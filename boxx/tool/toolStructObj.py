@@ -208,6 +208,23 @@ def typestr(instance):
     return typeNameOf(type(instance))
 typestr = FunAddMagicMethod(typestr)
 
+def strMethodForDiraAttrs(self, pattern='^[^_]'):
+    '''
+    the default of __str__ method in Class
+    
+    will return string of dira(self) 
+    
+    '''
+    from boxx import dira, PrintStrCollect
+    printf = PrintStrCollect()
+    dira(self, pattern=pattern, printf=printf, printClassFathers=False)
+    s = str(printf)
+    if py2:
+        s = s[s.index(u'└'.encode('utf-8')):]
+        return s
+    s = s[s.index('└'):]
+    return s
+
 def nextiter(iterr, raiseException=True):
     '''
     do next(iter(iterAble)) then return resoult
@@ -297,9 +314,9 @@ class withfun():
     
     Parameters
     ----------
-    enterFun : funcation, default None
+    enterFun : function, default None
         No parameter function
-    exitFun : funcation, default None
+    exitFun : function, default None
         No parameter function or parameter are (exc_type, exc_value, exc_traceback)
     exception : bool, default False
         Whether send (exc_type, exc_value, exc_traceback) to exitFun

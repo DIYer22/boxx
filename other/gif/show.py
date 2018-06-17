@@ -18,7 +18,7 @@ show(dataloader)
 
 
 from boxx import loga, torgb
-# torgb is a funcation that 
+# torgb is a function that 
 # try to transfer a tensor to normalized RGB image
 batch = next(iter(dataloader))[0]
 loga(batch)
