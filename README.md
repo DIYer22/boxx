@@ -61,8 +61,18 @@
 
 
 ---
+## 1. Features
 
-## 1. Install
+**`boxx`** is a Tool-box for Efficient Build and Debug in Python.   
+
+Especially, We have done a lot of optimization for **Scientific Computing** and **Computer Vision**. 
+
+You can jump to [=> Examples](#4-examples) to have a glance.
+
+**`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
+
+## 2. Install
+
 
 #### From source
 ```bash
@@ -82,7 +92,7 @@ pip install git+https://github.com/DIYer22/boxx
 pip install boxx -U
 ```
 
-## 2. Tutorial
+## 3. Tutorial
 
 #### Executable Interactive Online Tutorial: 
 We use [Binder](https://mybinder.org) to run Tutorial Notebook in  an executable interactive online jupyer environment.    
@@ -103,7 +113,8 @@ Then open `./tutorial_for_boxx.ipynb` in notebook.
  Just view the Tutorial Notebook.
 * [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
 
-## 3. Examples
+
+## 4. Examples
 
 All Tools are divided into 2 parts by wether the tool is general:    
  * Left Part: **General Python Tool**, Tools could be used anywhere in Python
@@ -121,22 +132,38 @@ All Tools are divided into 2 parts by wether the tool is general:
         
   #### ▶  `p/x` is better way to `print(x)`    
   `p/x` will `print(x)` and return `x`
-  [![click to restart GIF and see more clearer GIF](./other/gif/p.gif)](./other/gif/p.gif)
+  [![click to restart GIF and see more clearer GIF](./other/img/p.png)](./other/img/p.png)     
   💡 **Note:** `p/x` is easy to print value in expression.
         <hr></hr>
         <br><br>
         <br><br>
         
   #### ▶ Use `g.name = x` or `g.name/x` to transport var to Python interactive console
-  [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)   
+  [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)    
   💡 **Note:** `gg` is same usage as `g`, but `gg` will pretty print all vars in `locals()`. 
         <hr></hr>
         <br><br>
         <br><br>
         
   #### ▶ `g()` to transport all vars that in the function to Python interactive console
-  [![click to restart GIF and see more clearer GIF](./other/gif/g_call.gif) ](./other/gif/g_call.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/g_call.gif) ](./other/gif/g_call.gif)    
   💡 **Note:** `g()` is a useful tool for debug. `import boxx.g` is convenient way to use `g()` instead of `from boxx import g;g()`(`import boxx.gg` is avaliable too)
+        <hr></hr>
+        <br><br>
+        <br><br>
+        
+  #### ▶ `boxx` debug tool matrix
+| How many vars \ Operation | print | transport | print & transport |
+| :---- | :---- | :---- | :---- |
+| 1 variable | `p/x` | `g.name/x` | `gg.name/x`|
+|Multi variables | `with wp:` | `with wg:` | `with wgg:` |
+|All `locals()`| `p()` | `g()` | `gg()` |
+|All `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
+
+  💡 **Note:**   
+  * **transport** mean "transport variable to Python interactive console"
+  * **All `locals()`** mean all variables in the function or module
+  * **All `locals()`\_2** is a convenient way to execution operation when `boxx` are not imported
         <hr></hr>
         <br><br>
         <br><br>
@@ -152,14 +179,14 @@ All Tools are divided into 2 parts by wether the tool is general:
 
   #### ▶ `loga` to visualization matrix and tensor   
   `loga` is short of "log array", `loga` will show many attributes of array-like object.
-  [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)    
         <hr></hr>
         <br><br>
         <br><br>
 
   #### ▶ `show` every image in complex struct
   `show` could find every image in complex struct and imshow they.
-  [![click to restart GIF and see more clearer GIF](./other/gif/show.gif)](./other/gif/show.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/show.gif)](./other/gif/show.gif)    
   💡 **Note:** if args inculde function. those functions will process all numpys befor imshow.
         <hr></hr>
         <br><br>
@@ -167,7 +194,7 @@ All Tools are divided into 2 parts by wether the tool is general:
 
   #### ▶ `tree` for visualization complex struct
   like `tree` command in shell that could visualization any struct in tree struct view.
-  [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)
+  [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
   💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`， `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
         <br><br>
@@ -180,7 +207,7 @@ All Tools are divided into 2 parts by wether the tool is general:
 
 ---
 
-## 4. Acknowledgments
+## 5. Acknowledgments
  * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
  * `performance` is supported by [SnakeViz](https://jiffyclub.github.io/snakeviz/)
  * `heatmap` is supported by [csurfer/pyheat](https://github.com/csurfer/pyheat)
