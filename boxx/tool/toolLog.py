@@ -936,7 +936,7 @@ def generaPAndLc():
                 print((colorFormat.b%'Stacks: '+colorFormat.r%s))
                 print((colorFormat.b%'Locals: '))
                 from boxx import tree
-                tree(local, deep=1, maxprint=40)
+                tree(local, maxprint=100)
                 
             if saveOut[id(self)]:
                 p.update(glob)
@@ -959,9 +959,9 @@ def generaPAndLc():
                     print("")
                     addVarStr = ', '.join([colorFormat.p%k for k in addDic if k not in same])
                     if addVarStr:
-                        print(colorFormat.b% '\nVars add to Root Frame by out: '+'\n└── '+ addVarStr)
+                        print(colorFormat.b% '\nVars add to Console Frame: '+'\n└── '+ addVarStr)
                     if len(same):
-                        print(colorFormat.r% '\nVars that replaced by out in Root Frame: '+'\n└── '+', '.join([colorFormat.p%k for k in same]))
+                        print(colorFormat.r% '\nVars that replaced in Console Frame: '+'\n└── '+', '.join([colorFormat.p%k for k in same]))
                 root.f_globals.update(addDic)
                 lc.c = lc.code = code
                 lc.f = lc.frame = frame

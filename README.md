@@ -160,7 +160,7 @@ All Tools are divided into 2 parts by wether the tool is general:
   #### ▶ `show` every image in complex struct
   `show` could find every image in complex struct and imshow they.
   [![click to restart GIF and see more clearer GIF](./other/gif/show.gif)](./other/gif/show.gif)
-  💡 **Note:** if args inculde funcation. those funcations will process all numpys befor imshow.
+  💡 **Note:** if args inculde function. those functions will process all numpys befor imshow.
         <hr></hr>
         <br><br>
         <br><br>
