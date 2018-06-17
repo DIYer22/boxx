@@ -67,9 +67,14 @@
 
 Especially, We have done a lot of optimization for **Scientific Computing** and **Computer Vision**. 
 
+All Tools are divided into 2 parts by wether the tool is general used:    
+ * **General Python Tool**, Tools could be used anywhere in Python
+
+ * **Scientific Computing and Computer Vision Tool**, Those tools are useful in Scientific Computing and Computer Vision field
+ 
 You can jump to [=> Examples](#4-examples) to have a glance.
 
-**`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
+P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
 
 ## 2. Install
 
@@ -116,12 +121,11 @@ Then open `./tutorial_for_boxx.ipynb` in notebook.
 
 ## 4. Examples
 
-All Tools are divided into 2 parts by wether the tool is general:    
- * Left Part: **General Python Tool**, Tools could be used anywhere in Python
+Examples are divided into 2 parts too.   
 
- * Right Part: **Scientific Computing and Computer Vision Tool**, Those tools are useful in Scientific Computing and Computer Vision field
+**General Python Tool** on left, **Scientific Computing and Computer Vision Tool** on right.
 
-💡 **Note:** *Click the GIF image will restart GIF and see more clearer GIF image*
+💡 **Note:** *Click the GIF or image will restart GIF and see more clearer GIF or image*
 
 <table  style="">
   <tr>
@@ -195,7 +199,7 @@ All Tools are divided into 2 parts by wether the tool is general:
   #### ▶ `tree` for visualization complex struct
   like `tree` command in shell that could visualization any struct in tree struct view.
   [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
-  💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`， `mxnet.ndarray`, `PIL.Image`.etc
+  💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`, `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
         <br><br>
         <br><br>

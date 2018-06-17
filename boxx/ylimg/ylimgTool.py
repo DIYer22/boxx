@@ -167,6 +167,7 @@ typesToNumpyFuns = {
     "torch.nn.parameter.Parameter":lambda x:__torchCudaToNumpy(x.data),
 }
 
+__strToNumpy = lambda x: imread(x) if os.path.isfile(x) else np.array(list(x))
 __generatorToNumpy = lambda x:np.array(list(x))
 tryToNumpyFunsForNpa = {
     "dict_values":__generatorToNumpy,
@@ -175,15 +176,23 @@ tryToNumpyFunsForNpa = {
     "map":__generatorToNumpy,
     "filter":__generatorToNumpy,
     "zip":__generatorToNumpy,
+    
+    "str":__strToNumpy,
+    "unicode":__strToNumpy,
     }
 def npa(array):
     '''
-    根据`./typesToNumpyFuns` 将array转换为 np.ndarray
+    try to transfer other data to np.ndarray
+    
+    support types inculde:
+        numpy, torch.tensor, mxnet.ndarray, PIL.Image
+        list, tuple, dict, range, zip, map
+        str, image_path
     
     Parameters
     ----------
-    array : list/tuple, torch.Tensor, mxnet.NDArray 
-        在 字典 typesToNumpyFuns 的中的类型
+    array : list/tuple, torch.Tensor, mxnet.NDArray ...
+        support types in boxx.ylimg.ylimgTool.typesToNumpyFuns and boxx.ylimg.ylimgTool.tryToNumpyFunsForNpa
     '''
     if isinstance(array, np.ndarray):
         return array
