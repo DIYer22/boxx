@@ -1,9 +1,23 @@
 
 
+<div align="">
+
+  **Language :** 
+  <!-- English -->
+  <a href="https://github.com/DIYer22/boxx">
+    <img src="https://jaywcjlove.github.io/sb/lang/english.svg" alt="English">
+  </a>
+  <!-- Chinese -->
+  <a href="./README_zh_cn.md">
+    <img src="https://jaywcjlove.github.io/sb/lang/chinese.svg" alt="Chinese">
+  </a>
+</div>
+<br>
 <h1 align="center">Box-X</h1>
 
+
 <div align="center">
-  <strong>:high_brightness:Hack Python and Vision:crescent_moon:</strong>
+  <strong>Hack Python and Vision</strong>
 </div>
 
 <div align="center">
@@ -13,8 +27,6 @@
 <br/>
 
 <div align="center">
-  
-
   <!-- Build Status -->
   <a href="https://travis-ci.org/DIYer22/boxx">
     <img src="https://img.shields.io/badge/build-passing-brightgreen.svg" alt="build">
@@ -40,15 +52,12 @@
   <a href="https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb">
     <img src="https://mybinder.org/badge.svg" alt="Binder">
   </a>
-  <!-- English -->
-  <a href="./README.md">
-    <img src="https://jaywcjlove.github.io/sb/lang/english.svg" alt="English">
-  </a>
-  <!-- Chinese -->
-  <a href="./README_zh_cn.md">
-    <img src="https://jaywcjlove.github.io/sb/lang/chinese.svg" alt="Chinese">
-  </a>
+</div>
 
+
+<div align="center">
+
+ ### [Introduce](#1-introduce) | [Install](#2-install) | [Tutorial](#3-tutorial) | [Examples](#4-examples) | [Acknowledgments](#5-acknowledgments)
 </div>
 
 
