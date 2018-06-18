@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+tools for Image Processing and Visualization
+
+@author: yanglei
+"""
 from .ylimgTool import sk, np, plot, sda
 from .ylimgTool import (show, showb, shows, loga, tree, treem, treea, dira, what, wtf,
                         tprgb, torgb, mapp, normalizing, norma, imsave, imread, npa, 

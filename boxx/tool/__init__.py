@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+General Python Tools for Debugging, Logging, Magic .etc
+
+@author: yanglei
+"""
 
 from __future__ import unicode_literals
 

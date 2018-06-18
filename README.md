@@ -1,17 +1,8 @@
 
 
-<div align="">
 
-  **Language :** 
-  <!-- English -->
-  <a href="https://github.com/DIYer22/boxx">
-    <img src="https://jaywcjlove.github.io/sb/lang/english.svg" alt="English">
-  </a>
-  <!-- Chinese -->
-  <a href="./README_zh_cn.md">
-    <img src="https://jaywcjlove.github.io/sb/lang/chinese.svg" alt="Chinese">
-  </a>
-</div>
+  **Language :** [![English](https://jaywcjlove.github.io/sb/lang/english.svg)](https://github.com/DIYer22/boxx) [![Chinese](https://jaywcjlove.github.io/sb/lang/chinese.svg)](./README_zh_cn.md)
+  
 <br>
 <h1 align="center">Box-X</h1>
 
@@ -195,7 +186,8 @@ Examples are divided into 2 parts too.
 
   #### ▶ `loga` to visualization matrix and tensor   
   `loga` is short of "log array", `loga` will show many attributes of array-like object.
-  [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)    
+  [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)     
+  💡 **Note:** `loga` analysis array-like object by it's shape, max, min, mean, and distribute. Support `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
         <hr></hr>
         <br><br>
         <br><br>
@@ -240,6 +232,13 @@ Examples are divided into 2 parts too.
         <br><br>
         <br><br>
         
+  ####  ▶ `what` to know "What's this?"
+  [![click to restart GIF and see more clearer GIF](./other/img/what.png) ](./other/img/what.png)    
+  💡 **Note:** `what(x)` will show "what is `x`?" by pretty print it's **Document**, **Father Classes**, **Inner Struct** and **Attributes**. It is a supplement of `help(x)`.
+        <hr></hr>
+        <br><br>
+        <br><br>
+        
   #### ▶ `timeit` is convenient timing tool 
   [![click to restart GIF and see more clearer GIF](./other/img/timeit.png) ](./other/img/timeit.png)    
   💡 **Note:** In "with statement", timeit will timing code and print spend time in blue color.
@@ -277,10 +276,11 @@ Examples are divided into 2 parts too.
 ---
 
 ## 5. Acknowledgments
- * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
+ * Thanks to Xiaodong Xu, Guodong Wu, Haoqiang Fan, Pengfei Xiong for their suggestions
+ * I develop **`boxx`** in [Spyder IDE](https://github.com/spyder-ide/spyder), [Spyder](https://github.com/spyder-ide/spyder) is a awesome Scientific Python Development Environment with Powerful [**Qt-IPython**](https://github.com/jupyter/qtconsole)
  * `performance` is supported by [SnakeViz](https://jiffyclub.github.io/snakeviz/)
  * `heatmap` is supported by [csurfer/pyheat](https://github.com/csurfer/pyheat)
- * I develop **`boxx`** in [Spyder IDE](https://github.com/spyder-ide/spyder), [Spyder](https://github.com/spyder-ide/spyder) is a awesome Scientific Python Development Environment with Powerful [**Qt-IPython**](https://github.com/jupyter/qtconsole)
+ * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
 
 
 

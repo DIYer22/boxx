@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+A module provide ability to be compatible with Python 2.7
+
+@author: yanglei
+"""
 
 from __future__ import unicode_literals
 from __future__ import print_function

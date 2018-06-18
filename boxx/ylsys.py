@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 18 21:27:28 2018
+A module provide system info and Python Info for boxx
 
 @author: yanglei
 """

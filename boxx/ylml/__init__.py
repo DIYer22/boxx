@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+tools for Machine Learning and Image Processing
+
+@author: yanglei
+"""
 from __future__ import unicode_literals
 
 from .ylmlTrain import GenSimg

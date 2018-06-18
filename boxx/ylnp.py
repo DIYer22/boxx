@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+some numpy function
+
+@author: yanglei
+"""
 
 from __future__ import unicode_literals
 
