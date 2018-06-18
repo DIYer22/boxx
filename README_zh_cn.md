@@ -67,7 +67,7 @@
 
 尤其对 **科学计算** 和 **计算机视觉** 领域有良好的支持. 
 
-因此，工具库的所用功能 会根据该功能是否为通用功能 而被分为了两个部分:    
+因此，工具库的所有功能 会根据该功能是否为通用功能 而被分为了两个部分:    
  * **通用功能**: 这些功能（工具）可以在任何 Python 开发中发挥作用
 
  * **科学计算和计算机视觉功能**: 这些功能（工具）主要用于科学计算和计算机视觉领域
@@ -96,7 +96,7 @@ pip install git+https://github.com/DIYer22/boxx
 ```
 pip install boxx -U
 ```
-💡 **Note:** 确保 `pip` 镜像的 `boxx` 版本大于 `0.9`，否则请源码安装。
+💡 **Note:** 确保 `pip` 镜像的 `boxx` 版本大于 `0.9`，否则建议源码安装。
 ## 三. 教程
 
 **`boxx`** 的教程是一个 Jupyter Notebook 文件，可以边看边运行，Notebook 文件在 [`./tutorial_for_boxx.ipynb`](./tutorial_for_boxx.ipynb)
@@ -115,7 +115,7 @@ cd boxx/
 python setup.py install
 jupyter notebook
 ```
-在 Notebook 中打开 `./tutorial_for_boxx.ipynb` 即可.
+在 Jupyter Notebook 中打开 `./tutorial_for_boxx.ipynb` 即可.
 
 #### 方式三：静态的 Notebook:
  只能看 不能交互的 Notebook.
@@ -124,11 +124,11 @@ jupyter notebook
 
 ## 四. 例子
 
-Examples are divided into 2 parts too.   
+例子也被分为了两个部分
 
-**General Python Tool** on left, **Scientific Computing and Computer Vision Tool** on right.
+左侧为 **通用功能**，右侧为 **科学计算和计算机视觉功能**。
 
-💡 **Note:** *Click the GIF or image will restart GIF and see more clearer GIF or image*
+💡 **Note:** *点击图片会放大图片，如果是 GIF，GIF还会从头开始播放*
 
 <table  style="">
   <tr>
