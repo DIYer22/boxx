@@ -1,4 +1,10 @@
-
+from boxx import g, gg
 def f():
-    listt = [1,2]  # transport listt to console
-f()
+    listt = g.by_div/[1,2]  # transport listt to console
+    gg.l = listt
+    return listt
+listt = f()
+
+
+
+

@@ -1,7 +1,4 @@
-
-
-
-  **Language :** [![English](https://jaywcjlove.github.io/sb/lang/english.svg)](https://github.com/DIYer22/boxx) [![Chinese](https://jaywcjlove.github.io/sb/lang/chinese.svg)](./README_zh_cn.md)
+**Language :** [![English](https://jaywcjlove.github.io/sb/lang/english.svg)](https://github.com/DIYer22/boxx) [![Chinese](https://jaywcjlove.github.io/sb/lang/chinese.svg)](./README_zh_cn.md)
   
 <br>
 <h1 align="center">Box-X</h1>
@@ -80,9 +77,11 @@ You can jump to [=> Examples](#4-examples) to have a glance.
 
 P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
 
+
+
+
+
 ## 2. Install
-
-
 #### From source
 ```bash
 git clone https://github.com/DIYer22/boxx
@@ -100,6 +99,11 @@ pip install git+https://github.com/DIYer22/boxx
 ```
 pip install boxx -U
 ```
+💡 **Note:** Please ensure `boxx`'s version > `0.9` if used PyPI mirrors. Otherwise, please install from source
+
+
+
+
 
 ## 3. Tutorial
 
@@ -127,6 +131,8 @@ Then open `./tutorial_for_boxx.ipynb` in notebook.
 * [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
 
 
+
+
 ## 4. Examples
 
 Examples are divided into 2 parts too.   
@@ -150,9 +156,11 @@ Examples are divided into 2 parts too.
         <br><br>
         <br><br>
         
-  #### ▶ Use `g.name = x` or `g.name/x` to transport var to Python interactive console
+  #### ▶ Use `g.name = x` or `g.name/x` to transport variable to Python interactive console
   [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)    
-  💡 **Note:** `gg` is same usage as `g`, but `gg` will pretty print all vars in `locals()`. 
+  💡 **Note:** 
+  * `gg` is same usage as `g`, but `gg` will print the variable that is transported. 
+  *  if variable name exists in console before, the variable's value will be covered by new value.
         <hr></hr>
         <br><br>
         <br><br>
@@ -165,10 +173,11 @@ Examples are divided into 2 parts too.
         <br><br>
         
   #### ▶ `wp`, `wg`, `wgg` are mulit variables version of `p`, `g`, `gg` that work under "with statement"
+  `wp`, `wg`, `wgg` are meaning of "With Print", "With to Global", "With log and to Global"
   [![click to restart GIF and see more clearer GIF](./other/gif/w.gif) ](./other/gif/w.gif)    
   💡 **Note:** 
   * `wp`, `wg`, `wgg` only act on assignment variables under "with statement". 
-  * If variable's name exists in `locals()` and `id(variable)` not change ,variable may not be detected 
+  * If variable's name exists in `locals()` before and `id(variable)` not change ,variable may not be detected 
         <hr></hr>
         <br><br>
         <br><br>
@@ -192,16 +201,16 @@ Examples are divided into 2 parts too.
         <br><br>
         <br><br>
 
-  #### ▶ `show` every image in complex struct
+  #### ▶ `show` is easy to do `imshow`, even images are in complex struct
   `show` could find every image in complex struct and imshow they.
   [![click to restart GIF and see more clearer GIF](./other/gif/show.gif)](./other/gif/show.gif)    
-  💡 **Note:** if args inculde function. those functions will process all numpys befor imshow.
+  💡 **Note:** if args inculde function(like `torgb`). those functions will process all numpys befor imshow.
         <hr></hr>
         <br><br>
         <br><br>
 
   #### ▶ `tree` for visualization complex struct
-  like `tree` command in shell that could visualization any struct in tree struct view.
+  like `tree` command in shell, `boxx.tree` could visualization any struct in tree struct view.
   [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
   💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`, `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
@@ -228,23 +237,20 @@ Examples are divided into 2 parts too.
   * **transport** mean "transport variable to Python interactive console"
   * **All `locals()`** mean all variables in the function or module
   * **All `locals()`\_2** is a convenient way to execution operation when `boxx` are not imported
+        <br><br>
         <hr></hr>
-        <br><br>
-        <br><br>
         
   ####  ▶ `what` to know "What's this?"
   [![click to restart GIF and see more clearer GIF](./other/img/what.png) ](./other/img/what.png)    
   💡 **Note:** `what(x)` will show "what is `x`?" by pretty print it's **Document**, **Father Classes**, **Inner Struct** and **Attributes**. It is a supplement of `help(x)`.
+        <br><br>
         <hr></hr>
-        <br><br>
-        <br><br>
         
   #### ▶ `timeit` is convenient timing tool 
   [![click to restart GIF and see more clearer GIF](./other/img/timeit.png) ](./other/img/timeit.png)    
   💡 **Note:** In "with statement", timeit will timing code and print spend time in blue color.
+        <br><br>
         <hr></hr>
-        <br><br>
-        <br><br>
         
   #### ▶ `mapmp` is Multi Process version of `map`
   `mapmp` is the meaning of "MAP for Multi Process", has the same usage as `map` but faster.    
@@ -252,23 +258,18 @@ Examples are divided into 2 parts too.
   💡 **Note:** 
   * **pool** parameter in `mapmp` mean the number of Process, the default is the number of CPUs in the system.
   * In multi process programs, display processing progress is troublesome. **printfreq** parameter in `mapmp` can handle this problem.
+        <br><br>
         <hr></hr>
-        <br><br>
-        <br><br>
         
   #### ▶ `heatmap` to show the time heat map of your code
   [![click to restart GIF and see more clearer GIF](./other/img/heatmap.png) ](./other/img/heatmap.png)    
   💡 **Note:** `heatmap` also support python code string.
+        <br><br>
         <hr></hr>
-        <br><br>
-        <br><br>
         
   #### ▶ `performance` could statistic visualization your code performance   
   [![click to restart GIF and see more clearer GIF](./other/gif/performance.gif) ](./other/gif/performance.gif)    
   💡 **Note:** `performance` also support python code string.
-        <hr></hr>
-        <br><br>
-        <br><br>
     </td>
   </tr>
 </table>

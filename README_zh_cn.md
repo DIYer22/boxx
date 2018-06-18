@@ -1,9 +1,11 @@
-
-
+**Language :** [![English](https://jaywcjlove.github.io/sb/lang/english.svg)](https://github.com/DIYer22/boxx) [![Chinese](https://jaywcjlove.github.io/sb/lang/chinese.svg)](./README_zh_cn.md)
+  
+<br>
 <h1 align="center">Box-X</h1>
 
+
 <div align="center">
-  <strong>:high_brightness:Hack Python and Vision:crescent_moon:</strong>
+  <strong>Hack Python and Vision</strong>
 </div>
 
 <div align="center">
@@ -13,8 +15,6 @@
 <br/>
 
 <div align="center">
-  
-
   <!-- Build Status -->
   <a href="https://travis-ci.org/DIYer22/boxx">
     <img src="https://img.shields.io/badge/build-passing-brightgreen.svg" alt="build">
@@ -40,15 +40,12 @@
   <a href="https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb">
     <img src="https://mybinder.org/badge.svg" alt="Binder">
   </a>
-  <!-- English -->
-  <a href="./README.md">
-    <img src="https://jaywcjlove.github.io/sb/lang/english.svg" alt="English">
-  </a>
-  <!-- Chinese -->
-  <a href="./README_zh_cn.md">
-    <img src="https://jaywcjlove.github.io/sb/lang/chinese.svg" alt="Chinese">
-  </a>
+</div>
 
+
+<div align="center">
+
+ ### [Introduce](#1-introduce) | [Install](#2-install) | [Tutorial](#3-tutorial) | [Examples](#4-examples) | [Acknowledgments](#5-acknowledgments)
 </div>
 
 
@@ -85,8 +82,6 @@ P.S. **`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 
 [![](http://wangchujiang.com/sb/ico/zhihu.svg) 开发, 调试计算机视觉代码有哪些技巧？]()-->
 
 ## 二. 安装
-
-
 #### 源码安装
 ```bash
 git clone https://github.com/DIYer22/boxx
@@ -105,6 +100,11 @@ pip install git+https://github.com/DIYer22/boxx
 pip install boxx -U
 ```
 💡 **Note:** 确保 `pip` 镜像的 `boxx` 版本大于 `0.9`，否则建议源码安装。
+
+
+
+
+
 ## 三. 教程
 
 **`boxx`** 的教程是一个 Jupyter Notebook 文件，可以边看边运行，Notebook 文件在 [`./tutorial_for_boxx.ipynb`](./tutorial_for_boxx.ipynb)
@@ -130,6 +130,9 @@ jupyter notebook
 * [**=> 静态的 Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
 
 
+
+
+
 ## 四. 例子
 
 例子也被分为了两个部分
@@ -142,31 +145,86 @@ jupyter notebook
   <tr>
     <td valign="top" width="50%">
     
-  ### General Python Tool 
+  ### 通用功能
   <hr></hr>
         
-  #### ▶  `p/x` is better way to `print(x)`    
+  #### ▶  `p/x` 是更方便 `print(x)` 的方式   
   `p/x` will `print(x)` and return `x`
   [![click to restart GIF and see more clearer GIF](./other/img/p.png)](./other/img/p.png)     
-  💡 **Note:** `p/x` is easy to print value in expression.
+  💡 **Note:** `p/x` 能够方便的打印表达式中的值.
         <hr></hr>
         <br><br>
         <br><br>
         
-  #### ▶ Use `g.name = x` or `g.name/x` to transport var to Python interactive console
+  #### ▶  `g.name = x` 和 `g.name/x` 可以把函数内的变量传送到 Python interactive console 中
   [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)    
-  💡 **Note:** `gg` is same usage as `g`, but `gg` will pretty print all vars in `locals()`. 
+  💡 **Note:** 
+  * `gg` 和 `g` 的用法一样, 但 `gg` 会在传输的同时 打印出变量. 
+  * 如果之前在 console 中存在该变量名称，则变量的值将被新值覆盖.
         <hr></hr>
         <br><br>
         <br><br>
         
-  #### ▶ `g()` to transport all vars that in the function to Python interactive console
+  #### ▶ `g()` 一次性传输函数内的所有变量到 Python interactive console 中
   [![click to restart GIF and see more clearer GIF](./other/gif/g_call.gif) ](./other/gif/g_call.gif)    
-  💡 **Note:** `g()` is a useful tool for debug. `import boxx.g` is convenient way to use `g()` instead of `from boxx import g;g()`(`import boxx.gg` is avaliable too)
+  💡 **Note:** `g()` 在 Debug 时非常有用. `import boxx.g` 是 `g()` 的便携版本，避免了 `from boxx import g;g()`(`import boxx.gg` 同理)
         <hr></hr>
         <br><br>
         <br><br>
         
+  #### ▶ `wp`, `wg`, `wgg` 分别是 `p`, `g`, `gg` 的多变量版本，只需把变量放入 `with` 结构中即可
+  `wp`, `wg`, `wgg` 的意思分别是 "With Print", "With to Global", "With log and to Global"
+  [![click to restart GIF and see more clearer GIF](./other/gif/w.gif) ](./other/gif/w.gif)    
+  💡 **Note:** 
+  * `wp`, `wg`, `wgg` 只作用于在 `with` 结构中进行赋值操作的变量. 
+  * 如果变量名之前存在于 `locals()` 同时 `id(变量)` 没有变化 , `with` 结构可能无法检测到该变量 
+        <hr></hr>
+        <br><br>
+        <br><br>
+        
+        
+    </td>
+    <td valign="top">
+    
+  ### 科学计算和计算机视觉功能
+
+  本部分通过用例来介绍几个在 **科学计算** 和 **计算机视觉** 领域内的一些实用工具 . 几乎所有的工具(函数) 都支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` 等类似多维数组的数据类型
+        <hr></hr>
+        <br><br>
+        <br><br>
+
+  #### ▶ 用 `loga` 来可视化多维数组   
+  `loga` 是 "log array" 的意思, `loga` 能展示多维数组的许多属性.
+  [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)     
+  💡 **Note:** `loga` 支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
+        <hr></hr>
+        <br><br>
+        <br><br>
+
+  #### ▶ 用 `show` 来方便地可视化图像，哪怕图像隐藏于复杂的结构中
+  `show` 能够从复杂结构中找出所有类型的图像 并可视化他们。它甚至支持从 torch 的 Dataloader 中展示一个 batch 的图像
+  [![click to restart GIF and see more clearer GIF](./other/gif/show.gif)](./other/gif/show.gif)    
+  💡 **Note:** 如果有函数作为 `show` 的参数(比如 `torgb`)，则会对所有 `numpy` 执行此函数后再可视化。
+        <hr></hr>
+        <br><br>
+        <br><br>
+
+  #### ▶ 使用 `tree` 来可视化复杂结构
+  如同 shell 中的 `tree` 命令， `boxx.tree` 可以以树的形式来解构和展示任何复杂结构.
+  [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
+  💡 **Note:** `tree` 支持的数据有 `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`, `mxnet.ndarray`, `PIL.Image`.etc
+        <hr></hr>
+        <br><br>
+        <br><br>
+    </td>
+  </tr>
+</table> 
+
+
+<table  style="">
+  <tr>
+    <td valign="top" width="50%">
+    
   #### ▶ `boxx` debug tool matrix
 | How many vars \ Operation | print | transport | print & transport |
 | :---- | :---- | :---- | :---- |
@@ -179,54 +237,51 @@ jupyter notebook
   * **transport** mean "transport variable to Python interactive console"
   * **All `locals()`** mean all variables in the function or module
   * **All `locals()`\_2** is a convenient way to execution operation when `boxx` are not imported
+        <br><br>
         <hr></hr>
+        
+  ####  ▶ `what` to know "What's this?"
+  [![click to restart GIF and see more clearer GIF](./other/img/what.png) ](./other/img/what.png)    
+  💡 **Note:** `what(x)` will show "what is `x`?" by pretty print it's **Document**, **Father Classes**, **Inner Struct** and **Attributes**. It is a supplement of `help(x)`.
         <br><br>
-        <br><br>
-    </td>
-    <td valign="top">
-    
-  ### Scientific Computing and Computer Vision
-
-  Useful tools in **Scientific Computing** and **Computer Vision** field. All tools support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
         <hr></hr>
+        
+  #### ▶ `timeit` is convenient timing tool 
+  [![click to restart GIF and see more clearer GIF](./other/img/timeit.png) ](./other/img/timeit.png)    
+  💡 **Note:** In "with statement", timeit will timing code and print spend time in blue color.
         <br><br>
-        <br><br>
-
-  #### ▶ `loga` to visualization matrix and tensor   
-  `loga` is short of "log array", `loga` will show many attributes of array-like object.
-  [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)    
         <hr></hr>
+        
+  #### ▶ `mapmp` is Multi Process version of `map`
+  `mapmp` is the meaning of "MAP for Multi Process", has the same usage as `map` but faster.    
+  [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
+  💡 **Note:** 
+  * **pool** parameter in `mapmp` mean the number of Process, the default is the number of CPUs in the system.
+  * In multi process programs, display processing progress is troublesome. **printfreq** parameter in `mapmp` can handle this problem.
         <br><br>
-        <br><br>
-
-  #### ▶ `show` every image in complex struct
-  `show` could find every image in complex struct and imshow they.
-  [![click to restart GIF and see more clearer GIF](./other/gif/show.gif)](./other/gif/show.gif)    
-  💡 **Note:** if args inculde function. those functions will process all numpys befor imshow.
         <hr></hr>
+        
+  #### ▶ `heatmap` to show the time heat map of your code
+  [![click to restart GIF and see more clearer GIF](./other/img/heatmap.png) ](./other/img/heatmap.png)    
+  💡 **Note:** `heatmap` also support python code string.
         <br><br>
-        <br><br>
-
-  #### ▶ `tree` for visualization complex struct
-  like `tree` command in shell that could visualization any struct in tree struct view.
-  [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
-  💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`, `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
-        <br><br>
-        <br><br>
+        
+  #### ▶ `performance` could statistic visualization your code performance   
+  [![click to restart GIF and see more clearer GIF](./other/gif/performance.gif) ](./other/gif/performance.gif)    
+  💡 **Note:** `performance` also support python code string.
     </td>
   </tr>
-</table> 
-
-
+</table>
 
 ---
 
-## 5. Acknowledgments
- * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
+## 五. 致谢
+ * 特别感谢徐晓栋、吴国栋、范浩强和熊鹏飞对 `boxx` 提出的建议
+ * I develop **`boxx`** in [Spyder IDE](https://github.com/spyder-ide/spyder), [Spyder](https://github.com/spyder-ide/spyder) is a awesome Scientific Python Development Environment with Powerful [**Qt-IPython**](https://github.com/jupyter/qtconsole)
  * `performance` is supported by [SnakeViz](https://jiffyclub.github.io/snakeviz/)
  * `heatmap` is supported by [csurfer/pyheat](https://github.com/csurfer/pyheat)
- * I develop **`boxx`** in [Spyder IDE](https://github.com/spyder-ide/spyder), [Spyder](https://github.com/spyder-ide/spyder) is a awesome Scientific Python Development Environment with Powerful [**Qt-IPython**](https://github.com/jupyter/qtconsole)
+ * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
 
 
 
