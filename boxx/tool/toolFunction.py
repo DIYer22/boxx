@@ -93,27 +93,24 @@ def __multiprocessLogFun__(args):
 
 def mapmp(fun, *iterables, **kv):
     '''
-    Map with Multi Processing:多进程版本的map函数
+    Map with Multi Processing
     mapmp(fun, sequence[, sequence, ...], pool=None, thread=False)->list
+    
     !Important, multi processing must do in `__name__ == '__main__'`'s block 
     see more at https://docs.python.org/3/library/multiprocessing.html
     
     >>> mapmp(np.add, range(3), range(3), pool=3)
     [0, 2, 4]
     
-    Notice
-    ----------
-    * 多进程中 异常无法精确定位
-    * numpy操作 由于指令集优化 及numpy版本原因 可能多进程可能会更慢
-    * 多进程中 list, dict等元素会被直接复制，无法改变内部元素
     
     Parameters
     ----------
     fun : function
-        *mulit processing* only support`def`定义的函数 can't be lambda 和 内部函数 
-        否则 PicklingError: Can't pickle 
+        *mulit processing* only support`def` in globls() function can't be lambda and inner function 
+        which will raise PicklingError: Can't pickle 
     *iterables : list 
-        用于fun的参数list, fun需要N个参数则有N个列表
+        Make an iterator that computes the function using arguments from each of the iterables. 
+        Stops when the shortest iterable is exhausted.
     pool : int, default None
         the number of Process or Threading
         the default is the number of CPUs in the system
@@ -127,6 +124,13 @@ def mapmp(fun, *iterables, **kv):
         do logf([fun, args, ind, lenn, logf])
     thread : bool, default False
         是否以*多线程*形式替换多进程
+
+    Notice
+    ----------
+    *  mapmp(fun, *iterables,pool=None, **kv) will raise Error in Python 2.7.13
+    * 多进程中 异常无法精确定位
+    * numpy操作 由于指令集优化 及numpy版本原因 可能多进程可能会更慢
+    * 多进程中 list, dict等元素会被直接复制，无法改变内部元素
     '''    
     if winYl and not kv.get('thread'):
         from boxx import warn1time

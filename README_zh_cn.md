@@ -29,9 +29,9 @@
     <img src="https://img.shields.io/badge/platform-linux%20%7C%20osx%20%7C%20win-blue.svg" alt="platform">
   </a>
   <!-- License -->
-  <a href="https://www.github.com/DIYer22/boxx">
+  <!--<a href="https://www.github.com/DIYer22/boxx">
     <img src="https://img.shields.io/pypi/l/boxx.svg" alt="LICENSE">
-  </a>
+  </a>-->
   <!-- Version -->
   <a href="https://pypi.python.org/pypi/boxx">
     <img src="https://img.shields.io/pypi/v/boxx.svg" alt="PyPI">
@@ -40,9 +40,13 @@
   <a href="https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb">
     <img src="https://mybinder.org/badge.svg" alt="Binder">
   </a>
-  <!--  -->
-  <a href="">
-    <img src="" alt="">
+  <!-- English -->
+  <a href="./README.md">
+    <img src="https://jaywcjlove.github.io/sb/lang/english.svg" alt="English">
+  </a>
+  <!-- Chinese -->
+  <a href="./README_zh_cn.md">
+    <img src="https://jaywcjlove.github.io/sb/lang/chinese.svg" alt="Chinese">
   </a>
 
 </div>
@@ -67,7 +71,7 @@
 
 尤其对 **科学计算** 和 **计算机视觉** 领域有良好的支持. 
 
-因此，工具库的所有功能 会根据该功能是否为通用功能 而被分为了两个部分:    
+因此，工具库的所有功能 会根据该功能是否通用 而被分为了两个部分:    
  * **通用功能**: 这些功能（工具）可以在任何 Python 开发中发挥作用
 
  * **科学计算和计算机视觉功能**: 这些功能（工具）主要用于科学计算和计算机视觉领域
@@ -75,6 +79,10 @@
 可以去 [=> 例子](#四-例子) 处瞥一眼效果.
 
 P.S. **`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 操作系统.
+
+<!--如果你从事科学计算和计算机视觉，这里有一个详尽的中文介绍：
+
+[![](http://wangchujiang.com/sb/ico/zhihu.svg) 开发, 调试计算机视觉代码有哪些技巧？]()-->
 
 ## 二. 安装
 

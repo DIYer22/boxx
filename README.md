@@ -29,9 +29,9 @@
     <img src="https://img.shields.io/badge/platform-linux%20%7C%20osx%20%7C%20win-blue.svg" alt="platform">
   </a>
   <!-- License -->
-  <a href="https://www.github.com/DIYer22/boxx">
+  <!--<a href="https://www.github.com/DIYer22/boxx">
     <img src="https://img.shields.io/pypi/l/boxx.svg" alt="LICENSE">
-  </a>
+  </a>-->
   <!-- Version -->
   <a href="https://pypi.python.org/pypi/boxx">
     <img src="https://img.shields.io/pypi/v/boxx.svg" alt="PyPI">
@@ -40,9 +40,13 @@
   <a href="https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb">
     <img src="https://mybinder.org/badge.svg" alt="Binder">
   </a>
-  <!--  -->
-  <a href="">
-    <img src="" alt="">
+  <!-- English -->
+  <a href="./README.md">
+    <img src="https://jaywcjlove.github.io/sb/lang/english.svg" alt="English">
+  </a>
+  <!-- Chinese -->
+  <a href="./README_zh_cn.md">
+    <img src="https://jaywcjlove.github.io/sb/lang/chinese.svg" alt="Chinese">
   </a>
 
 </div>
@@ -160,21 +164,16 @@ Examples are divided into 2 parts too.
         <br><br>
         <br><br>
         
-  #### ▶ `boxx` debug tool matrix
-| How many vars \ Operation | print | transport | print & transport |
-| :---- | :---- | :---- | :---- |
-| 1 variable | `p/x` | `g.name/x` | `gg.name/x`|
-|Multi variables | `with wp:` | `with wg:` | `with wgg:` |
-|All `locals()`| `p()` | `g()` | `gg()` |
-|All `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
-
-  💡 **Note:**   
-  * **transport** mean "transport variable to Python interactive console"
-  * **All `locals()`** mean all variables in the function or module
-  * **All `locals()`\_2** is a convenient way to execution operation when `boxx` are not imported
+  #### ▶ `wp`, `wg`, `wgg` are mulit variables version of `p`, `g`, `gg` that work under "with statement"
+  [![click to restart GIF and see more clearer GIF](./other/gif/w.gif) ](./other/gif/w.gif)    
+  💡 **Note:** 
+  * `wp`, `wg`, `wgg` only act on assignment variables under "with statement". 
+  * If variable's name exists in `locals()` and `id(variable)` not change ,variable may not be detected 
         <hr></hr>
         <br><br>
         <br><br>
+        
+        
     </td>
     <td valign="top">
     
@@ -212,6 +211,59 @@ Examples are divided into 2 parts too.
 </table> 
 
 
+<table  style="">
+  <tr>
+    <td valign="top" width="50%">
+    
+  #### ▶ `boxx` debug tool matrix
+| How many vars \ Operation | print | transport | print & transport |
+| :---- | :---- | :---- | :---- |
+| 1 variable | `p/x` | `g.name/x` | `gg.name/x`|
+|Multi variables | `with wp:` | `with wg:` | `with wgg:` |
+|All `locals()`| `p()` | `g()` | `gg()` |
+|All `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
+
+  💡 **Note:**   
+  * **transport** mean "transport variable to Python interactive console"
+  * **All `locals()`** mean all variables in the function or module
+  * **All `locals()`\_2** is a convenient way to execution operation when `boxx` are not imported
+        <hr></hr>
+        <br><br>
+        <br><br>
+        
+  #### ▶ `timeit` is convenient timing tool 
+  [![click to restart GIF and see more clearer GIF](./other/img/timeit.png) ](./other/img/timeit.png)    
+  💡 **Note:** In "with statement", timeit will timing code and print spend time in blue color.
+        <hr></hr>
+        <br><br>
+        <br><br>
+        
+  #### ▶ `mapmp` is Multi Process version of `map`
+  `mapmp` is the meaning of "MAP for Multi Process", has the same usage as `map` but faster.    
+  [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
+  💡 **Note:** 
+  * **pool** parameter in `mapmp` mean the number of Process, the default is the number of CPUs in the system.
+  * In multi process programs, display processing progress is troublesome. **printfreq** parameter in `mapmp` can handle this problem.
+        <hr></hr>
+        <br><br>
+        <br><br>
+        
+  #### ▶ `heatmap` to show the time heat map of your code
+  [![click to restart GIF and see more clearer GIF](./other/img/heatmap.png) ](./other/img/heatmap.png)    
+  💡 **Note:** `heatmap` also support python code string.
+        <hr></hr>
+        <br><br>
+        <br><br>
+        
+  #### ▶ `performance` could statistic visualization your code performance   
+  [![click to restart GIF and see more clearer GIF](./other/gif/performance.gif) ](./other/gif/performance.gif)    
+  💡 **Note:** `performance` also support python code string.
+        <hr></hr>
+        <br><br>
+        <br><br>
+    </td>
+  </tr>
+</table>
 
 ---
 

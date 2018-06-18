@@ -152,7 +152,7 @@ def performance(pyfileOrCode, snakeviz=True):
         use snakeviz to get flame graph in web page
         otherwise, print cProfile result sorted by time
     '''
-    if os.path.isfile(pyfileOrCode):
+    if pyfileOrCode.endswith('.py'):
         crun("from boxx import runpyfile;runpyfile('%s')"%pyfileOrCode)
     else:
         crun(pyfileOrCode)
@@ -223,7 +223,7 @@ def heatmap(pathOrCode):
     import matplotlib.pyplot as plt
     tmppath = 'code-tmp-pyheat-boxx.py'
     
-    ispath = os.path.isfile(pathOrCode)
+    ispath = pathOrCode.endswith('.py')
     path = pathOrCode if ispath else tmppath
     try :
         if not ispath:
