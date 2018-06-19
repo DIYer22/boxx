@@ -134,7 +134,8 @@ def mapmp(fun, *iterables, **kv):
     '''    
     if winYl and not kv.get('thread'):
         from boxx import warn1time
-        warn1time("""detection your Platform is windows,   multiprocessing maybe slower cause os.fork is disable.""")
+        warn1time("""detection your Platform is Windows,   multiprocessing maybe slower cause os.fork is disable.
+Even multiprocessing can't work on Windows sometimes""")
     Pool = PoolMp
     if 'thread' in kv and kv['thread']:
         Pool = PoolThread

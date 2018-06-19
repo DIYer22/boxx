@@ -37,7 +37,7 @@
     <img src="https://img.shields.io/pypi/v/boxx.svg" alt="PyPI">
   </a>
   <!-- Binder -->
-  <a href="https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb">
+  <a href="https://mybinder.org/v2/gh/DIYer22/boxx-ipynb/master?filepath=tutorial_for_boxx.ipynb">
     <img src="https://mybinder.org/badge.svg" alt="Binder">
   </a>
 </div>
@@ -110,7 +110,7 @@ There are 3 methods to view/run this Tutorial
 #### Method 1: Executable Interactive Online Notebook
 We use [Binder](https://mybinder.org) to run Tutorial Notebook in  an executable interactive online jupyer environment.    
 That's mean you can **run code in notebook rightnow** in your browser without download or install anything.    
-* [**=> Executable Interactive Online Tutorial**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb)
+* [**=> Executable Interactive Online Tutorial**](https://mybinder.org/v2/gh/DIYer22/boxx-ipynb/master?filepath=tutorial_for_boxx.ipynb)
 
 #### Method 2: Download and Run at Local
 
@@ -124,7 +124,7 @@ Then open `./tutorial_for_boxx.ipynb` in notebook.
 
 #### Method 3: Static Noetbook
  Just view the Tutorial Notebook.
-* [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
+* [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx-ipynb/blob/master/tutorial_for_boxx.ipynb)
 
 
 ## 4. Examples
@@ -251,10 +251,10 @@ Examples are divided into 2 parts too.
   `mapmp` is the meaning of "MAP for Multi Process", has the same usage as `map` but faster.    
   [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
   💡 **Note:** 
-  *  * It's better to run multi process under `if __name__ == '__main__':`
   * **pool** parameter in `mapmp` mean the number of Process, the default is the number of CPUs in the system.
   * In multi process programs, display processing progress is troublesome. **printfreq** parameter in `mapmp` can handle this problem.
-  * Like `map`, `mapmp` support muliti args to input to function, like `mapmp(add, list_1, list_2)`
+  * Like `map`, `mapmp` support muliti args to as input to function, like `mapmp(add, list_1, list_2)`.
+  *  * It's better to run multi process under `__name__ == '__main__'` environment.
         <br><br>
         <hr></hr>
         

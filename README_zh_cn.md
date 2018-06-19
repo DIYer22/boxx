@@ -37,7 +37,7 @@
     <img src="https://img.shields.io/pypi/v/boxx.svg" alt="PyPI">
   </a>
   <!-- Binder -->
-  <a href="https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb">
+  <a href="https://mybinder.org/v2/gh/DIYer22/boxx-ipynb/master?filepath=tutorial_for_boxx.ipynb">
     <img src="https://mybinder.org/badge.svg" alt="Binder">
   </a>
 </div>
@@ -182,7 +182,7 @@ pip install boxx -U
     
   ### 科学计算和计算机视觉功能
 
-  本部分通过用例来介绍几个在 **科学计算** 和 **计算机视觉** 领域内的一些实用工具 . 几乎所有的工具(函数) 都支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` 等类似多维数组的数据类型
+  本部分通过用例来介绍几个在 **科学计算** 和 **计算机视觉** 领域内的一些实用工具 . 几乎所有的工具(函数) 都支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` 等类似多维数组的数据类型    
   💡 **Note:** 若你是通过 `ssh` 在远程服务器上执行代码， 建议 `ssh` 加上 `-X` 使得 `plt` 可视化的图表能传输到本地显示，即 `ssh -X user@host`。
         <hr></hr>
         <br><br>
@@ -251,10 +251,10 @@ pip install boxx -U
   `mapmp` 的意思是 "MAP for Multi Process", 和 `map` 有着一样的用法，但会用多进程加速.    
   [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
   💡 **Note:** 
-  * 在 Python 中，多进程最好在 `if __name__ == '__main__':` 中运行.
   * `mapmp` 的 **pool** 参数来控制进程数目，默认为 CPU 线程数目.
   * 在多进程程序中, 打印进度往往非常麻烦. **printfreq** 参数会解决这个问题.
-  * 如同 `map` 一样，`mapmp` 支持多个参数输入函数 `mapmp(add, list_1, list_2)`
+  * 如同 `map` 一样，`mapmp` 支持将多个参数输入函数 `mapmp(add, list_1, list_2)`
+  * 在 Python 中，多进程最好在 `__name__ == '__main__'` 环境中运行.
         <br><br>
         <hr></hr>
         
@@ -282,7 +282,7 @@ pip install boxx -U
 #### 方式一：可执行的在线 Notebook: 
 Notebook 文件被运行在 [Binder](https://mybinder.org) 上。[Binder](https://mybinder.org) 提供了可执行、可交互的在线 Notebook 环境.    
 也就是说，无需下载和运行任何代码，只需浏览器打开链接，就可以执行任何 Notebook 中的代码块。  
-* [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb)
+* [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx-ipynb/master?filepath=tutorial_for_boxx.ipynb)
 
 #### 方式二：下载并在本地打开教程:
 
@@ -296,7 +296,7 @@ jupyter notebook
 
 #### 方式三：静态的 Notebook:
  只能看 不能交互的 Notebook.
-* [**=> 静态的 Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
+* [**=> 静态的 Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx-ipynb/blob/master/tutorial_for_boxx.ipynb)
 
 
 ## 五. 致谢
