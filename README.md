@@ -73,7 +73,6 @@ So, all Tools are divided into 2 parts by wether the tool is general used:
 
  * **Scientific Computing and Computer Vision Tool**: Those tools are useful in Scientific Computing and Computer Vision field
  
-You can jump to [=> Examples](#4-examples) to have a glance.
 
 P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
 
@@ -102,12 +101,9 @@ pip install boxx -U
 💡 **Note:** Please ensure `boxx`'s version > `0.9` if used PyPI mirrors. Otherwise, please install from source
 
 
-
-
-
 ## 3. Tutorial
 
-**`Box-X`**'s Tutorial is a Jupyter Notebook file that allows run examples while view Tutorial. The Notebook file is in [`./tutorial_for_boxx.ipynb`](./tutorial_for_boxx.ipynb)
+**`Box-X`**'s Tutorial is a Jupyter Notebook file that allows run examples while view Tutorial. 
 
 There are 3 methods to view/run this Tutorial
 
@@ -129,8 +125,6 @@ Then open `./tutorial_for_boxx.ipynb` in notebook.
 #### Method 3: Static Noetbook
  Just view the Tutorial Notebook.
 * [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
-
-
 
 
 ## 4. Examples
@@ -189,6 +183,7 @@ Examples are divided into 2 parts too.
   ### Scientific Computing and Computer Vision
 
   Useful tools in **Scientific Computing** and **Computer Vision** field. All tools support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
+    💡 **Note:** If you are using `ssh` to execute code on a remote server, it is recommended that `ssh` plus `-X` make `plt` visualized charts can be transferred to the local and display, like `ssh -x user@host`.
         <hr></hr>
         <br><br>
         <br><br>
@@ -235,8 +230,8 @@ Examples are divided into 2 parts too.
 
   💡 **Note:**   
   * **transport** mean "transport variable to Python interactive console"
-  * **All `locals()`** mean all variables in the function or module
-  * **All `locals()`\_2** is a convenient way to execution operation when `boxx` are not imported
+  * **All `locals()`** mean operation will act on all variables in the function or module
+  * **All `locals()`\_2 :** when `boxx` are not imported, `import boxx.{operation}` is a convenient way to execution operation 
         <br><br>
         <hr></hr>
         
@@ -248,7 +243,7 @@ Examples are divided into 2 parts too.
         
   #### ▶ `timeit` is convenient timing tool 
   [![click to restart GIF and see more clearer GIF](./other/img/timeit.png) ](./other/img/timeit.png)    
-  💡 **Note:** In "with statement", timeit will timing code and print spend time in blue color.
+  💡 **Note:** `timeit` will timing code block under "with statement" and print spend time in blue color.
         <br><br>
         <hr></hr>
         
@@ -256,8 +251,10 @@ Examples are divided into 2 parts too.
   `mapmp` is the meaning of "MAP for Multi Process", has the same usage as `map` but faster.    
   [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
   💡 **Note:** 
+  *  * It's better to run multi process under `if __name__ == '__main__':`
   * **pool** parameter in `mapmp` mean the number of Process, the default is the number of CPUs in the system.
   * In multi process programs, display processing progress is troublesome. **printfreq** parameter in `mapmp` can handle this problem.
+  * Like `map`, `mapmp` support muliti args to input to function, like `mapmp(add, list_1, list_2)`
         <br><br>
         <hr></hr>
         
@@ -267,14 +264,40 @@ Examples are divided into 2 parts too.
         <br><br>
         <hr></hr>
         
-  #### ▶ `performance` could statistic visualization your code performance   
+  #### ▶ `performance` could statistic function calls and visualize code performance   
   [![click to restart GIF and see more clearer GIF](./other/gif/performance.gif) ](./other/gif/performance.gif)    
   💡 **Note:** `performance` also support python code string.
     </td>
   </tr>
 </table>
 
+
+
+
+
+
+
+
+
+
+
 ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 5. Acknowledgments
  * Thanks to Xiaodong Xu, Guodong Wu, Haoqiang Fan, Pengfei Xiong for their suggestions

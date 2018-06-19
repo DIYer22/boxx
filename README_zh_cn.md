@@ -45,7 +45,7 @@
 
 <div align="center">
 
- ### [Introduce](#1-introduce) | [Install](#2-install) | [Tutorial](#3-tutorial) | [Examples](#4-examples) | [Acknowledgments](#5-acknowledgments)
+ ### [简介](#一-简介) | [安装](#二-安装) | [示例](#三-示例) | [教程](#四-教程) | [致谢](#五-致谢)
 </div>
 
 
@@ -73,7 +73,6 @@
 
  * **科学计算和计算机视觉功能**: 这些功能（工具）主要用于科学计算和计算机视觉领域
  
-可以去 [=> 例子](#四-例子) 处瞥一眼效果.
 
 P.S. **`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 操作系统.
 
@@ -99,43 +98,38 @@ pip install git+https://github.com/DIYer22/boxx
 ```
 pip install boxx -U
 ```
+
+
+
+
 💡 **Note:** 确保 `pip` 镜像的 `boxx` 版本大于 `0.9`，否则建议源码安装。
 
 
 
 
 
-## 三. 教程
-
-**`boxx`** 的教程是一个 Jupyter Notebook 文件，可以边看边运行，Notebook 文件在 [`./tutorial_for_boxx.ipynb`](./tutorial_for_boxx.ipynb)
-
-有三种方式来查看/运行此教程
-#### 方式一：可直接执行的在线 Notebook: 
-Notebook 文件被运行在 [Binder](https://mybinder.org) 上。[Binder](https://mybinder.org) 提供了可执行、可交互的在线 Notebook 环境.    
-也就是说，无需下载和运行任何代码，只需浏览器打开链接，就可以执行任何 Notebook 中的代码块。  
-* [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb)
-
-#### 方式二：下载并在本地打开教程:
-
-```bash
-git clone https://github.com/DIYer22/boxx
-cd boxx/
-python setup.py install
-jupyter notebook
-```
-在 Jupyter Notebook 中打开 `./tutorial_for_boxx.ipynb` 即可.
-
-#### 方式三：静态的 Notebook:
- 只能看 不能交互的 Notebook.
-* [**=> 静态的 Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
 
 
 
 
 
-## 四. 例子
 
-例子也被分为了两个部分
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 三. 示例
+
+示例也被分为了两个部分
 
 左侧为 **通用功能**，右侧为 **科学计算和计算机视觉功能**。
 
@@ -149,7 +143,7 @@ jupyter notebook
   <hr></hr>
         
   #### ▶  `p/x` 是更方便 `print(x)` 的方式   
-  `p/x` will `print(x)` and return `x`
+  `p/x` 在执行 `print(x)` 后会返回 `x`
   [![click to restart GIF and see more clearer GIF](./other/img/p.png)](./other/img/p.png)     
   💡 **Note:** `p/x` 能够方便的打印表达式中的值.
         <hr></hr>
@@ -189,6 +183,7 @@ jupyter notebook
   ### 科学计算和计算机视觉功能
 
   本部分通过用例来介绍几个在 **科学计算** 和 **计算机视觉** 领域内的一些实用工具 . 几乎所有的工具(函数) 都支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` 等类似多维数组的数据类型
+  💡 **Note:** 若你是通过 `ssh` 在远程服务器上执行代码， 建议 `ssh` 加上 `-X` 使得 `plt` 可视化的图表能传输到本地显示，即 `ssh -X user@host`。
         <hr></hr>
         <br><br>
         <br><br>
@@ -234,47 +229,75 @@ jupyter notebook
 | `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
 
   💡 **Note:**   
-  * **transport** mean "transport variable to Python interactive console"
-  * **All `locals()`** mean all variables in the function or module
-  * **All `locals()`\_2** is a convenient way to execution operation when `boxx` are not imported
+  * **transport** 的意思是把函数内的变量传送到 Python interactive console 中
+  * **`locals()`** 指作用于函数内的所用变量
+  * **`locals()`\_2**: 当 `boxx` 未导入时， `import boxx.{操作}` 能更方便的执行 `{操作}()`
         <br><br>
         <hr></hr>
         
-  ####  ▶ `what` to know "What's this?"
+  ####  ▶ 使用 `what` 来了解任何对象"
   [![click to restart GIF and see more clearer GIF](./other/img/what.png) ](./other/img/what.png)    
-  💡 **Note:** `what(x)` will show "what is `x`?" by pretty print it's **Document**, **Father Classes**, **Inner Struct** and **Attributes**. It is a supplement of `help(x)`.
+  💡 **Note:** `what(x)` 通过打印 `x` 的 **文档**, **父类继承关系**, **内部结构** 及 **所有属性** 来全面了解 `x`. 是 `help(x)` 的补充.
         <br><br>
         <hr></hr>
         
-  #### ▶ `timeit` is convenient timing tool 
+  #### ▶ `timeit` 是一个方便的计时工具
   [![click to restart GIF and see more clearer GIF](./other/img/timeit.png) ](./other/img/timeit.png)    
-  💡 **Note:** In "with statement", timeit will timing code and print spend time in blue color.
+  💡 **Note:** `timeit` 会对在 `with` 结构下的代码块进行计时，并用蓝色来打印出运行的时间.
         <br><br>
         <hr></hr>
         
-  #### ▶ `mapmp` is Multi Process version of `map`
-  `mapmp` is the meaning of "MAP for Multi Process", has the same usage as `map` but faster.    
+  #### ▶ `mapmp` 是多进程版本的 `map`
+  `mapmp` 的意思是 "MAP for Multi Process", 和 `map` 有着一样的用法，但会用多进程加速.    
   [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
   💡 **Note:** 
-  * **pool** parameter in `mapmp` mean the number of Process, the default is the number of CPUs in the system.
-  * In multi process programs, display processing progress is troublesome. **printfreq** parameter in `mapmp` can handle this problem.
+  * 在 Python 中，多进程最好在 `if __name__ == '__main__':` 中运行.
+  * `mapmp` 的 **pool** 参数来控制进程数目，默认为 CPU 线程数目.
+  * 在多进程程序中, 打印进度往往非常麻烦. **printfreq** 参数会解决这个问题.
+  * 如同 `map` 一样，`mapmp` 支持多个参数输入函数 `mapmp(add, list_1, list_2)`
         <br><br>
         <hr></hr>
         
-  #### ▶ `heatmap` to show the time heat map of your code
+  #### ▶ 用 `heatmap` 来展示代码的运行时间热力图
   [![click to restart GIF and see more clearer GIF](./other/img/heatmap.png) ](./other/img/heatmap.png)    
-  💡 **Note:** `heatmap` also support python code string.
+  💡 **Note:** `heatmap` 也支持字符串形式的 Python 代码.
         <br><br>
         <hr></hr>
         
-  #### ▶ `performance` could statistic visualization your code performance   
+  #### ▶ `performance` 可以统计函数调用并可视化代码性能
   [![click to restart GIF and see more clearer GIF](./other/gif/performance.gif) ](./other/gif/performance.gif)    
-  💡 **Note:** `performance` also support python code string.
+  💡 **Note:** `performance` 也支持字符串形式的 Python 代码.
     </td>
   </tr>
 </table>
 
 ---
+
+## 四. 教程
+
+**`boxx`** 的教程是一个 Jupyter Notebook 文件，可以边看边运行.
+
+有三种方式来查看/运行此教程
+
+#### 方式一：可执行的在线 Notebook: 
+Notebook 文件被运行在 [Binder](https://mybinder.org) 上。[Binder](https://mybinder.org) 提供了可执行、可交互的在线 Notebook 环境.    
+也就是说，无需下载和运行任何代码，只需浏览器打开链接，就可以执行任何 Notebook 中的代码块。  
+* [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx/master?filepath=tutorial_for_boxx.ipynb)
+
+#### 方式二：下载并在本地打开教程:
+
+```bash
+git clone https://github.com/DIYer22/boxx
+cd boxx/
+python setup.py install
+jupyter notebook
+```
+在 Jupyter Notebook 中打开 `./tutorial_for_boxx.ipynb` 即可.
+
+#### 方式三：静态的 Notebook:
+ 只能看 不能交互的 Notebook.
+* [**=> 静态的 Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx/blob/master/tutorial_for_boxx.ipynb)
+
 
 ## 五. 致谢
  * 特别感谢徐晓栋、吴国栋、范浩强和熊鹏飞对 `boxx` 提出的建议
