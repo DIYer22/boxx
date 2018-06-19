@@ -2,7 +2,8 @@
 
 from __future__ import unicode_literals, print_function
 
-from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto, generator, nextiter, getfathers
+from ..tool.toolStructObj import FunAddMagicMethod, typeNameOf, typestr, dicto
+from ..tool.toolStructObj import generator, nextiter, getfathers, isinstancestr
 from ..tool.toolLog import log, PrintStrCollect, colorFormat, clf, tounicode, LogLoopTime, prettyClassFathers
 from ..tool.toolLog import tabstr, getDoc, shortStr, discrib, strnum
 from ..tool.toolFunction import mapmp, pipe
@@ -180,6 +181,8 @@ tryToNumpyFunsForNpa = {
     "str":__strToNumpy,
     "unicode":__strToNumpy,
     }
+tryToNumpyFunsForNpa.update(typesToNumpyFuns)
+
 def npa(array):
     '''
     try to transfer other data to np.ndarray
@@ -196,11 +199,10 @@ def npa(array):
     '''
     if isinstance(array, np.ndarray):
         return array
-    typeName = typestr(array)
-    if typeName in tryToNumpyFunsForNpa:
-        ndarray = tryToNumpyFunsForNpa[typeName](array)
-    elif typeName in typesToNumpyFuns:
-        ndarray = typesToNumpyFuns[typeName](array)
+    
+    typeNameForNpa = isinstancestr(array, tryToNumpyFunsForNpa)
+    if typeNameForNpa:
+        ndarray = tryToNumpyFunsForNpa[typeNameForNpa](array)
     else:
         ndarray = np.array(array)
     return ndarray
@@ -355,9 +357,9 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
     if res is None:
         res = []
     for x in l:
-        typeName = typestr(x)
+        typeName = isinstancestr(x, typesToNumpyFuns)
         fathersStr = str(getfathers(x))
-        if typeName in typesToNumpyFuns:
+        if typeName:
             ndarray = typesToNumpyFuns[typeName](x)
             res.extend(doNumpy(ndarray))
         elif isinstance(x,(list,tuple)):

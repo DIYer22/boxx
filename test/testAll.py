@@ -9,8 +9,9 @@ from __future__ import unicode_literals, print_function
 
 #what-
 from boxx import *
+import boxx
 test = True
-test = False
+#test = False
 if test:
     from toolTest import *
     
@@ -19,13 +20,13 @@ if test:
     from ylmlTest import *
 
 pattern = 'MappingProxyType'
-findinRoot(pattern,root='..')
+#findinRoot(pattern,root='..')
 #findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'Function',root='..')
 
 
 
-
+#print(isinstancestr(LookupError, 'Exception'))
 
 if __name__ == '__main__0':
     pass

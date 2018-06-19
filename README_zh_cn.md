@@ -183,13 +183,11 @@ pip install boxx -U
   ### 科学计算和计算机视觉功能
 
   本部分通过用例来介绍几个在 **科学计算** 和 **计算机视觉** 领域内的一些实用工具 . 几乎所有的工具(函数) 都支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` 等类似多维数组的数据类型    
-  💡 **Note:** 若你是通过 `ssh` 在远程服务器上执行代码， 建议 `ssh` 加上 `-X` 使得 `plt` 可视化的图表能传输到本地显示，即 `ssh -X user@host`。
+  💡 **Note:** 若通过 `ssh` 在远程服务器上执行代码， 建议在 `ssh` 加上 `-X` 参数，使可视化的 `plt` 图表能传输到本地显示，即 `ssh -X user@host`。
         <hr></hr>
-        <br><br>
-        <br><br>
 
   #### ▶ 用 `loga` 来可视化多维数组   
-  `loga` 是 "log array" 的意思, `loga` 能展示多维数组的许多属性.
+  `loga` 是 "log array" 的缩写, `loga` 能展示多维数组的许多属性.
   [![click to restart GIF and see more clearer GIF](./other/gif/loga.gif)](./other/gif/loga.gif)     
   💡 **Note:** `loga` 支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
         <hr></hr>
@@ -205,7 +203,7 @@ pip install boxx -U
         <br><br>
 
   #### ▶ 使用 `tree` 来可视化复杂结构
-  如同 shell 中的 `tree` 命令， `boxx.tree` 可以以树的形式来解构和展示任何复杂结构.
+  如同 shell 中的 `tree` 命令， `boxx.tree` 可以直观地展示复杂结构.
   [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
   💡 **Note:** `tree` 支持的数据有 `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`, `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
@@ -229,7 +227,7 @@ pip install boxx -U
 | `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
 
   💡 **Note:**   
-  * **transport** 的意思是把函数内的变量传送到 Python interactive console 中
+  * **transport** 操作是把函数内的变量传送到 Python interactive console 中
   * **`locals()`** 指作用于函数内的所用变量
   * **`locals()`\_2**: 当 `boxx` 未导入时， `import boxx.{操作}` 能更方便的执行 `{操作}()`
         <br><br>
@@ -248,7 +246,7 @@ pip install boxx -U
         <hr></hr>
         
   #### ▶ `mapmp` 是多进程版本的 `map`
-  `mapmp` 的意思是 "MAP for Multi Process", 和 `map` 有着一样的用法，但会用多进程加速.    
+  `mapmp` 是 "MAP for Multi Process"的缩写, 和 `map` 有着一样的用法，但会用多进程加速.    
   [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
   💡 **Note:** 
   * `mapmp` 的 **pool** 参数来控制进程数目，默认为 CPU 线程数目.

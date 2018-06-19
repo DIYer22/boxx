@@ -383,6 +383,31 @@ class withattr(withfun):
                     sett(d, k, v)
         withfun.__init__(self,enterFun, exitFun)
     
+def isinstancestr(obj, typeStrList):
+    '''
+    same as isinstance but only use type name strs to avoid `import torch.tensor` .etc
+    
+    Parameters
+    ----------
+    obj : object
+        anything
+    typeStrList : str or list of strs
+        like tuple of types for isinstance
+    
+    Return
+    ----------
+    if True return the type name str
+    '''
+    if isinstance(typeStrList, str):
+        typeStrList = [typeStrList]
+    types = getfathers(obj)
+    typestrs = list(map(typeNameOf, types))
+    for t in typeStrList:
+        if t in typestrs:
+            typestrs.index(t)
+            return t
+    return False
+
 if __name__ == "__main__":
 
     pass

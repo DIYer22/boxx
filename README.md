@@ -183,10 +183,8 @@ Examples are divided into 2 parts too.
   ### Scientific Computing and Computer Vision
 
   Useful tools in **Scientific Computing** and **Computer Vision** field. All tools support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
-    💡 **Note:** If you are using `ssh` to execute code on a remote server, it is recommended that `ssh` plus `-X` make `plt` visualized charts can be transferred to the local and display, like `ssh -x user@host`.
+    💡 **Note:** If you are using `ssh` to execute code on a remote server, it is recommended that `ssh` plus `-X` make visualized `plt` charts can be transferred to the local and display, like `ssh -x user@host`.
         <hr></hr>
-        <br><br>
-        <br><br>
 
   #### ▶ `loga` to visualization matrix and tensor   
   `loga` is short of "log array", `loga` will show many attributes of array-like object.
