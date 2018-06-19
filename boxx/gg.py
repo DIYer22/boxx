@@ -29,11 +29,15 @@ from .tool import out
 
 deep = 6
 if py2:
-    deep = 1  
+    deep = 1
 
 out(deep)
 
-if not py2:
+if py2:
+    import sys
+    from .tool import gg
+    sys.modules['boxx.gg'] = gg
+else:
     from .tool import removeImportSelf
     removeImportSelf('boxx.gg')
 

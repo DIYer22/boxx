@@ -26,14 +26,16 @@ from .tool import p
 
 deep = 6
 if py2:
-    deep = 1  
+    deep = 1
 
 p(deep)
 
-if not py2:
+if py2:
+    import sys
+    sys.modules['boxx.p'] = p
+else:
     from .tool import removeImportSelf
     removeImportSelf('boxx.p')
-
 #from . import *
 #print(prettyFrameStack())
 #fs = getFatherFrames(endByMain=1)

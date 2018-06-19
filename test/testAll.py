@@ -11,7 +11,7 @@ from __future__ import unicode_literals, print_function
 from boxx import *
 import boxx
 test = True
-#test = False
+test = False
 if test:
     from toolTest import *
     
@@ -24,7 +24,9 @@ pattern = 'MappingProxyType'
 #findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'Function',root='..')
 
-
+with p:
+    a=1.
+import q
 
 #print(isinstancestr(LookupError, 'Exception'))
 
