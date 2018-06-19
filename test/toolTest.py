@@ -16,7 +16,7 @@ def ifTest(fun):
     return shouldTest
 
 TEST_ALL = True
-TEST_ALL = False
+#TEST_ALL = False
  
 
 testFun = None
@@ -25,10 +25,10 @@ tests = [testFun]
 df=pd.DataFrame([{'a':5,'b':3},{1:1}]*20)
     
 
-tests = wgg    
-if ifTest(wgg):
+#tests = gg    
+if ifTest(gg):
     def funForWgg():
-        with wgg:
+        with gg:
             ia = 517
             ib = 222
     funForWgg()

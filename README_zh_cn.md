@@ -166,11 +166,11 @@ pip install boxx -U
         <br><br>
         <br><br>
         
-  #### ▶ `wp`, `wg`, `wgg` 分别是 `p`, `g`, `gg` 的多变量版本，只需把变量放入 `with` 结构中即可
-  `wp`, `wg`, `wgg` 的意思分别是 "With Print", "With to Global", "With log and to Global"
+  #### ▶ `with p`, `with g`, `with gg` 分别是 `p`, `g`, `gg` 的多变量版本，只需把变量放入 `with` 结构中即可
+  使得对应操作只作用于感兴趣的几个变量
   [![click to restart GIF and see more clearer GIF](./other/gif/w.gif) ](./other/gif/w.gif)    
   💡 **Note:** 
-  * `wp`, `wg`, `wgg` 只作用于在 `with` 结构中进行赋值操作的变量. 
+  * `with p`, `with g`, `with gg` 只作用于在 `with` 结构中进行赋值操作的变量. 
   * 如果变量名之前存在于 `locals()` 同时 `id(变量)` 没有变化 , `with` 结构可能无法检测到该变量 
         <hr></hr>
         <br><br>
@@ -183,6 +183,7 @@ pip install boxx -U
   ### 科学计算和计算机视觉功能
 
   本部分通过用例来介绍几个在 **科学计算** 和 **计算机视觉** 领域内的一些实用工具 . 几乎所有的工具(函数) 都支持 `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` 等类似多维数组的数据类型    
+  
   💡 **Note:** 若通过 `ssh` 在远程服务器上执行代码， 建议在 `ssh` 加上 `-X` 参数，使可视化的 `plt` 图表能传输到本地显示，即 `ssh -X user@host`。
         <hr></hr>
 
@@ -222,7 +223,7 @@ pip install boxx -U
 | 变量个数 \ 操作 | print | transport | print & transport |
 | :---- | :---- | :---- | :---- |
 | 单变量 | `p/x` | `g.name/x` | `gg.name/x`|
-| 多变量 | `with wp:` | `with wg:` | `with wgg:` |
+| 多变量 | `with p:` | `with g:` | `with gg:` |
 | `locals()`| `p()` | `g()` | `gg()` |
 | `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
 

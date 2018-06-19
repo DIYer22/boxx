@@ -153,7 +153,7 @@ Examples are divided into 2 parts too.
   #### ▶ Use `g.name = x` or `g.name/x` to transport variable to Python interactive console
   [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)    
   💡 **Note:** 
-  * `gg` is same usage as `g`, but `gg` will print the variable that is transported. 
+  * `gg` is same usage as `g`, but `gg` will print the transported variable. 
   *  if variable name exists in console before, the variable's value will be covered by new value.
         <hr></hr>
         <br><br>
@@ -166,11 +166,11 @@ Examples are divided into 2 parts too.
         <br><br>
         <br><br>
         
-  #### ▶ `wp`, `wg`, `wgg` are mulit variables version of `p`, `g`, `gg` that work under "with statement"
-  `wp`, `wg`, `wgg` are meaning of "With Print", "With to Global", "With log and to Global"
+  #### ▶ `with p`, `with g`, `with gg` are mulit variables version of `p`, `g`, `gg` that work under "with statement"
+  Only act on interested variables which is under "with statement"
   [![click to restart GIF and see more clearer GIF](./other/gif/w.gif) ](./other/gif/w.gif)    
   💡 **Note:** 
-  * `wp`, `wg`, `wgg` only act on assignment variables under "with statement". 
+  * `with p`, `with g`, `with gg` only act on assignment variables under "with statement". 
   * If variable's name exists in `locals()` before and `id(variable)` not change ,variable may not be detected 
         <hr></hr>
         <br><br>
@@ -182,7 +182,8 @@ Examples are divided into 2 parts too.
     
   ### Scientific Computing and Computer Vision
 
-  Useful tools in **Scientific Computing** and **Computer Vision** field. All tools support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc 
+  Useful tools in **Scientific Computing** and **Computer Vision** field. All tools support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc     
+  
     💡 **Note:** If you are using `ssh` to execute code on a remote server, it is recommended that `ssh` plus `-X` make visualized `plt` charts can be transferred to the local and display, like `ssh -x user@host`.
         <hr></hr>
 
@@ -222,7 +223,7 @@ Examples are divided into 2 parts too.
 | How many vars \ Operation | print | transport | print & transport |
 | :---- | :---- | :---- | :---- |
 | Single variable | `p/x` | `g.name/x` | `gg.name/x`|
-|Multi variables | `with wp:` | `with wg:` | `with wgg:` |
+|Multi variables | `with p:` | `with g:` | `with gg:` |
 |All `locals()`| `p()` | `g()` | `gg()` |
 |All `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
 

@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 Tool-box for efficient build and debug in Python. 
 Espacially for Scientific Computing and Computer Vision.
 '''
-__version__ = "0.9.0.5"
+__version__ = "0.9.0.6"
 __short_description__ = "Tool-box for efficient build and debug in Python. Especially for Scientific Computing and Computer Vision."
 __license__ = "MIT"
 __author__ = "DIYer22"

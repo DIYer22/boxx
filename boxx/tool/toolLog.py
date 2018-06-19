@@ -908,10 +908,10 @@ class GlobalG(GlobalGCore):
 #        print(id(self),name)
         if name.startswith('__') and name.endswith('__') or name in dir(GlobalGCore): 
             return GlobalGCore.__getattribute__(self, name, *l)
-        log = global_g_paras[id(self)]
+        log = global_g_paras[id(self)].log
         return TransportToRootFrame(name,log)
     def __setattr__(self, name, v):
-        log = global_g_paras[id(self)]
+        log = global_g_paras[id(self)].log
         transport = TransportToRootFrame(name,log)
         transport(v)
 g = GlobalG()

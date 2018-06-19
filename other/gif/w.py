@@ -1,10 +1,11 @@
-from boxx import wgg
+from boxx import gg
 from random import randint
 def f():
     other_vars = "No need to pay attention"
-    with wgg:
+    with gg:
         a = randint(1, 9)
         l = [a, a*2]
+    
     others = "No need to pay attention" 
 f()
 
