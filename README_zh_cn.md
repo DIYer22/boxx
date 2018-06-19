@@ -66,7 +66,7 @@
 
 **`Box-X`** 的目标是提高 Python 代码的开发和调试效率.    
 
-尤其对 **科学计算** 和 **计算机视觉** 领域有良好的支持. 
+特别是在 **科学计算** 和 **计算机视觉** 领域有着良好的支持. 
 
 因此，工具库的所有功能 会根据该功能是否通用 而被分为了两个部分:    
  * **通用功能**: 这些功能（工具）可以在任何 Python 开发中发挥作用
@@ -225,13 +225,13 @@ jupyter notebook
   <tr>
     <td valign="top" width="50%">
     
-  #### ▶ `boxx` debug tool matrix
-| How many vars \ Operation | print | transport | print & transport |
+  #### ▶ `boxx` 调试工具矩阵
+| 变量个数 \ 操作 | print | transport | print & transport |
 | :---- | :---- | :---- | :---- |
-| 1 variable | `p/x` | `g.name/x` | `gg.name/x`|
-|Multi variables | `with wp:` | `with wg:` | `with wgg:` |
-|All `locals()`| `p()` | `g()` | `gg()` |
-|All `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
+| 单变量 | `p/x` | `g.name/x` | `gg.name/x`|
+| 多变量 | `with wp:` | `with wg:` | `with wgg:` |
+| `locals()`| `p()` | `g()` | `gg()` |
+| `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
 
   💡 **Note:**   
   * **transport** mean "transport variable to Python interactive console"

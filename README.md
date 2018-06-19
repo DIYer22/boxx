@@ -228,7 +228,7 @@ Examples are divided into 2 parts too.
   #### ▶ `boxx` debug tool matrix
 | How many vars \ Operation | print | transport | print & transport |
 | :---- | :---- | :---- | :---- |
-| 1 variable | `p/x` | `g.name/x` | `gg.name/x`|
+| Single variable | `p/x` | `g.name/x` | `gg.name/x`|
 |Multi variables | `with wp:` | `with wg:` | `with wgg:` |
 |All `locals()`| `p()` | `g()` | `gg()` |
 |All `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
