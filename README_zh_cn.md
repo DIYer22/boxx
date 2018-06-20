@@ -72,13 +72,13 @@
  * **通用功能**: 这些功能（工具）可以在任何 Python 开发中发挥作用
 
  * **科学计算和计算机视觉功能**: 这些功能（工具）主要用于科学计算和计算机视觉领域
+
  
+**`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 操作系统.
 
-P.S. **`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 操作系统.
+P.S. 如果对计算机视觉感兴趣，这里有一个详尽的关于 **`boxx`** 的介绍：
 
-<!--如果你从事科学计算和计算机视觉，这里有一个详尽的中文介绍：
-
-[![](http://wangchujiang.com/sb/ico/zhihu.svg) 开发, 调试计算机视觉代码有哪些技巧？]()-->
+ > [开发, 调试计算机视觉代码有哪些技巧？ ![](http://wangchujiang.com/sb/ico/zhihu.svg)](https://www.zhihu.com/question/280472255/answer/422068650)
 
 ## 二. 安装
 

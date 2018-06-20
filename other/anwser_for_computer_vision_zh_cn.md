@@ -37,7 +37,7 @@
 💡 **Note:** 在函数内 `import boxx.p` 和 `p()` 有相同的效果
 
 
-许多数情况下， 直接 `print` 无法获得调试的关键信息。 比如训练 loss 跑飞了, 导致 Bug 的可能是 `tensor` 的尺度/类型不对, 矩阵里有 nan , inf 等多种情况。我曾遇到过 [梯度含有nan](https://www.zhihu.com/question/67209417/answer/277425438) 的情况
+许多数情况下， 直接 `print` 无法获得调试的关键信息。 比如训练 loss 跑飞了, 导致 Bug 的可能是 `tensor` 的尺度/类型不对, 矩阵里有 nan , inf 等情况。我曾遇到过 [梯度含有nan](https://www.zhihu.com/question/67209417/answer/277425438) 的情况
 
 这时 就必须对矩阵进行分析, 方式有：
  1. 在调试处加上 `print(x.mean(), np.hasinf(x),.np.hasnan(x))`
@@ -61,8 +61,6 @@
 
 💡 **Note:** 在函数内 `import boxx.g` 和 `g()` 有相同的效果
 
-
-<!--刚才讲了对变量的两类操作 打印和传输到终端，`p/x` 和 `g.name=x` 是对单个变量操作，`p()` 和 `g()` 则是对整个函数或模块内的变量(`locals()`)进行操作。    -->
 在实际开发调试中, 函数或 module 内可能含有非常多的变量 但我们只对几个变量感兴趣,  `with p`, `with g`, `with gg` 可以使操作只作用于几个感兴趣的变量，只需把变量放入 `with` 结构中即可 :     
 ![](https://raw.githubusercontent.com/DIYer22/boxx/master/other/gif/w.gif)        
   💡 **Note:**  
@@ -105,7 +103,7 @@
 
 
 如今的数据集都数百上千 GB，在数据清洗和预处理时 要写多进程的 Python 代码 来榨干 CPU 的每一个线程获得加速。但我觉得 Python 多进程的几个范式都不够方便，我参照 `map` 的思想和用法把多进程操作封装成 `boxx.mapmp` 函数(意思是"Map for Mulit Processing"). `mapmp` 和 `map` 有一样的用法， 只需把 `map` 替换为 `mapmp` 即可获得多进程加速:    
-  [![click to restart GIF and see more clearer GIF](./gif/mapmp.gif) ](./gif/mapmp.gif)    
+![](https://raw.githubusercontent.com/DIYer22/boxx/master/other/gif/mapmp.gif)      
   💡 **Note:** 
   * `mapmp` 的 **pool** 参数来控制进程数目，默认为 CPU 线程数目.
   * 在多进程程序中, 打印进度往往非常麻烦. `mapmp` 的 **printfreq** 参数能解决这个问题.
@@ -118,13 +116,6 @@
 
 ---
 
- <!--dict 经常用来存储属性, 但是 字典调用属性麻烦 dic[`label`] 我继承 dict 写了一个dicto, 调用属性和 JavaScript 一样方便, 
-我还在 boxx 中 内置了一个
-
-tree show what npa tprgb 都是调试代码时 才用到的工具, 使用频率很高 人生苦短 为了少打括号 以上方法全都支持减号来调用 call 即 fun-x 来调用
-
-说完调试 再说一下性能调优 -->
-
 
 
 再分享一下我自己在写视觉代码的感受吧
@@ -133,23 +124,23 @@ tree show what npa tprgb 都是调试代码时 才用到的工具, 使用频率�
  1. 写 CV 代码离不开强大的 [Qt console for IPython](https://ipython.org/ipython-doc/3/interactive/qtconsole.html)
  2. 受不了远程编辑对网络的依赖和延迟
 
-所以 一直用 Anaconda 自带的 Spyder 作为 Python 开发的 IDE. Spyder 虽然不够强大，但自带的 Qt-IPython, 配合自己写的工具，调试起来还是比较方便, 顺手。所以, 我开发的工具都尽可能地直接, 简洁，上面介绍的大部分工具都支持 `func-x` 来代替 `func(x)` 以方便调试时调用。甚至，我还写了一些字符串处理工具，直接在IPython 内使用, 以弥补 Spyder 作为 IDE 的不足。 
+  所以 一直用 Anaconda 自带的 Spyder 作为 Python 开发的 IDE. Spyder 虽然不够强大，但自带的 Qt-IPython, 配合自己写的工具，调试起来还是比较方便, 顺手。所以, 我开发的工具都尽可能地直接, 简洁，上面介绍的大部分工具都支持 `func-x` 来代替 `func(x)` 以方便调试时调用。甚至，我还写了一些字符串处理工具，直接在IPython 内使用, 以弥补 Spyder 作为 IDE 的不足。 
 
 
-此外，我的工作流一般是 先在本地开发调试, 用 `boxx.sysi` 检测运行环境来自动切换运行参数, 本地开发调试 OK 了, 用 `rsync` 命令 只传改过的 .py 文件到服务器 再来 train。虽然这样传代码比较麻烦, 但开发, 调试起来会方便很多。
+  此外，我的工作流一般是 先在本地开发调试, 用 `boxx.sysi` 检测运行环境来自动切换运行参数, 本地开发调试 OK 了, 用 `rsync` 命令 只传改过的 .py 文件到服务器 再来 train。虽然这样传代码比较麻烦, 但开发, 调试起来会方便很多。
   
-之前在实验室一直是本地 GPU 环境调试 比较方便。实习后, 旷厂不提供本地 GPU。我主力是 PyTorch, 为了方便调试 我写了个 `boxx.ylth` 包，如果检测到没有 CUDA 环境，`boxx.ylth` 会强行使 `.cuda()` 和大部分 GPU 操作无效。只要在代码开头 `import boxx.ylth` 大多数只基于 GPU 的 torch 代码, 可以不经更改 直接在 CPU 上运行和调试。(这操作太暴力 请慎用)
+  之前在实验室一直是本地 GPU 环境调试 比较方便。实习后, 旷厂不提供本地 GPU。我主力是 PyTorch, 为了方便调试 我写了个 `boxx.ylth` 包，如果检测到没有 CUDA 环境，`boxx.ylth` 会强行使 `.cuda()` 和大部分 GPU 操作无效。只要在代码开头 `import boxx.ylth` 大多数只基于 GPU 的 torch 代码, 可以不经更改 直接在 CPU 上运行和调试。(这操作太暴力 请慎用)
 
 
 
 ---
 
 
-GitHub 主页：https://github.com/DIYer22/boxx
+GitHub 主页：[https://github.com/DIYer22/boxx](https://github.com/DIYer22/boxx)
  
 安装：`pip install git+https://github.com/DIYer22/boxx` ([其他安装方法及说明](https://github.com/DIYer22/boxx/blob/master/README_zh_cn.md#%E4%BA%8C-%E5%AE%89%E8%A3%85))
  
-教程：**`boxx`** 的教程是一个可执行的在线 Notebook。 也就是说，无需下载和运行任何代码，只需浏览器打开链接，就可以在线执行 Notebook 教程中的代码块。  
-* [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx-ipynb/master?filepath=tutorial_for_boxx.ipynb)
+教程：**`boxx`** 的教程是一个可执行的在线 Notebook。 也就是说，无需下载和运行任何代码，只需浏览器点击下面的链接，就可以在线执行 Notebook 教程中的代码块。  
+ [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx-ipynb/master?filepath=tutorial_for_boxx.ipynb)
  
 最后 特别感谢徐晓栋、吴国栋、范浩强和熊鹏飞对 `boxx` 提出的建议。
