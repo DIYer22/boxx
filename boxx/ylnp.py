@@ -7,6 +7,7 @@ some numpy function
 
 from __future__ import unicode_literals
 
+from .ylsys import sysi
 from .ylcompat import interactivePlot
 
 from .tool.toolTools import filterList
@@ -88,6 +89,32 @@ def isNumpyType(array, typee='int'):
         return array.dtype in (npStrTypes)
     raise Exception("isNumpyType(array, typee) array must be numpy,"+\
     "typee must be tuple or [bool, int, float, str, unicode] ")
+
+def testNumpyMultiprocessing(n=16, nn=1500):
+    '''
+    test numpy Multiprocessing performance in your enviroment
+    
+    Parameters
+    ----------
+    n : int
+        How many times to do np.dot
+    nn : int
+        the shape of the np.ndarray is (nn, nn)
+    '''
+    from boxx import timeit, mapmp
+    ass = [np.random.rand(nn , nn) for i in range(n)]
+    bs = [np.random.rand(nn , nn) for i in range(n)]
+    s = 'np.dot%s for %s times'%(str(([nn,nn],[nn,nn])), n )
+    name = 'map'
+    print('\n\nTesting %s in %s ...'%(s, name))
+    with timeit(name):
+        l = map(np.dot, ass, bs)
+        l = list(l)
+    
+    name = 'mapmp with pool=%d'%sysi.cpun
+    print('\n\nTesting %s in %s ...'%(s, name))
+    with timeit(name):
+        l = mapmp(np.dot, ass, bs)
 
 if __name__ == '__main__':
     

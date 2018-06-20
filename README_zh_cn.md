@@ -81,28 +81,31 @@ P.S. **`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 
 [![](http://wangchujiang.com/sb/ico/zhihu.svg) 开发, 调试计算机视觉代码有哪些技巧？]()-->
 
 ## 二. 安装
+
+#### 通过 git 安装
+```
+pip install git+https://github.com/DIYer22/boxx
+```
+
 #### 源码安装
 ```bash
 git clone https://github.com/DIYer22/boxx
 cd boxx/
 python setup.py install
 ```
-💡 **Note:** 由于国内的 `pip` 镜像平均有好几天的延迟，强烈推荐从 GitHub 安装.
-
-#### Linux or macOS
-```
-pip install git+https://github.com/DIYer22/boxx
-```
-
-#### Windows
+#### 若没有 git 
 ```
 pip install boxx -U
 ```
 
+💡 **Note:** 
+ * 由于国内的各个 `pip` 镜像平均有很长的延迟，不推荐使用 `pip` 镜像来安装.
+ * 请确保安装的 `boxx` 版本大于 `0.9.1`，否则建议从源码安装.
 
 
 
-💡 **Note:** 确保 `pip` 镜像的 `boxx` 版本大于 `0.9`，否则建议源码安装。
+
+
 
 
 
@@ -153,8 +156,8 @@ pip install boxx -U
   #### ▶  `g.name = x` 和 `g.name/x` 可以把函数内的变量传送到 Python interactive console 中
   [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)    
   💡 **Note:** 
-  * `gg` 和 `g` 的用法一样, 但 `gg` 会在传输的同时 打印出变量. 
-  * 如果之前在 console 中存在该变量名称，则变量的值将被新值覆盖.
+ * `gg` 的意思是 `to Global and log`， 和 `g` 的用法一样, 但 `gg` 会在传输的同时打印变量. 
+  * 需要注意， 如果之前在终端中存在一样的变量名称，则变量的值会被新值覆盖.
         <hr></hr>
         <br><br>
         <br><br>
@@ -171,11 +174,8 @@ pip install boxx -U
   [![click to restart GIF and see more clearer GIF](./other/gif/w.gif) ](./other/gif/w.gif)    
   💡 **Note:** 
   * `with p`, `with g`, `with gg` 只作用于在 `with` 结构中进行赋值操作的变量. 
-  * 如果变量名在 `with` 前存在于 `locals()`, 同时 `id(变量)` 没有变化 , `with` 结构可能无法检测到该变量. 
+  * 如果变量名在 `with` 前存在于 `locals()` 中, 同时 `id(变量)` 没有变化 , `with` 结构可能无法检测到该变量. 
         <hr></hr>
-        <br><br>
-        <br><br>
-        
         
     </td>
     <td valign="top">
@@ -208,8 +208,6 @@ pip install boxx -U
   [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
   💡 **Note:** `tree` 支持的数据有 `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`, `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
-        <br><br>
-        <br><br>
     </td>
   </tr>
 </table> 
@@ -228,15 +226,15 @@ pip install boxx -U
 | `locals()`\_2 | `import boxx.p` | `import boxx.g` | `import boxx.gg` |    
 
   💡 **Note:**   
-  * **transport** 操作是把函数内的变量传送到 Python interactive console 中
-  * **`locals()`** 指作用于函数内的所用变量
+  * **transport** 操作是指 把函数内的变量传送到 Python interactive console 中
+  * **`locals()`** 指作 用于函数或 module 内的所有变量
   * **`locals()`\_2**: 当 `boxx` 未导入时， `import boxx.{操作}` 能等价于 `from boxx import {操作};{操作}()`
         <br><br>
         <hr></hr>
         
-  ####  ▶ 使用 `what` 来了解任何对象"
+  ####  ▶ 使用 `what` 来了解任何对象
   [![click to restart GIF and see more clearer GIF](./other/img/what.png) ](./other/img/what.png)    
-  💡 **Note:** `what(x)` 通过打印 `x` 的 **文档**, **父类继承关系**, **内部结构** 及 **所有属性** 来全面了解 `x`. 是 `help(x)` 的补充.
+  💡 **Note:** `what(x)` 通过打印 `x` 自己及`x` 的 **文档**, **父类继承关系**, **内部结构** 及 **所有属性** 来全面了解 `x`. 是 `help(x)` 的补充.
         <br><br>
         <hr></hr>
         
@@ -251,9 +249,10 @@ pip install boxx -U
   [![click to restart GIF and see more clearer GIF](./other/gif/mapmp.gif) ](./other/gif/mapmp.gif)    
   💡 **Note:** 
   * `mapmp` 的 **pool** 参数来控制进程数目，默认为 CPU 线程数目.
-  * 在多进程程序中, 打印进度往往非常麻烦. **printfreq** 参数会解决这个问题.
-  * 如同 `map` 一样，`mapmp` 支持将多个参数输入函数 `mapmp(add, list_1, list_2)`
-  * 在 Python 中，多进程最好在 `__name__ == '__main__'` 环境中运行.
+  * 在多进程程序中, 打印进度往往非常麻烦. `mapmp` 的 **printfreq** 参数能解决这个问题.
+  * 如同 `map` 一样，`mapmp` 支持将多个参数输入函数，如`mapmp(add, list_1, list_2)`
+  * 在 Python 中，多进程代码最好在 `__name__ == '__main__'` 环境中运行.
+  * 如果加速 `numpy` 程序，请注意 [在 MKL 版本的 `numpy` 中，多进程会更慢](https://blog.skyaid-service.org/2017/08/15/numpy_performance/), 可以运行 `boxx.testNumpyMultiprocessing()` 来测试当前环境对多进程 `numpy` 的友好程度
         <br><br>
         <hr></hr>
         
@@ -263,7 +262,7 @@ pip install boxx -U
         <br><br>
         <hr></hr>
         
-  #### ▶ `performance` 可以统计函数调用并可视化代码性能
+  #### ▶ `performance` 可以统计函数调用并通过[火焰图](http://www.ruanyifeng.com/blog/2017/09/flame-graph.html)可视化代码性能
   [![click to restart GIF and see more clearer GIF](./other/gif/performance.gif) ](./other/gif/performance.gif)    
   💡 **Note:** `performance` 也支持字符串形式的 Python 代码.
     </td>
@@ -280,7 +279,7 @@ pip install boxx -U
 
 #### 方式一：可执行的在线 Notebook: 
 Notebook 文件被运行在 [Binder](https://mybinder.org) 上。[Binder](https://mybinder.org) 提供了可执行、可交互的在线 Notebook 环境.    
-也就是说，无需下载和运行任何代码，只需浏览器打开链接，就可以执行任何 Notebook 中的代码块。  
+也就是说，无需下载和运行任何代码，只需浏览器打开链接，就可以在线执行 Notebook 教程中的代码块。  
 * [**=> 可直接执行的在线教程**](https://mybinder.org/v2/gh/DIYer22/boxx-ipynb/master?filepath=tutorial_for_boxx.ipynb)
 
 #### 方式二：下载并在本地打开教程:

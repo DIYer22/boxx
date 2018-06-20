@@ -11,7 +11,7 @@ from __future__ import unicode_literals, print_function
 from boxx import *
 import boxx
 test = True
-#test = False
+test = False
 if test:
     from toolTest import *
     
@@ -24,7 +24,6 @@ pattern = 'wgg'
 #findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'Function',root='..')
 
-#print(isinstancestr(LookupError, 'Exception'))
 
 if __name__ == '__main__0':
     pass

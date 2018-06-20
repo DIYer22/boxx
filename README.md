@@ -81,24 +81,27 @@ P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
 
 
 ## 2. Install
+
+#### Via git and pip
+```
+pip install git+https://github.com/DIYer22/boxx
+```
 #### From source
 ```bash
 git clone https://github.com/DIYer22/boxx
 cd boxx/
 python setup.py install
 ```
-💡 **Note:** Recommended to install from source because PyPI mirrors may has a big delay.
 
-#### Linux or macOS
-```
-pip install git+https://github.com/DIYer22/boxx
-```
-
-#### Windows
+#### If no git
 ```
 pip install boxx -U
 ```
-💡 **Note:** Please ensure `boxx`'s version > `0.9` if used PyPI mirrors. Otherwise, please install from source
+
+💡 **Note:** 
+ * Recommended to install via git or source because PyPI mirrors may has a big delay.
+ * Please ensure `boxx`'s version > `0.9.1`. Otherwise, please install from source.
+
 
 
 ## 3. Tutorial
@@ -153,7 +156,7 @@ Examples are divided into 2 parts too.
   #### ▶ Use `g.name = x` or `g.name/x` to transport variable to Python interactive console
   [![click to restart GIF and see more clearer GIF](./other/gif/g.gif) ](./other/gif/g.gif)    
   💡 **Note:** 
-  * `gg` is same usage as `g`, but `gg` will print the transported variable. 
+  * `gg` is the meaning of "to Global and log", has same usage as `g`, but `gg` will print the transported variable. 
   *  if variable name exists in console before, the variable's value will be covered by new value.
         <hr></hr>
         <br><br>
@@ -173,9 +176,6 @@ Examples are divided into 2 parts too.
   * `with p`, `with g`, `with gg` only act on assignment variables under "with statement". 
   * If variable's name exists in `locals()` before and `id(variable)` not change ,variable may not be detected 
         <hr></hr>
-        <br><br>
-        <br><br>
-        
         
     </td>
     <td valign="top">
@@ -184,7 +184,7 @@ Examples are divided into 2 parts too.
 
   Useful tools in **Scientific Computing** and **Computer Vision** field. All tools support array-like types, include `numpy`, `torch.tensor`, `mxnet.ndarray`, `PIL.Image` .etc     
   
-    💡 **Note:** If you are using `ssh` to execute code on a remote server, it is recommended that `ssh` plus `-X` make visualized `plt` charts can be transferred to the local and display, like `ssh -x user@host`.
+  💡 **Note:** If you are using `ssh` to execute code on a remote server, it is recommended that `ssh` plus `-X` make visualized `plt` charts can be transferred to the local and display, like `ssh -x user@host`.
         <hr></hr>
 
   #### ▶ `loga` to visualization matrix and tensor   
@@ -208,8 +208,6 @@ Examples are divided into 2 parts too.
   [![click to restart GIF and see more clearer GIF](./other/gif/tree.gif)](./other/gif/tree.gif)    
   💡 **Note:** `tree` support types include `list`, `tuple`, `dict`, `numpy`, `torch.tensor/Dataset/DataLoader`, `mxnet.ndarray`, `PIL.Image`.etc
         <hr></hr>
-        <br><br>
-        <br><br>
     </td>
   </tr>
 </table> 
@@ -236,7 +234,7 @@ Examples are divided into 2 parts too.
         
   ####  ▶ `what` to know "What's this?"
   [![click to restart GIF and see more clearer GIF](./other/img/what.png) ](./other/img/what.png)    
-  💡 **Note:** `what(x)` will show "what is `x`?" by pretty print it's **Document**, **Father Classes**, **Inner Struct** and **Attributes**. It is a supplement of `help(x)`.
+  💡 **Note:** `what(x)` will show "what is `x`?" by pretty print it's **Self**, **Document**, **Father Classes**, **Inner Struct** and **Attributes**. It is a supplement of `help(x)`.
         <br><br>
         <hr></hr>
         
@@ -254,6 +252,7 @@ Examples are divided into 2 parts too.
   * In multi process programs, display processing progress is troublesome. **printfreq** parameter in `mapmp` can handle this problem.
   * Like `map`, `mapmp` support muliti args to as input to function, like `mapmp(add, list_1, list_2)`.
   *  * It's better to run multi process under `__name__ == '__main__'` environment.
+  * If you speed up the `numpy` program, note that in the MKL version of `numpy`, multiple processes will be slower. You can run `boxx.testNumpyMultiprocessing()` to test how friendly the current environment is to a multi-process `numpy`. 
         <br><br>
         <hr></hr>
         
