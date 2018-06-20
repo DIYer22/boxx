@@ -171,7 +171,7 @@ pip install boxx -U
   [![click to restart GIF and see more clearer GIF](./other/gif/w.gif) ](./other/gif/w.gif)    
   💡 **Note:** 
   * `with p`, `with g`, `with gg` 只作用于在 `with` 结构中进行赋值操作的变量. 
-  * 如果变量名之前存在于 `locals()` 同时 `id(变量)` 没有变化 , `with` 结构可能无法检测到该变量 
+  * 如果变量名在 `with` 前存在于 `locals()`, 同时 `id(变量)` 没有变化 , `with` 结构可能无法检测到该变量. 
         <hr></hr>
         <br><br>
         <br><br>
@@ -230,7 +230,7 @@ pip install boxx -U
   💡 **Note:**   
   * **transport** 操作是把函数内的变量传送到 Python interactive console 中
   * **`locals()`** 指作用于函数内的所用变量
-  * **`locals()`\_2**: 当 `boxx` 未导入时， `import boxx.{操作}` 能更方便的执行 `{操作}()`
+  * **`locals()`\_2**: 当 `boxx` 未导入时， `import boxx.{操作}` 能等价于 `from boxx import {操作};{操作}()`
         <br><br>
         <hr></hr>
         
