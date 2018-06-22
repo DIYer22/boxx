@@ -136,7 +136,9 @@ Examples are divided into 2 parts too.
 
 **General Python Tool** on left, **Scientific Computing and Computer Vision Tool** on right.
 
-💡 **Note:** *Click the GIF or image will restart GIF and see more clearer GIF or image*
+💡 **Note:** 
+ * *Click the image will see more clearer image, and if image is GIF, GIF will be replayed*
+ * *The following content is layout of desktop browser, if viewing through a mobile browser, it is recommended to visit [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx-ipynb/blob/master/tutorial_for_boxx.ipynb)*
 
 <table  style="">
   <tr>
