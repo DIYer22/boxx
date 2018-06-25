@@ -13,7 +13,7 @@ from .ylcompat import py2, ModuleNotFoundError
 
 def importYlthRequire(exc_type, exc_value, exc_traceback):
     if exc_type is ModuleNotFoundError:
-        pred('''\n\nMesage from boxx:\n\tTo use boxx.ylth, you should run: \n\t`pip install torch torchsummary torchviz`\n''')
+        pred('''\n\nMesage from boxx:\n\tTo use boxx.ylth, you should run: \n\t`pip install torchvision torchsummary torchviz`\n''')
 with withfun(exitFun=importYlthRequire, exception=True):
     from torchsummary import summary
 #    import torchviz

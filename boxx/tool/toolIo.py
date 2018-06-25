@@ -113,18 +113,18 @@ def listdir(path=None):
     path = path or '.'
     return os.listdir(path)
 
-def openread(path):
+def openread(path, encoding='utf-8'):
     '''
     返回path文件的文本内容
     '''
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding=encoding) as f:
         strr = f.read()
     return strr
-def openwrite(strr, path, mode='w'):
+def openwrite(strr, path, mode='w', encoding='utf-8'):
     '''
     将strr写入path
     '''
-    with open(path, mode) as f:
+    with open(path, mode, encoding=encoding) as f:
         f.write(strr)
     return path
 def replaceTabInPy(dirr='.'):
