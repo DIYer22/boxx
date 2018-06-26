@@ -19,8 +19,8 @@ if test:
     
     from ylmlTest import *
 
-pattern = 'wgg'
-#findinRoot(pattern,root='..')
+pattern = 'ModuleNotFoundError'
+findinRoot(pattern,root='..')
 #findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'Function',root='..')
 

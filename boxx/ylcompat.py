@@ -175,8 +175,11 @@ def runpyfile(filename, main=True, globals=None, locals=None):
     with open(filename) as f:
         code = f.read()
     exec(code, default, locals)
-    
-ModuleNotFoundError = ModuleNotFoundError if not py2 else ImportError
+
+try:
+    ModuleNotFoundError = ModuleNotFoundError
+except NameError:
+    ModuleNotFoundError = ImportError
 
 if not py2 and 0:
     __rawOpen__ = open
