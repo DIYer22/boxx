@@ -46,9 +46,14 @@ def path2type(path):
 
 def filterFileList(l):
     if len(l) < arg.max:
-        return l
+        return l    
+    n = arg.n
+    if n < 1:
+        n = len(l) * n
+    n = int(n)
     l = sorted(l)
-    return l[:arg.n] 
+    return l[:n] 
+
 def copyfile(src, dst):
     size = os.path.getsize(src)/float(1024**2)
     if size > arg.max_size:
