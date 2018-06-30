@@ -6,6 +6,8 @@ import os, sys
 import warnings
 from functools import wraps
 
+from ..ylsys import py2
+
 class BoxxException(Exception):
     '''
     root Exception for boxx
@@ -117,6 +119,9 @@ def openread(path, encoding='utf-8'):
     '''
     返回path文件的文本内容
     '''
+    if py2:
+        with open(path, 'r') as f:
+            return f.read()
     with open(path, 'r', encoding=encoding) as f:
         strr = f.read()
     return strr
@@ -124,6 +129,10 @@ def openwrite(strr, path, mode='w', encoding='utf-8'):
     '''
     将strr写入path
     '''
+    if py2:
+        with open(path, mode) as f:
+            f.write(strr)
+        return path
     with open(path, mode, encoding=encoding) as f:
         f.write(strr)
     return path
