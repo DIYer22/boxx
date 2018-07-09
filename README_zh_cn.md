@@ -74,7 +74,7 @@
  * **科学计算和计算机视觉功能**: 这些功能（工具）主要用于科学计算和计算机视觉领域
 
  
-**`boxx`** 同时支持 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 操作系统.
+**`boxx`** 兼容 **`Python 2/3`** 及 **`Linux | macOS | Windows`** 操作系统, 支持 纯 Python、IPython、Spyder、Jupyer Notebook 等 Python 运行环境
 
 P.S. 如果对计算机视觉感兴趣，这里有一个详尽的关于 **`boxx`** 的介绍：
 
@@ -82,9 +82,9 @@ P.S. 如果对计算机视觉感兴趣，这里有一个详尽的关于 **`boxx`
 
 ## 二. 安装
 
-#### 通过 git 安装
+#### 通过 pip 安装
 ```
-pip install git+https://github.com/DIYer22/boxx
+pip install boxx
 ```
 
 #### 源码安装
@@ -93,15 +93,15 @@ git clone https://github.com/DIYer22/boxx
 cd boxx/
 python setup.py install
 ```
+<!--
 #### 若没有 git 
 ```
 pip install boxx -U
 ```
-
-💡 **Note:** 
  * 由于国内的各个 `pip` 镜像平均有很长的延迟，不推荐使用 `pip` 镜像来安装.
- * 请确保安装的 `boxx` 版本大于 `0.9.1`，否则建议从源码安装.
-
+-->
+💡 **Note:** 
+ * 请确保通过 `pip` 安装的 `boxx` 版本大于 `0.9.1`，否则建议从源码安装.
 
 
 

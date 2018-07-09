@@ -66,7 +66,7 @@
 
 **`Box-X`** is a Tool-box for Efficient Build and Debug in Python.   
 
-Especially, have done a lot of optimization for **Scientific Computing** and **Computer Vision**. 
+Especially for **Scientific Computing** and **Computer Vision**. 
 
 So, all Tools are divided into 2 parts by wether the tool is general used:    
  * **General Python Tool**: Tools could be used anywhere in Python
@@ -74,7 +74,7 @@ So, all Tools are divided into 2 parts by wether the tool is general used:
  * **Scientific Computing and Computer Vision Tool**: Those tools are useful in Scientific Computing and Computer Vision field
  
 
-P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
+P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`** with **`CPython | IPython | Spyder | Notebook`** environment.
 
 
 
@@ -82,17 +82,17 @@ P.S. **`boxx`** supports both **`Python 2/3`** on **`Linux | macOS | Windows`**.
 
 ## 2. Install
 
-#### Via git and pip
 ```
-pip install git+https://github.com/DIYer22/boxx
+pip install boxx
 ```
+<!--
+#### Via pip
 #### From source
 ```bash
 git clone https://github.com/DIYer22/boxx
 cd boxx/
 python setup.py install
 ```
-
 #### If no git
 ```
 pip install boxx -U
@@ -102,13 +102,13 @@ pip install boxx -U
  * Recommended to install via git or source because PyPI mirrors may has a big delay.
  * Please ensure `boxx`'s version > `0.9.1`. Otherwise, please install from source.
 
-
+-->
 
 ## 3. Tutorial
 
-**`Box-X`**'s Tutorial is a Jupyter Notebook file that allows run examples while view Tutorial. 
+**`Box-X`**'s Tutorial is a Jupyter Notebook file 
 
-There are 3 methods to view/run this Tutorial
+There are 3 methods to run or view this Notebook file
 
 #### Method 1: Executable Interactive Online Notebook
 We use [Binder](https://mybinder.org) to run Tutorial Notebook in  an executable interactive online jupyer environment.    
@@ -138,7 +138,7 @@ Examples are divided into 2 parts too.
 
 💡 **Note:** 
  * *Click the image will see more clearer image, and if image is GIF, GIF will be replayed*
- * *The following content is layout of desktop browser, if viewing through a mobile browser, it is recommended to visit [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx-ipynb/blob/master/tutorial_for_boxx.ipynb)*
+ * *The following content is layout of desktop browser, if you are viewing through a mobile browser, it is recommended to visit [**=> Static Tutorial**](https://nbviewer.jupyter.org/github/DIYer22/boxx-ipynb/blob/master/tutorial_for_boxx.ipynb)*
 
 <table  style="">
   <tr>
