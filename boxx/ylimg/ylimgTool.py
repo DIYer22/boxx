@@ -9,7 +9,7 @@ from ..tool.toolLog import tabstr, getDoc, shortStr, discrib, strnum
 from ..tool.toolFunction import mapmp, pipe
 from ..tool.toolSystem import tryImport
 from ..ylsys import tmpYl, pyi, py2
-from ..ylnp import isNumpyType
+from ..ylsci.ylnp import isNumpyType
 from ..ylcompat import interactivePlot, beforImportPlt
 
 import skimage as sk

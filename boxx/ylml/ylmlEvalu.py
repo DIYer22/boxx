@@ -6,7 +6,7 @@ import os
 from ..ylcompat import interactivePlot
 from ..tool.toolLog import LogLoopTime,log
 from ..tool import pathjoin, getFunName
-from ..ylnp import savenp, loadnp
+from ..ylsci import savenp, loadnp
 import pandas as pd
 import numpy as np
 

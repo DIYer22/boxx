@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from ..tool import dynamicWraps, findints, glob,dicto
-from ..ylnp import isNumpyType
+from ..ylsci import isNumpyType
 from ..ylimg import (mapp, labelToColor)
 
 from .ylmlEvalu import Evalu

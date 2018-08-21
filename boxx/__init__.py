@@ -21,7 +21,7 @@ from . import ylsys
 from . import ylcompat
 from . import tool
 from . import ylimg
-from . import ylnp
+from . import ylsci
 from . import ylml
 from . import yldb
 from . import undetermined
@@ -33,7 +33,7 @@ from .ylsys import *
 from .ylcompat import *
 from .ylimg import *
 from .ylml import *
-from .ylnp import *
+from .ylsci import *
 
 
 if __name__ == '__main__':

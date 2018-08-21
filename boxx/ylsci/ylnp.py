@@ -7,10 +7,10 @@ some numpy function
 
 from __future__ import unicode_literals
 
-from .ylsys import sysi
-from .ylcompat import interactivePlot
+from ..ylsys import sysi
+from ..ylcompat import interactivePlot
 
-from .tool.toolTools import filterList
+from ..tool.toolTools import filterList
 
 import numpy as np
 from numpy import e, pi, nan, inf

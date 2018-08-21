@@ -136,6 +136,15 @@ def openwrite(strr, path, mode='w', encoding='utf-8'):
     with open(path, mode, encoding=encoding) as f:
         f.write(strr)
     return path
+
+def loadjson(jsonPath):
+    import json
+    return json.loads(openread(jsonPath))
+
+def savejson(obj, path):
+    import json
+    return json.dump(obj, path)
+    
 def replaceTabInPy(dirr='.'):
     '''
     将所有tab换成4个空格
