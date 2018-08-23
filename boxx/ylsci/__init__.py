@@ -11,4 +11,6 @@ from .ylnp import  e, pi, nan, inf
 from .ylnp import npFloatTypes, npIntTypes, npBoolTypes, npStrTypes
 from .ylnp import savenp, loadnp, plot3dSurface, isNumpyType, testNumpyMultiprocessing
 
+from .ylvector import sin, cos, arccos, arctan, deg2rad, rad2deg
+from .ylvector import Vector
 

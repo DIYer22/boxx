@@ -249,6 +249,19 @@ def vizmodel(m, shape=None):
     x.to(getpara(m))
     graph = make_dot(m(x), params=dict(m.named_parameters()))
     return graph
+
+def flatten(t, dim=-1):
+    '''
+    >>> t = shape(1,2,3,4) 
+    >>> flatten(t, dim=-2)
+    shape(1,6,4)
+    '''
+    shape = list(t.shape)
+    shape[dim-1] *= shape[dim]
+    shape.pop(dim)
+    return t.reshape(tuple(shape))
+
+
 if __name__ == '__main__':
     l = ['LongTensor',
      'DoubleTensor',

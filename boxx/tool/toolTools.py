@@ -12,6 +12,8 @@ from .toolLog import log
 
 from ..ylsys import py2
 
+intround = lambda floatt: int(round(floatt))
+
 __increase_recording = defaultdict(lambda:-1)
 def increase(namespace=None):
     '''

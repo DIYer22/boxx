@@ -36,7 +36,7 @@ from .toolSystem import getMainFrame, getRootFrame, getFatherFrames#, exceptionH
 from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, retry)
 
-from .toolTools import (increase, filterList, findints, randint, randfloat, randchoice,
+from .toolTools import (intround, increase, filterList, findints, randint, randfloat, randchoice,
                        listdirWithFun, replaceAllInRoot, findinRoot)
 
 from glob import glob
