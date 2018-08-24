@@ -13,13 +13,14 @@ import numpy as np
 from numpy import pi
 
 from ..tool import strnum
-
+from ..ylcompat import py2
 
 rad2deg = lambda rad:rad/pi*180
 deg2rad = lambda deg:deg/180*pi
 
 def degShift(trifun, inpIsAngle=True):
-    @wraps(trifun)
+    funForInfo = lambda :0 if py2 else trifun
+    @wraps(funForInfo)
     def innerfun(inp):
         if inpIsAngle:
             inp = deg2rad(inp)

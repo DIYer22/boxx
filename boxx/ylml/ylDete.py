@@ -67,7 +67,7 @@ class Bbox():
         ps: bbox 的四个定点, p0 左上角为 p0 顺时针依次类推
     
     '''
-    def __init__(self, p0:Vector, w, h, deg=None, canvas=None, expandPara=None, **kv):
+    def __init__(self, p0, w, h, deg=None, canvas=None, expandPara=None, **kv):
         vx, vy = Bbox.getVxVy(w, h, deg)
         pNose = p0 + vx/2 + vy/2
         if expandPara :
@@ -87,7 +87,7 @@ class Bbox():
         self.__dict__.update(locals())
     def __str__(self, ):
         p0, w, h, deg = self.p0, self.w, self.h, self.deg
-        return f"p0:{p0}, w:{w}, h:{h}, deg:{deg}"
+        return "p0:{p0}, w:{w}, h:{h}, deg:{deg}".format(locals())
     __repr__ = __str__
     
     @staticmethod
@@ -117,7 +117,9 @@ class Bbox():
         sboxImg = self.canvas.canvas[sliceInt[u:d, l:r]]
         sboxImgPng = toPng(sboxImg)
         return sboxImgPng
-    def paste(self, rimg:'result img'):
+    def paste(self, rimg):
+        '''
+        rimg: result img'''
         rimg = toPng(rimg)
         w, h = self.r-self.l, self.d-self.u
         deg = - self.deg
