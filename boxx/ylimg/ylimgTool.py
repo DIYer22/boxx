@@ -99,6 +99,30 @@ def tprgb(ndarray):
     return ndarray
 tprgb = FunAddMagicMethod(tprgb)
 
+
+def padding(img, urdl=1):
+    '''
+    padding image for up, right, down, left
+    '''
+    if not isinstance(urdl, list):
+        urdl = [urdl] * 4
+    from ..tool import intround
+    u, r, d, l = map(intround, urdl)
+    h, w = img.shape[:2]
+    hh = h + u + d
+    ww = w + r + l
+    bimg = np.zeros((hh, ww,) + img.shape[2:], img.dtype)
+    bimg[u:hh-d, l:ww-r] = img
+    return bimg
+
+def toPng(img):
+    '''
+    add alpha channel to be a png picture
+    '''
+    if img.shape[-1] == 3:
+        return np.append(img, np.ones(img.shape[:-1]+(1,), img.dtype)* 255 if isNumpyType(img, 'int') else 1, 2)
+    return img
+
 def torgb(img):
     '''
     try to transfer a tensor to normalized RGB image

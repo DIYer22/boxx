@@ -15,5 +15,7 @@ from .ylmlTest import (binaryDiff, classDiff, drawBoundAndBackground,
 
 from .ylmlEvalu import (Evalu, accEvalu, lplrEvalu, diceEvalu, pd)
 
+from .ylDete import Bbox, Canvas, cropMinAreaRect
+
 if __name__ == "__main__":
     pass

@@ -19,7 +19,7 @@ from .toolLog import prettyClassFathers, prettyFrameLocation, prettyFrameStack, 
 from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, strMethodForDiraAttrs, 
-                            getfathers, getfather, generator,
+                            getfathers, getfather, generator,  
                             nextiter, listToBatch, sliceInt, ll, FunAddMagicMethod, mf, addCall,
                             setself, unfoldself, withfun, withattr, isinstancestr)
 

@@ -25,7 +25,7 @@ def listToBatch(listt, batch):
         ziped.append(tail)
     return ziped
 
-class SliceToInt():
+class _SliceToInt():
     ''' convert float to int when in slice
     >>> range(5)[sliceInt[3.3]]
     3
@@ -35,9 +35,9 @@ class SliceToInt():
     
     '''
     def intround(self, v):
-        if isinstance(v, float):
-            return int(round(v))
-        return v
+        if v is None:
+            return v
+        return int(round(v))
     def __intSlice(self, s):
         f = self.intround
         return slice(f(s.start), f(s.stop), f(s.step),)
@@ -53,7 +53,7 @@ class SliceToInt():
         if isinstance(slicee, (tuple, slice)):
             return f(slicee)
         return int(round(slicee))
-sliceInt = SliceToInt()
+sliceInt = _SliceToInt()
 
 class Ll(list):
     '''
