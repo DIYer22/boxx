@@ -151,7 +151,7 @@ Even multiprocessing can't work on Windows sometimes""")
         lenn = len(l)
         if printfreq < 1:
             printfreq = int(round(lenn*printfreq))
-        
+            printfreq = max(1, printfreq)
         def yieldWithIndFun(fun, iterables, lenn, logf, printfreq):
             for i,args in enumerate(zip(*iterables)):
                 yield (fun, args, None if i%printfreq else i, lenn, logf)

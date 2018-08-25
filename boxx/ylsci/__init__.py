@@ -14,3 +14,4 @@ from .ylnp import savenp, loadnp, plot3dSurface, isNumpyType, testNumpyMultiproc
 from .ylvector import sin, cos, arccos, arctan, deg2rad, rad2deg
 from .ylvector import Vector
 
+from .ylstatistics import distavg, distnorm
