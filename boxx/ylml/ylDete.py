@@ -120,8 +120,15 @@ class Bbox():
     def paste(self, rimg):
         '''
         rimg: result img'''
+        u, r, d, l = self.u, self.r, self.d, self.l 
+        if self.deg is None:
+            mask = slice(None)
+            if rimg.shape[-1] == 4:
+                rimg, mask = rimg[...,:3], rimg[...,3] > 0 
+            self.canvas.canvas[sliceInt[u:d, l:r]][mask] = rimg[mask]
+            return 
         rimg = toPng(rimg)
-        w, h = self.r-self.l, self.d-self.u
+        w, h = r-l, d-u
         deg = - self.deg
         p2 = Vector((rimg).shape)[[1,0]]
         pad = max([w,h]-p2)/2
@@ -139,7 +146,7 @@ class Bbox():
             img = self.cropSbox()
             p0 = self.p0 - self.offsetToSbox
         else:
-            img = self.canvas.raw
+            img = self.canvas.canvas
             p0 = self.p0
         w, h, deg = self.w, self.h, self.deg
         l, u = p0
@@ -167,7 +174,9 @@ class Canvas():
         canvas 和 raw 的坐标转换: v_canvas = v_raw + offset
     '''
     BboxClass = Bbox
-    def __init__(self, img, bboxList, expandPara=None):
+    def __init__(self, img, bboxList=None, expandPara=None):
+        if bboxList is None:
+            bboxList = []
         self.raw = img
         self.bboxs = bboxs = []
         for bboxDic in bboxList:
@@ -196,7 +205,7 @@ class Canvas():
         result = canvas.getResult()
         pblue('show canvas.getResult()')
         show-result
-        pblue('show Bboxs.crop():')
+        pblue('show Bboxs.crop(): crop from canvas.raw')
         show-[b.crop() for b in canvas.bboxs]
         if canvas.bboxs and canvas.bboxs[0].deg:
             pblue('show Bboxs.crop(cropSboxFirst=True):')

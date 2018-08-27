@@ -120,7 +120,7 @@ def toPng(img):
     add alpha channel to be a png picture
     '''
     if img.shape[-1] == 3:
-        return np.append(img, np.ones(img.shape[:-1]+(1,), img.dtype)* 255 if isNumpyType(img, 'int') else 1, 2)
+        return np.append(img, np.ones(img.shape[:-1]+(1,), img.dtype)* (255 if isNumpyType(img, 'int') else 1), 2)
     return img
 
 def torgb(img):

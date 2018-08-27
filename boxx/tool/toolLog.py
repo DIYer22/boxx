@@ -83,6 +83,22 @@ def timegap(gap, key='boxx.default'):
         TimeGapDic[keyt] = timeGap(gap)
     return TimeGapDic[keyt]()
 
+__logGapDic = {}
+def logGap(key='gap'):
+    '''
+    log time gap in loop
+    '''
+    d = __logGapDic
+    l = d.get(key)
+    now = time.time()
+    if not l :
+        pblue('Begin to log time gap of "%s"!'%key)
+        d[key] = [0, now]
+    else :
+        dt = now - l[1]
+        pblue('%dst loop, "%s" spend %ss.'%(l[0] ,key, strnum(dt)))
+        l[0] += 1
+        l[1] = now
 
 frontColorDic = dicto({   # 前景色
         'black'    : 30,   #  黑色
