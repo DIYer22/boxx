@@ -34,7 +34,7 @@ from .toolSystem import importAllFunCode, impt, tryImport, FakeModule, removeImp
 from .toolSystem import getMainFrame, getRootFrame, getFatherFrames#, exceptionHook
 
 from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,
-                           setInterval, multiThread, mapmp, mapmt, retry)
+                           setInterval, multiThread, mapmp, mapmt, maptry, retry)
 
 from .toolTools import (intround, increase, filterList, findints, randint, randfloat, randchoice,
                        listdirWithFun, replaceAllInRoot, findinRoot)

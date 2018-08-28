@@ -8,7 +8,7 @@ from ..tool.toolLog import log, PrintStrCollect, colorFormat, clf, tounicode, Lo
 from ..tool.toolLog import tabstr, getDoc, shortStr, discrib, strnum
 from ..tool.toolFunction import mapmp, pipe
 from ..tool.toolSystem import tryImport
-from ..ylsys import tmpYl, pyi, py2
+from ..ylsys import tmpYl, pyi, py2, sysi
 from ..ylsci.ylnp import isNumpyType
 from ..ylcompat import interactivePlot, beforImportPlt
 
@@ -460,6 +460,8 @@ def showb(*arr,**__kv):
         imsave(path,arr)
         arr = path
     cmd = 'shotwell "%s" &'%arr
+    if sysi.win:
+        cmd = '"%s"'%arr
     os.system(cmd)
 showb = FunAddMagicMethod(showb)
 

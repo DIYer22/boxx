@@ -87,7 +87,7 @@ class Vector(np.ndarray):
         print(a.angleWith(b))
         print(a.rotation(45).norm)
     
-
+v0 = Vector([0, 0])
 
 if __name__ == "__main__":
     Vector.test()

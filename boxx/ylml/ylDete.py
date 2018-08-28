@@ -81,13 +81,13 @@ class Bbox():
             vx, vy = Bbox.getVxVy(w, h, deg)
         ps = np.array([p0, p0+vx, p0+vx+vy, p0+vy])
         
-        urdl = u, r, d, l = min(ps[:, 1]), max(ps[:, 0]), max(ps[:, 1]), min(ps[:, 0])
+        urdl = u, r, d, l = [min(ps[:, 1]), max(ps[:, 0]), max(ps[:, 1]), min(ps[:, 0])]
         self.offsetToSbox = Vector([l, u])
         self.boxUrdl = None
         self.__dict__.update(locals())
     def __str__(self, ):
         p0, w, h, deg = self.p0, self.w, self.h, self.deg
-        return "p0:{p0}, w:{w}, h:{h}, deg:{deg}".format(locals())
+        return "p0:{p0}, w:{w}, h:{h}, deg:{deg}".format(p0=p0, w=w, h=h, deg=deg)
     __repr__ = __str__
     
     @staticmethod

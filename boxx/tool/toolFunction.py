@@ -186,6 +186,20 @@ def mapmt(fun, *mapArgList, **kv):
     '''
     return mapmp(fun, *mapArgList,thread=True, **kv)
 
+def maptry(fun, *mapArgList, **kv):
+    '''
+    test spend time while use `map`, `mapmt`, `mapmp`
+    '''
+    from boxx import timeit, pblue
+    pblue('Begin test map!')
+    with timeit('map2'):
+        list(map(fun, *mapArgList))
+    with timeit('mapmt'):
+        list(mapmt(fun, *mapArgList, **kv))
+    with timeit('mapmp'):
+        list(mapmp(fun, *mapArgList, **kv))
+
+
 class multiThread():
     '''
     将多线程封装成为类的形式
