@@ -23,8 +23,9 @@ from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, strMethodForDi
                             nextiter, listToBatch, sliceInt, ll, FunAddMagicMethod, mf, addCall,
                             setself, unfoldself, withfun, withattr, isinstancestr)
 
-from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, replaceTabInPy, saveData, 
-                    loadData, fileJoinPath,  warn, warn1time, BoxxException, BoxxWarning, OffScreenWarning,
+from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, saveData, 
+                    loadData, loadjson, savejson, fileJoinPath,  warn, 
+                    replaceTabInPy, warn1time, BoxxException, BoxxWarning, OffScreenWarning,
                     Except, excep, getExcept, browserOpen)
 save_data = saveData
 load_data = loadData
