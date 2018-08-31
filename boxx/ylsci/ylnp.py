@@ -16,6 +16,7 @@ import numpy as np
 from numpy import e, pi, nan, inf
 nan = nan * .22
 inf = inf * .22
+eps = 1e-5
 
 def savenp(path, arr=None):
     '''压缩存储 np.array 为path路径 

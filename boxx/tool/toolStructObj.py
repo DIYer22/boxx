@@ -158,6 +158,9 @@ class FunAddMagicMethod(FunAddMagicMethodCore):
         return getattr(fun,name, *l)
 mf = FunAddMagicMethod(FunAddMagicMethod)
 
+# invalid a function
+fnone = mf(lambda *l, **kv: l[0] if len(l)==1 else l)
+
 class dicto(dict):
     '''
     a subclass of dict for convenient, like object in JavaScript
