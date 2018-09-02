@@ -143,7 +143,7 @@ def loadjson(jsonPath):
 
 def savejson(obj, path):
     import json
-    return json.dump(obj, path)
+    return openwrite(json.dumps(obj), path)
     
 def replaceTabInPy(dirr='.'):
     '''

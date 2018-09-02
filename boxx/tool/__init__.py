@@ -38,7 +38,7 @@ from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, maptry, retry)
 
 from .toolTools import (intround, increase, filterList, findints, randint, randfloat, randchoice,
-                       listdirWithFun, replaceAllInRoot, findinRoot)
+                       listdirWithFun, replaceAllInRoot, findinRoot, iscn)
 
 from glob import glob
 from os.path import join as pathjoin
@@ -59,7 +59,6 @@ from fn import _ as x_
 x = x_
 
 from functools import wraps
-
 
 if __name__ == "__main__":
     pass

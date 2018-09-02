@@ -18,9 +18,9 @@ with withfun(exitFun=importYlthRequire, exception=True):
     from torchsummary import summary
 #    import torchviz
 
-import matplotlib.pyplot as plt
-import skimage.io as sio
-import skimage.data as sda
+#import matplotlib.pyplot as plt
+#import skimage.io as sio
+#import skimage.data as sda
 from collections import OrderedDict
 from functools import wraps
 
