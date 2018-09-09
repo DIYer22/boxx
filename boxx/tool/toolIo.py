@@ -6,7 +6,7 @@ import os, sys
 import warnings
 from functools import wraps
 
-from ..ylsys import py2
+from ..ylsys import py2, sysi
 
 class BoxxException(Exception):
     '''
@@ -136,6 +136,19 @@ def openwrite(strr, path, mode='w', encoding='utf-8'):
     with open(path, mode, encoding=encoding) as f:
         f.write(strr)
     return path
+
+
+def validFilename(filename, replaceBy='_'):
+    '''
+    return validate filename 
+    '''
+    import re
+    if sysi.win:
+        rstr = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
+    else:
+        rstr = r"[\/]" # ' / '
+    newName = re.sub(rstr, replaceBy, filename)
+    return newName
 
 def loadjson(jsonPath):
     import json

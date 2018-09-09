@@ -83,7 +83,7 @@ def toCpu():
     nn.Module.cuda = cudaAttri
     Variable.cuda = cudaAttri
     torch.Tensor.cuda = cudaAttri
-    
+    torch.Tensor.to = cudaAttri
     
 #    class FakeDataParallel(torch.nn.DataParallel):
 #        def __init__(self, x):
@@ -100,6 +100,10 @@ def toCpu():
         def __exit__(self, typee, value, traceback):
             pass
     torch.cuda.device = withh
+    from boxx import fnone
+    torch.cuda.set_device = fnone
+    torch.cuda.is_available = lambda :True
+    
 
     th.cuda.LongTensor = th.LongTensor
     th.cuda.DoubleTensor = th.DoubleTensor
