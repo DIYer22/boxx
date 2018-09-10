@@ -309,7 +309,7 @@ def softInPath(softName):
     '''
     是否安装命令为softName的软件，即 判断softName 是否在环境变量里面
     '''
-    for p in os.environ['PATH'].split(':'):
+    for p in os.environ['PATH'].split(';' if sysi.win else ':'):
         if os.path.isdir(p) and softName in os.listdir(p):
             return True
     return False

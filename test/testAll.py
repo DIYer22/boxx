@@ -19,7 +19,7 @@ if test:
     
     from ylmlTest import *
 
-pattern = 'ModuleNotFoundError'
+pattern = 'TODO'
 findinRoot(pattern,root='..')
 #findinRoot(up=pattern,root='..')
 #replaceAllInRoot(pattern,'Function',root='..')

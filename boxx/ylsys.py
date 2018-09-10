@@ -9,9 +9,6 @@ A module provide system info and Python Info for boxx
 import sys, os
 from os import environ
 
-
-
-
 def jupyterNotebookOrQtConsole():
     env = 'Unknow'
     cmd = 'ps -ef'
@@ -54,9 +51,12 @@ cloud = cpun > 16
 
 if linuxYl or osxYl:
     cuda = not os.system('nvcc --version> /dev/null 2>&1')
-else:
-    # TODO:
-    cuda = 'Not Implemented'
+elif winYl:
+    import subprocess
+    try:
+        cuda = not subprocess.call('nvcc --version', creationflags=0x00000008)
+    except FileNotFoundError:
+        cuda = False
 usecuda = 'auto' # auto: auto, False: not use
     
 if linuxYl or osxYl:
