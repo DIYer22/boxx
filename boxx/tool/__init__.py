@@ -30,7 +30,8 @@ from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, 
 save_data = saveData
 load_data = loadData
 
-from .toolSystem import (crun, performance, timeit, heatmap, getArgvDic, softInPath, execmd, addPathToSys)
+from .toolSystem import (crun, performance, timeit, heatmap, getArgvDic, 
+                         softInPath, makedirs, execmd, addPathToSys)
 from .toolSystem import importAllFunCode, impt, tryImport, FakeModule, removeImportSelf,  removeimp
 from .toolSystem import getMainFrame, getRootFrame, getFatherFrames#, exceptionHook
 

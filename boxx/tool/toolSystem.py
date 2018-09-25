@@ -313,7 +313,14 @@ def softInPath(softName):
         if os.path.isdir(p) and softName in os.listdir(p):
             return True
     return False
-
+def makedirs(dirr):
+    if os.path.isdir(dirr):
+        return
+    from random import random
+    time.sleep(random()*0.001)
+    if os.path.isdir(dirr):
+        return
+    os.makedirs(dirr)
 def execmd(cmd):
     '''
     execuld cmd and reutrn str(stdout)
