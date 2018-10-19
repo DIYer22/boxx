@@ -180,6 +180,16 @@ def iscn(char):
         return True
     return False
     
+
+def zipTar(paths, tarp):
+    '''
+    tar file for ,especially for label++
+    '''
+    import tarfile  
+    with tarfile.open(tarp,'w') as tar:
+        for path in paths:
+            tar.add(path, arcname=os.path.basename(path))
+
 if __name__ == "__main__":
      
     string=["A001.45，b5，6.45，8.82",'sd4 dfg77']
