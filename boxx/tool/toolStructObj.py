@@ -181,7 +181,7 @@ class dicto(dict):
             return dict.__getattribute__(self,name)
         if name in self:
             return self[name]
-        return self[name]
+        return None
     def __setattr__(self, name, v):
         if name in dir(dict):
             return dict.__setattr__(self,name,v)

@@ -39,7 +39,7 @@ from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,
                            setInterval, multiThread, mapmp, mapmt, maptry, retry)
 
 from .toolTools import (intround, increase, filterList, findints, randint, randfloat, randchoice,
-                       listdirWithFun, replaceAllInRoot, findinRoot, iscn)
+                       listdirWithFun, replaceAllInRoot, findinRoot, iscn, zipTar)
 
 from glob import glob
 from os.path import join as pathjoin

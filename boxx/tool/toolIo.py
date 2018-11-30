@@ -107,8 +107,9 @@ def filename(path):
     '''
     将路径和后缀名除去 只留下文件名字
     '''
-    name = os.path.basename(path)
-    filen = name[:name.rindex('.')]
+    filen = name = os.path.basename(path)
+    if '.' in name:
+        filen = name[:name.rindex('.')]
     return filen
 
 def listdir(path=None):
@@ -150,13 +151,16 @@ def validFilename(filename, replaceBy='_'):
     newName = re.sub(rstr, replaceBy, filename)
     return newName
 
-def loadjson(jsonPath):
+def loadjson(path):
     import json
-    return json.loads(openread(jsonPath))
-
+    with open(path, 'r') as f:
+        js = json.load(f)
+    return js
 def savejson(obj, path):
     import json
-    return openwrite(json.dumps(obj), path)
+    with open(path, 'w') as f:
+        json.dump(obj, f)
+    return path 
     
 def replaceTabInPy(dirr='.'):
     '''
