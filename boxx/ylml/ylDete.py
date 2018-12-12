@@ -181,8 +181,12 @@ class Canvas():
         self.bboxs = bboxs = []
         for bboxDic in bboxList:
             dic = dicto(canvas=self, expandPara=expandPara,)
-            dic.update(dict(bboxDic))
-            bbox = self.BboxClass( **dic)
+            if isinstance(bboxDic, Bbox):
+                bbox = bboxDic
+                bbox.__init__(bbox.p0, bbox.w, bbox.h, deg=bbox.deg, **dic)
+            else:
+                dic.update(dict(bboxDic))
+                bbox = self.BboxClass( **dic)
 #            g()
             bboxs.append(bbox)
         h, w = img.shape[:2]
