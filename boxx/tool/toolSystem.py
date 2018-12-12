@@ -136,7 +136,7 @@ instead of using snakeviz to visualization code perfomance in web page'''
         assert softInPath('snakeviz'),'run `pip install snakeviz`'
         os.system('snakeviz %s &'% os.path.join(tmpYl,'snakeviz.result'))
     elif sysi.win:
-        os.system('snakeviz.exe %s &'% os.path.join(tmpYl,'snakeviz.result'))
+        os.system('start /b  snakeviz.exe %s '% os.path.join(tmpYl,'snakeviz.result'))
         
     
 def performance(pyfileOrCode, snakeviz=True):
