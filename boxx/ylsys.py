@@ -70,12 +70,15 @@ class __TmpboxxWithCall(str):
     '''
     the tmp dir for boxx 
     use tmpboxx() to get tmpdir 
+    use tmpboxx({dirname}) to get tmpdir/{dirname}
     if not exist then will auto mkdir of boxxTmp in `/tmp`
     '''
-    def __call__(self):
-        if not os.path.isdir(self):
-            os.makedirs(self)
-        return self
+    def __call__(self, dirName=None):
+        dirr = os.path.join(self, dirName) if dirName else self
+        
+        if not os.path.isdir(dirr):
+            os.makedirs(dirr)
+        return dirr
 tmpboxx = __TmpboxxWithCall(os.path.join(tmpYl,'boxxTmp/'))
 
 class PythonInfo():
