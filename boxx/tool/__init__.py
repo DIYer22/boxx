@@ -43,7 +43,7 @@ from .toolTools import (intround, increase, filterList, findints, randint, randf
 
 from glob import glob
 from os.path import join as pathjoin
-from os.path import basename, isfile, isdir, dirname
+from os.path import basename, isfile, isdir, dirname, abspath
 
 from collections import namedtuple, defaultdict, Counter, OrderedDict
 dictd = defaultdict
