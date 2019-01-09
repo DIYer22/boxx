@@ -133,6 +133,8 @@ class SystemInfo():
     display = True
     if linuxYl:
         display = 'DISPLAY' in environ and environ['DISPLAY']
+        from os.path import expanduser
+        home = expanduser('~')
     gui = pyi.gui or display
     if 0:
         @property
