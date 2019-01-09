@@ -63,21 +63,26 @@ def plot3dSurface(Z):
     X, Y = np.meshgrid(X, Y)
     __draw3dSurface(X,Y,Z)
 
-def __getNumpyType(typee='int'):
+__numpyTypeCache = dict()
+def getNumpyType(typee='int'):
+    if typee in __numpyTypeCache:
+        return __numpyTypeCache[typee]
     finds = eval('('+', '.join(['np.'+mu for mu in filterList(typee, dir(np))])+')')
     types = [x for x in finds if type(x)==type]
-    return tuple(types)
-    
-npFloatTypes = __getNumpyType('float')
-npIntTypes = __getNumpyType('int')+(np.long,)
-npBoolTypes = __getNumpyType('bool')
-npStrTypes = __getNumpyType('str')+__getNumpyType('unicode')
+    if typee == "str":
+        types = tuple(types) + getNumpyType('unicode')
+    types = tuple(types)
+    __numpyTypeCache[typee] = types
 
 def isNumpyType(array, typee='int'):
     '''
     和isinstance一样的用法 判断np.array.dtype 对象对应 [bool, int, float, str]的类
     注意 isNumpyType([bool],int) 为True 
     '''
+    npFloatTypes = getNumpyType('float')
+    npIntTypes = getNumpyType('int')
+    npBoolTypes = getNumpyType('bool')
+    npStrTypes = getNumpyType('str')
     if isinstance(typee,tuple):
         return any([isNumpyType(array, t) for t in typee])
     if typee in [bool,'bool']:
@@ -86,7 +91,7 @@ def isNumpyType(array, typee='int'):
         return array.dtype in (npIntTypes+npBoolTypes)
     if typee in [float,'float']:
         return array.dtype in (npFloatTypes)
-    if typee in [str,str,'str','unicode']:
+    if typee in [str,'str','unicode']:
         return array.dtype in (npStrTypes)
     raise Exception("isNumpyType(array, typee) array must be numpy,"+\
     "typee must be tuple or [bool, int, float, str, unicode] ")
