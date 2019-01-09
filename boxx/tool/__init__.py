@@ -41,6 +41,8 @@ from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,
 from .toolTools import (intround, increase, filterList, findints, randint, randfloat, randchoice,
                        listdirWithFun, replaceAllInRoot, findinRoot, iscn, zipTar)
 
+from .toolMarkdown import Markdown
+
 from glob import glob
 from os.path import join as pathjoin
 from os.path import basename, isfile, isdir, dirname, abspath
