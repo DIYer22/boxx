@@ -71,7 +71,7 @@ class Markdown(pd.DataFrame):
         print(md)
         print("-"*20)
         print(md.round(2))
-
+        return df
 if __name__ == "__main__":
     pass
     
