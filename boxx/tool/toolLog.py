@@ -908,6 +908,7 @@ class GlobalGCore(object):
         d = global_g_paras[id(self)]
         withOperation.__exit__(d.wo, typee, value, traceback)
 class GlobalG(GlobalGCore):
+    # TODO: add Decorators(装饰器) to catch error in with and export vars
     '''
     TODO:
         
