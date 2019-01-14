@@ -56,6 +56,20 @@ class Vector(np.ndarray):
     @y.setter
     def y(self, v, *l):
         self[1] = v
+        
+    @property
+    def h(self):
+        return self[0]
+    @property
+    def w(self):
+        return self[1]
+    
+    @h.setter
+    def h(self, v, *l):
+        self[0] = v
+    @w.setter
+    def w(self, v, *l):
+        self[1] = v
     
     def intround(self):
         return self.round().astype(int)
@@ -76,7 +90,7 @@ class Vector(np.ndarray):
         return Vector(after)
     def __str__(self, ):
         if (self).shape == (2,):
-            return "V(x=%s, y=%s)%s"%(strnum(self[0]), strnum(self[1]), self.dtype)
+            return "V(x|h=%s, y|w=%s)%s"%(strnum(self[0]), strnum(self[1]), self.dtype)
         return np.ndarray.__str__(self,) + ' (Vector)'
     __repr__ = __str__
     
