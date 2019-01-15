@@ -8,6 +8,6 @@
 
  - [ ] update `tree` to `tree(seq, deep, __max_log)
 
-
+ - [ ] add pasteImg(bg, fg)
 
 ## DONE
