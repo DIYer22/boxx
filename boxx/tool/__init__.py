@@ -20,7 +20,7 @@ from .toolLog import localTimeStr, gmtTimeStr, timeGap, timegap, logGap
 
 from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, strMethodForDiraAttrs, 
                             getfathers, getfather, generator, nextiter, listToBatch, 
-                            sliceInt, ll, FunAddMagicMethod, mf, fnone, addCall,
+                            sliceInt, sliceLimit, ll, FunAddMagicMethod, mf, fnone, addCall,
                             setself, unfoldself, withfun, withattr, isinstancestr)
 
 from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, validFilename,

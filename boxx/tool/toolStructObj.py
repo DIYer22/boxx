@@ -32,28 +32,79 @@ class _SliceToInt():
     
     >>> range(5)[sliceInt[-0.1: 3.3]]
     range(0, 3)
-    
     '''
     def intround(self, v):
         if v is None:
             return v
         return int(round(v))
     def __intSlice(self, s):
-        f = self.intround
-        return slice(f(s.start), f(s.stop), f(s.step),)
-        
-    def __getitem__(self, slicee):
+        intround = self.intround
+        return slice(intround(s.start), intround(s.stop), intround(s.step),)
+    def __getitem__(self, index):
         def f(t):
             if isinstance(t, tuple):
                 return tuple(f(i) for i in t)
             else:
                 if isinstance(t, slice):
                     return self.__intSlice(t)
+                if isinstance(t, float):
+                    return int(round(t))
                 return t
-        if isinstance(slicee, (tuple, slice)):
-            return f(slicee)
-        return int(round(slicee))
+        if isinstance(index, (tuple, slice)):
+            return f(index)
+        return int(round(index))
+    @staticmethod
+    def test():
+        print(range(5)[sliceInt[3.3]])
+        print(range(5)[sliceInt[3.3:]])
 sliceInt = _SliceToInt()
+
+class sliceLimit():
+    ''' limit the value in slice by given numpy array
+    
+    >>> rr = np.zeros((4,4,4))
+    >>> sliceLimit(rr)[-1:2, :1000]
+    r[0:2, :4, :]
+    
+    >>> sliceLimit(rr, True)[-1:2, :1000]
+    (slice(0, 2, None), slice(None, 4, None))
+    
+    >>> sliceLimit(rr, True)[-1:2, ..., :1000]
+    (slice(0, 2, None), Ellipsis, slice(None, 4, None))
+    '''
+    def __init__(self, arr, returnSlice=False):
+        self.arr = arr
+        self.shape = arr.shape
+        self.returnSlice = returnSlice
+    def getitem(self, index):
+        shape = self.shape
+        def sliceTupleLimit(slicee, maxx):
+            if not isinstance(slicee, slice):
+                return slicee
+            return slice(
+                    None if slicee.start is None else max(0, slicee.start), 
+                    None if slicee.stop is None else min(maxx, slicee.stop), 
+                    slicee.step)
+        if isinstance(index, slice):
+            return sliceTupleLimit(index, shape[0])
+        if isinstance(index, tuple):
+            splitInd = index.index(Ellipsis) if Ellipsis in index else len(index)
+            left = tuple(sliceTupleLimit(slicee, n)  for slicee, n  in zip(index[:splitInd], shape))    
+            right = tuple(sliceTupleLimit(slicee, n)  for slicee, n  in zip(index[splitInd+1:][::-1], shape[::-1]))[::-1]
+            middle = (Ellipsis,) if Ellipsis in index else ()
+            return left + middle + right
+        return index
+    def __getitem__(self, index):
+        new_index = self.getitem(index)
+        if self.returnSlice:
+            return new_index
+        return self.arr[new_index]
+    @staticmethod
+    def test():
+        import numpy as np
+        rr = np.zeros((4,4,4))
+        print(sliceLimit(rr, True)[-1:2, :1000])
+        print(sliceLimit(rr, True)[-3:80, ..., -3:80])
 
 class Ll(list):
     '''
