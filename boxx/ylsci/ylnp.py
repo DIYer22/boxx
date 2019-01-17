@@ -73,7 +73,7 @@ def getNumpyType(typee='int'):
         types = tuple(types) + getNumpyType('unicode')
     types = tuple(types)
     __numpyTypeCache[typee] = types
-
+    return types
 def isNumpyType(array, typee='int'):
     '''
     和isinstance一样的用法 判断np.array.dtype 对象对应 [bool, int, float, str]的类
