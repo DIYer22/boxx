@@ -84,7 +84,7 @@
   * **`locals()`\_2**: 当 `boxx` 未导入时， `import boxx.{操作}` 能等价于 `from boxx import {操作};{操作}()`
 
 
-在学习新框架或适配大佬代码时，经常会使用 `print(x)`, `dir(x)`, `help(x)`, `type(x)` 来了解某个变量的各方面的信息 (变量可能是 值/function/class/module 等)，于是我写了一个 `boox.what(x)` 来全面了解"what is `x`?"： 
+在学习新框架或适配大佬代码时，经常会使用 `print(x)`, `dir(x)`, `help(x)`, `type(x)` 来了解某个变量的各方面的信息 (变量可能是 值/function/class/module 等)，于是我写了一个 `boxx.what(x)` 来全面了解"what is `x`?"： 
   [![](https://raw.githubusercontent.com/DIYer22/boxx/master/other/img/what.png) ](./img/what.png)    
   💡 **Note:** `what(x)` 通过打印 `x` 自己及`x` 的 **文档**, **父类继承关系**, **内部结构** 及 **所有属性** 来全面了解 `x`. 是 `help(x)` 的补充.
   
