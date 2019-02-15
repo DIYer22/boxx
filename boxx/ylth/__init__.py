@@ -4,12 +4,12 @@
 sysc.py: system config
 '''
 from __future__ import unicode_literals
-from . import *
-from .ylsys import cpun, cloud, cuda, usecuda
-from .ylimg import npa, r
-from .tool import FunAddMagicMethod, nextiter, withfun, pred
+from .. import *
+from ..ylsys import cpun, cloud, cuda, usecuda
+from ..ylimg import npa, r
+from ..tool import FunAddMagicMethod, nextiter, withfun, pred
 
-from .ylcompat import py2, ModuleNotFoundError
+from ..ylcompat import py2, ModuleNotFoundError
 
 def importYlthRequire(exc_type, exc_value, exc_traceback):
     if exc_type is ModuleNotFoundError:
@@ -225,7 +225,7 @@ def removeAllHook(module):
 from boxx import log, ylimgTool, out
 ar= FunAddMagicMethod(lambda x: log-ylimgTool.prettyArray(x))
 
-def hasnan(t):
+def nanDete(t):
     nan = th.isnan(t).sum()
     if nan :
         out(1)
@@ -265,6 +265,28 @@ def flatten(t, dim=-1):
     shape.pop(dim)
     return t.reshape(tuple(shape))
 
+
+def hasnan(tensor):
+    return bool(torch.isnan(tensor).sum())
+
+def pthnan(pth='/home/dl/github/maskrcnn/output/mix_11/model_final.pth'):
+    dic = torch.load(pth)
+    from collections import OrderedDict
+    
+    def getOrderedDict(seq):
+        if isinstance(seq, OrderedDict):
+            return seq
+        if isinstance(seq, dict):
+            seq = list(seq.values())
+        if not isinstance(seq, (tuple, list)):
+            return None
+        for s in seq:
+            re = getOrderedDict(s)
+            if re is not None:
+                return re
+    od = getOrderedDict(dic)
+    tensor = list(od.values())[-1]
+    print('"%s"has nan: %s'%(tensor[...,:10], hasnan(tensor)))
 
 if __name__ == '__main__':
     l = ['LongTensor',
