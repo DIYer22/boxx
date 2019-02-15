@@ -9,7 +9,7 @@ from . import torch, hasnan
 
 
 def pthnan(pth):
-    dic = torch.load(pth)
+    dic = torch.load(pth, map_location='cpu')
     from collections import OrderedDict
     
     def getOrderedDict(seq):
@@ -23,7 +23,6 @@ def pthnan(pth):
             re = getOrderedDict(s)
             if re is not None:
                 return re
-    import boxx.g
     od = getOrderedDict(dic)
     tensor = list(od.values())[-1]
     print('\n"%s"\n\nHas nan: %s\n'%('\x1b[36m%s\x1b[0m'%tensor[...,:10], '\x1b[31m%s\x1b[0m'%hasnan(tensor)))
