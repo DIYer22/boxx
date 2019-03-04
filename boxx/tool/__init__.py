@@ -43,7 +43,11 @@ from .toolTools import (intround, increase, filterList, findints, randint, randf
 
 from .toolMarkdown import Markdown
 
-from glob import glob
+# Compatible with previous `boxx.glob` and `glob module`
+import glob as globModule
+glob = globModule.glob
+glob.__dict__.update(globModule.__dict__)
+
 from os.path import join as pathjoin
 from os.path import basename, isfile, isdir, dirname, abspath
 
