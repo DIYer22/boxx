@@ -222,13 +222,14 @@ def removeAllHook(module):
         module._forward_hooks=OrderedDict()
     module.apply(apply)
 
-from boxx import log, ylimgTool, out
+from boxx import log, ylimgTool, g
 ar= FunAddMagicMethod(lambda x: log-ylimgTool.prettyArray(x))
 
-def nanDete(t):
+def nanDete(t, globalg=False):
     nan = th.isnan(t).sum()
     if nan :
-        out(1)
+        if globalg:
+            g(1)
         ar(t)
         raise LookupError('Has torch.nan')
     
