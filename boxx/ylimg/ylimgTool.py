@@ -397,6 +397,7 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
             if seq is not False:
                 listToImgLists(seq,res=res,doNumpy=doNumpy)
     return res
+
 @interactivePlot
 def showImgLists(imgs,**kv):
     import matplotlib.pyplot as plt
@@ -408,14 +409,19 @@ def showImgLists(imgs,**kv):
     if n > 4:
         showImgLists(imgs[:3],**kv)
         showImgLists(imgs[3:],**kv)
-        return 
-    fig, axes = plt.subplots(ncols=n)
+        return
+    if "figsize" in kv:
+        figsize = kv.pop("figsize")
+        fig, axes = plt.subplots(ncols=n, figsize=figsize)
+    else:
+        fig, axes = plt.subplots(ncols=n)
     count = 0
-    axes = [axes] if n==1 else axes 
+    axes = [axes] if n==1 else axes
     for img in imgs:
         axes[count].imshow(img,**kv)
         count += 1
     plt.show()
+    
 def show(*imgsAndFuns,**kv):
     '''
     show could find every image in complex struct and show they
