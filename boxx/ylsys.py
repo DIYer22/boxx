@@ -47,7 +47,7 @@ osxYl = sys.platform.startswith('darwin')
 import multiprocessing as __module
 cpun = __module.cpu_count()
 
-cloud = cpun > 16
+cloud = cpun > 8
 
 if linuxYl or osxYl:
     cuda = not os.system('nvcc --version> /dev/null 2>&1')
