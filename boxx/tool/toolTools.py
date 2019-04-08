@@ -2,7 +2,9 @@
 
 from __future__ import unicode_literals
 
-import re, random
+import re
+import os
+import random
 from os.path import join,isdir,isfile
 from glob import glob
 from collections import defaultdict
