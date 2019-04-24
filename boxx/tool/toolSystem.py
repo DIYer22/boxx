@@ -50,7 +50,25 @@ class impt():
     def __exit__(self,*l):
         assert sys.path.pop() == self.f, 'impt sys.path error'
         
-        
+def importByPath(pyPath):
+    '''
+    import `.py` file by a python file path, return the py file as a moudle
+
+    >>> module = importByPath('far/away.py')
+    
+    TODO 增加对 module 的支持
+    '''
+    from boxx import os, dirname, sys, withfun
+    pyFile = pyPath
+    assert os.path.isfile(pyFile), pyFile
+    dirr = dirname(pyFile)
+    import importlib
+    def exitFun():
+        assert sys.path.pop(0)==dirr
+    with withfun(lambda :sys.path.insert(0, dirr), exitFun):
+        module = importlib.import_module(os.path.basename(pyFile).replace('.py',''))
+        return module
+    
 def tryImport(moduleName):
     '''
     try `import @moduleName`. if @moduleName is not installed, return a FakeModule to placeholder the module name
