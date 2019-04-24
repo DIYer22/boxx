@@ -135,7 +135,7 @@ class Bbox():
         padedImg = padding(rimg, pad)
         rect = (p2/2+pad, (w, h), deg)
         simgPng = cropMinAreaRect(padedImg, rect, borderValue=(0,0,0,0))
-        simg, mask = simgPng[...,:3], simgPng[...,3]>0
+        simg, mask = simgPng[...,:3], simgPng[...,3]>simgPng[...,3].max()/2
         u, r, d, l = self._getUrdlForCanvas()
 #        g()
 #        self.canvas.canvas[sliceInt[u:d, l:r]][mask] = simg[mask]
