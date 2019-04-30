@@ -10,6 +10,58 @@ from ..ylsci import Vector, cos, sin
 from ..tool import sliceInt, dicto
 from ..ylimg import toPng, padding
 
+def saveCoco(jsp, cocoDic, imgdf=None, anndf=None, catdf=None):
+    '''
+    save coco format annotation json according to 3 pandas.DataFrame
+    
+    Parameters
+    ----------
+    jsp : string 
+        string: path for coco format annaotation json
+    cocoDic : dict
+        coco format dict
+    **df : pandas.DataFrame
+        replace the corresponding table in cocoDic 
+    '''
+    from .. import df2dicts
+    cocoDic = cocoDic.copy()
+    if imgdf is not None:
+        cocoDic['images'] = df2dicts(imgdf)
+    if anndf is not None:
+        cocoDic['annotations'] = df2dicts(anndf)
+    if catdf is not None:
+        cocoDic['categories'] = df2dicts(catdf)
+    import json
+    with open(jsp, 'w') as f:
+        json.dump(cocoDic, f)
+    return jsp
+
+def loadCoco(jsp):
+    '''
+    load coco format annotation json to 3 pandas.DataFrame
+    
+    >>> cocoDic, imgdf, anndf, catdf = loadCoco(jsp)
+    
+    Parameters
+    ----------
+    jsp : string or dict
+        string: path for coco format annaotation json
+        dict: a coco format json
+    Return
+    ----------
+    cocoDic, imgdf, anndf, catdf
+    '''
+    import json
+    import pandas as pd
+    if not isinstance(jsp, dict):
+        with open(jsp, 'r') as f:
+            cocoDic = json.load(f)
+    else:
+        cocoDic = jsp
+    imgdf = pd.DataFrame(cocoDic['images']).set_index('file_name', False)
+    anndf = pd.DataFrame(cocoDic['annotations'])
+    catdf = pd.DataFrame(cocoDic['categories']).set_index('id', False)
+    return cocoDic, imgdf, anndf, catdf
 
 #inttuple = mf - inttuple
 def cropMinAreaRect(img, rect, borderValue=None):
