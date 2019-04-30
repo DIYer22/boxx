@@ -90,7 +90,9 @@ class Vector(np.ndarray):
         return Vector(after)
     def __str__(self, ):
         if (self).shape == (2,):
-            return "V(x|h=%s, y|w=%s)%s"%(strnum(self[0]), strnum(self[1]), self.dtype)
+            if 'int' in str(self.dtype):
+                return "Vector(x|h=%s, y|w=%s)%s"%((self[0]), (self[1]), self.dtype)
+            return "Vector(x|h=%s, y|w=%s)%s"%(strnum(self[0]), strnum(self[1]), self.dtype)
         return np.ndarray.__str__(self,) + ' (Vector)'
     __repr__ = __str__
     
