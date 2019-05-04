@@ -154,7 +154,8 @@ def tht(t):
     return t.cuda()
 tht = FunAddMagicMethod(tht)
 
-t = tht(r).float()
+#t = tht(r).float()
+t = th.from_numpy(r).float()
 
 @wraps(torch.autograd.Variable)
 def var(t, *l,  **kv):
