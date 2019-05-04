@@ -49,7 +49,7 @@ glob = globModule.glob
 glob.__dict__.update(globModule.__dict__)
 
 from os.path import join as pathjoin
-from os.path import basename, isfile, isdir, dirname, abspath
+from os.path import basename, isfile, isdir, dirname, abspath, expanduser
 
 from collections import namedtuple, defaultdict, Counter, OrderedDict
 dictd = defaultdict
