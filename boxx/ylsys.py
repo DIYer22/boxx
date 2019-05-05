@@ -50,11 +50,11 @@ cpun = __module.cpu_count()
 cloud = cpun > 8
 
 if linuxYl or osxYl:
-    cuda = not os.system('nvcc --version> /dev/null 2>&1')
+    cuda = not os.system('nvidia-smi> /dev/null 2>&1')
 elif winYl:
     import subprocess
     try:
-        cuda = not subprocess.call('nvcc --version', creationflags=0x00000008)
+        cuda = not subprocess.call('nvidia-smi', creationflags=0x00000008)
     except FileNotFoundError:
         cuda = False
 usecuda = 'auto' # auto: auto, False: not use
