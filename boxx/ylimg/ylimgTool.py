@@ -135,6 +135,13 @@ def torgb(img):
     if img.min() < 0:
         img = norma(img)
     return tprgb(img)
+
+def frombgr(img):
+    img = torgb(img)
+    if img.ndim >= 3 and img.shape[-1] == 3 :
+        img = img[...,[2,1,0]]
+    return img
+
 torgb = FunAddMagicMethod(torgb)
 
 def mapp(f, matrix, need_i_j=False):
@@ -504,9 +511,9 @@ shows = FunAddMagicMethod(shows)
     
 def __torchShape(x):
     if x.shape:
-        s = '%s of %s'%(tuple(x.shape), x.type())
+        s = "%s of %s @ %s"%(tuple(x.shape), x.type(), str(x.device))
     else:
-        s = '%s of %s'%(strnum(float(x)), x.type())
+        s = "%s of %s @ %s"%(strnum(float(x)), x.type(), str(x.device))
     return colorFormat.r%s
 StructLogFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
