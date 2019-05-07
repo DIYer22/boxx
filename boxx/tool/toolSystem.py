@@ -36,6 +36,7 @@ except ImportError:
 
 class impt():
     '''
+    TODO test in mapmt
     使Python 3 在包内可直接 import. 并且， 可直接运行包内的文件.
     原理：
         enter时候 append __file__, exit时候 pop
@@ -45,10 +46,11 @@ class impt():
     '''
     def __init__(self, _file_):
         self.f = _file_
+        self.d = os.path.dirname(_file_)
     def __enter__(self):
-        sys.path.append(self.f)
+        sys.path.insert(0, self.d)
     def __exit__(self,*l):
-        assert sys.path.pop() == self.f, 'impt sys.path error'
+        assert sys.path.pop(0)==self.d, 'impt sys.path error'
         
 def importByPath(pyPath):
     '''
