@@ -82,53 +82,9 @@ P.S. 如果对计算机视觉感兴趣，这里有一个详尽的关于 **`boxx`
 
 ## 二. 安装
 
-#### 通过 pip 安装
 ```
 pip install boxx
 ```
-
-#### 源码安装
-```bash
-git clone https://github.com/DIYer22/boxx
-cd boxx/
-python setup.py install
-```
-<!--
-#### 若没有 git 
-```
-pip install boxx -U
-```
- * 由于国内的各个 `pip` 镜像平均有很长的延迟，不推荐使用 `pip` 镜像来安装.
--->
-💡 **Note:** 
- * 请确保通过 `pip` 安装的 `boxx` 版本大于 `0.9.1`，否则建议从源码安装.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## 三. 示例
 
