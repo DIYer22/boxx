@@ -36,22 +36,48 @@ except ImportError:
 
 class impt():
     '''
-    TODO test in mapmt
-    使Python 3 在包内可直接 import. 并且， 可直接运行包内的文件.
-    原理：
-        enter时候 append __file__, exit时候 pop
-    用法：  
-        with impt(__file__):
-            from tool import *
-    '''
-    def __init__(self, _file_):
-        self.f = _file_
-        self.d = os.path.dirname(_file_)
-    def __enter__(self):
-        sys.path.insert(0, self.d)
-    def __exit__(self,*l):
-        assert sys.path.pop(0)==self.d, 'impt sys.path error'
+    Only one import to support both environments : __name__ == '__main__' or in a package.
+    And no need relative import.
         
+    usage： 
+        using: 
+            >>> with impt():
+            >>>     import local_py
+        instead of :
+            >>> if __name__ == '__main__':
+            >>>     import local_py
+            >>> else:
+            >>>     form . import local_py
+            
+    Principle：
+        temporary add the relpath in sys.path during with statement
+        
+    Parameters
+    ----------
+    relpath: str, default
+        the dir path of the .py file that you want to import
+        
+    Zh-cn: 
+        在包内或 __name__ == '__main__' 都能直接导入文件.
+    '''
+    from multiprocessing import Lock
+    lock = Lock() # ensure work fine in multi threding
+    def __init__(self, relpath='.'):
+        frame = sys._getframe(1)
+        _file_ = frame.f_globals['__file__']
+        dirr = os.path.dirname(_file_)
+        self.d = os.path.abspath(os.path.join(dirr, relpath))
+    def __enter__(self):
+        with self.lock:
+            sys.path.insert(0, self.d)
+    def __exit__(self,*l):
+        with self.lock:
+            if sys.path[0] == self.d:
+                assert sys.path.pop(0)==self.d, 'impt sys.path error'
+            else:
+                ind = sys.path.index(self.d)
+                assert sys.path.pop(ind)==self.d, 'impt sys.path error'
+
 def importByPath(pyPath):
     '''
     import `.py` file by a python file path, return the py file as a moudle
