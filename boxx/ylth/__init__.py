@@ -4,6 +4,7 @@
 sysc.py: system config
 '''
 from __future__ import unicode_literals
+import numpy as np
 from .. import *
 from ..ylsys import cpun, cloud, cuda, usecuda
 from ..ylimg import npa, r
@@ -57,7 +58,7 @@ import torchvision.datasets as datasets
 #th.float = torch.cuda.FloatTensor 
 
 # add summary to torch.nn.Module
-nn.Module.summary = lambda self, inputShape=None, group=None, gen=None:summary(self, inputShape or getDefaultInputShape(self, group, gen))
+nn.Module.summary = lambda self, inputShape=None, group=None, ganNoise=False:summary(self, inputShape or getModelDefaultInputShape(self, group, ganNoise) ,device=['cuda', 'cpu']['cpu' in str(getpara(self).device)])
 
 
 def dedp(model):
@@ -71,7 +72,7 @@ else :
 def tryLoad(self, state_dict, strict=True):
     try:
         rawModule(self, state_dict, strict)
-    except (KeyError,RuntimeError) as e:
+    except (KeyError,RuntimeError) :
         print('\x1b[31m%s\x1b[0m' % '\n"try strict=False! in Module.load_state_dict() " messge from boxx.ylth \n')
         para = state_dict
         para = OrderedDict(
@@ -159,22 +160,24 @@ t = th.from_numpy(r).float()
 if cuda:
     t = t.cuda()
 
-def batchToTensor(d):
+def batchToTensor(batch):
     '''
-    turn a dataloader's batch to tensor 
+    turn a dataloader's batch to tensor (from dpflow).
+    support dict, list, tuple as a batch
     '''
-    if isinstance(d, dict):
-        return {k: torch.from_numpy(v).cuda() if isinstance(v, np.ndarray) else v   for k,v in d.items()}
-    if isinstance(d, (list,tuple)):
-        return [torch.from_numpy(v).cuda() if isinstance(v, np.ndarray) else v   for v in d]
-def batchToNumpy(d):
+    if isinstance(batch, dict):
+        return {k: torch.from_numpy(v).cuda() if isinstance(v, np.ndarray) else v   for k,v in batch.items()}
+    if isinstance(batch, (list,tuple)):
+        return [torch.from_numpy(v).cuda() if isinstance(v, np.ndarray) else v   for v in batch]
+def batchToNumpy(batch):
     '''
-    turn a dataloader's batch to numpy (for dpflow)
+    turn a dataloader's batch to numpy (for dpflow).
+    support dict, list, tuple as a batch
     '''
-    if isinstance(d, dict):
-        return {k: (v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for k,v in d.items()}
-    if isinstance(d, (list,tuple)):
-        return [(v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for v in d]
+    if isinstance(batch, dict):
+        return {k: (v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for k,v in batch.items()}
+    if isinstance(batch, (list,tuple)):
+        return [(v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for v in batch]
 
 @wraps(torch.autograd.Variable)
 def var(t, *l,  **kv):
@@ -203,21 +206,57 @@ def kaimingInit(model):
             nn.init.kaiming_normal(t)
 
 
-def getDefaultInputShape(model, group=None, gen=None):
+def getModelDefaultInputShape(model, group=None, ganNoise=False):
     para = nextiter(model.parameters())
     shape = para.shape
     if len(shape) == 4 and shape[-1]>2 :
         default = (shape[1], 244, 244)
     elif len(shape) == 4 and shape[-1] == shape[-2] == 1  :
         default = (shape[1], 244, 244)
-        if gen:
+        if ganNoise:
             default = (shape[1], 1, 1)
     elif len(shape) == 2:
         default = (shape[1],)
     if group:
         default = (shape[1]*group, 244, 244)
     return default
+
+def genModelInput(model, inputShape=None,group=None, ganNoise=False, batchn=2):
+    '''
+    Auto generate a Tensor that could as model's input
     
+    Usage
+    -----
+    >>> inp = genModelInput(model)
+    >>> result = model(inp)
+    >>> tree(result)
+    
+    Parameters
+    ----------
+    model: nn.Module
+        nn.Module
+    inputShape: tuple or list, default None
+        By default, inputShape will auto calculate through model's first parameters 
+    group: int, default None
+        If the first conv has is a group conv, please provide the group num
+    ganNoise: bool, default False
+        set True, if input is a 1dim vector of noise for GAN
+    batchn: int, default 2
+        batch number, consider the BatchNorma opr, default of batchn is 2
+    '''
+    inputShape = inputShape or getModelDefaultInputShape(model, group, ganNoise)
+    para = getpara(model)
+    inp = th.rand((batchn,)+inputShape, dtype=para.dtype, device=para.device)
+    if not ganNoise:
+        from skimage.data import astronaut
+        img = astronaut().mean(-1)/255.
+        mean = img.mean()
+        std = ((img-mean)**2).mean()**.5
+        normaed = (img-mean)/std
+        feat = nn.functional.interpolate(tht-[[normaed]], inputShape[-2:], mode='bilinear',)
+        inp[:] = feat.to(para.device)
+    return inp
+
 class HookRegister():
     def __init__(self, module, hook, direct='f'):
         self.hook = hook
@@ -252,7 +291,8 @@ def nanDete(t, globalg=False):
             g(1)
         ar(t)
         raise LookupError('Has torch.nan')
-    
+
+
 def getpara(m):
     '''get first parameter'''
     return nextiter(m.parameters())
@@ -266,11 +306,9 @@ def getgrad0(m):
     return None if grad is None else grad.view(-1)[0]
 getpara, getpara0, getgrad, getgrad0 = map(FunAddMagicMethod, [getpara, getpara0, getgrad, getgrad0])
 
-def vizmodel(m, shape=None):
-    if shape is None:
-        shape = (1,) + getDefaultInputShape(m)
+def vizmodel(m, inputShape=None,group=None, ganNoise=False, batchn=2):
+    x = genModelInput(m, inputShape=inputShape,group=group, ganNoise=ganNoise, batchn=batchn)
     from torchviz import make_dot
-    x = th.rand(shape)
     x.to(getpara(m))
     graph = make_dot(m(x), params=dict(m.named_parameters()))
     return graph
