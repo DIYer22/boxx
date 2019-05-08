@@ -159,6 +159,23 @@ t = th.from_numpy(r).float()
 if cuda:
     t = t.cuda()
 
+def batchToTensor(d):
+    '''
+    turn a dataloader's batch to tensor 
+    '''
+    if isinstance(d, dict):
+        return {k: torch.from_numpy(v).cuda() if isinstance(v, np.ndarray) else v   for k,v in d.items()}
+    if isinstance(d, (list,tuple)):
+        return [torch.from_numpy(v).cuda() if isinstance(v, np.ndarray) else v   for v in d]
+def batchToNumpy(d):
+    '''
+    turn a dataloader's batch to numpy (for dpflow)
+    '''
+    if isinstance(d, dict):
+        return {k: (v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for k,v in d.items()}
+    if isinstance(d, (list,tuple)):
+        return [(v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for v in d]
+
 @wraps(torch.autograd.Variable)
 def var(t, *l,  **kv):
     t = tht(t)
