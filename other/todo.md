@@ -14,8 +14,9 @@
  
  - [ ] add `from boxx.symbol import *` to do symbol computing
  
- - [ ] update `boxx.tool.toolSystem.impt` 
-
+ - [ ] split General Python Tool as `mxx` which mean: "Mini boXX" or "Magic boX X"
+ 
 ## DONE
+ - [x] update `boxx.tool.toolSystem.impt` 
 
  - [x] add `boxx.ylth.hasNan` funcation and module: `python -m boxx.ylth.hasNan checkpoint.pth` for nan, inf
