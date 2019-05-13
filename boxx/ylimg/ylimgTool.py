@@ -13,7 +13,6 @@ from ..ylsci.ylnp import isNumpyType
 from ..ylcompat import interactivePlot, beforImportPlt
 
 import skimage as sk
-from skimage.transform import resize 
 from skimage.exposure import equalize_hist
 import os
 import glob
@@ -74,6 +73,46 @@ def normalizing(arr):
     return (arr-minn)/(arr.max() - minn)
 normalizing = FunAddMagicMethod(normalizing)
 norma = normalizing
+
+def warpResize(img, hw, interpolation=None):
+    '''
+    resize by cv2.warpAffine to avoid cv2.resize()'s BUG(not align when resize bigger)
+    '''
+    import cv2
+    from ..ylsci import Vector
+    if interpolation is None:
+        interpolation = cv2.INTER_NEAREST
+    h, w = hw
+    rhw = Vector(img.shape[:2])
+    dhw = hw/rhw
+    M = np.array([[dhw.w*1.,0,0],[0,dhw.h*1,0]])
+    dst = cv2.warpAffine(img, M, (w, h), flags=interpolation,)
+    return dst
+
+def resize(img, arg2, interpolation=None):
+    '''
+    resize the np.ndarray or torch.Tensor
+        
+    Parameters
+    ----------
+    arg2: size or target ndarray
+        the size or target ndarray 
+        
+    '''
+    hw = arg2
+    if isinstance(arg2, np.ndarray):
+        if not(arg2.ndim == 1 and arg2.shape == (2,)):
+            hw = arg2.shape[:2]
+    elif typestr(arg2) in ['torch.Tensor']:
+        hw = arg2.shape[-2:]
+    
+    if isinstance(img, np.ndarray):
+        dst = warpResize(img, hw, interpolation=interpolation)
+    elif typestr(img) in ['torch.Tensor']:
+        interpolation =  interpolation or 'nearest'
+        from torch import nn
+        dst = nn.functional.interpolate(img, tuple(hw), mode=interpolation)
+    return dst
 
 def uint8(img):
     '''将0～1的float或bool值的图片转换为uint8格式'''
