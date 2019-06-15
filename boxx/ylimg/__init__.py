@@ -7,7 +7,7 @@ tools for Image Processing and Visualization
 from .ylimgTool import sk, np, plot, sda
 from .ylimgTool import (show, showb, shows, loga, tree, treem, treea, dira, what, wtf,
                         tprgb, torgb, frombgr, mapp, normalizing, norma, imsave, imread, npa, 
-                       getShapes, greyToRgb, resize, histEqualize, StructLogFuns)
+                       getShapes, greyToRgb, warpResize, resize, histEqualize, StructLogFuns)
 from .ylimgTool import (uint8, padding, toPng, randomm , r, labelToColor,getDefaultColorList,
                        standImg, getMeanStd, boolToIndex, discribArray, prettyArray)
 
