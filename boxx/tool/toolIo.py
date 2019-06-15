@@ -156,10 +156,10 @@ def loadjson(path):
     with open(path, 'r') as f:
         js = json.load(f)
     return js
-def savejson(obj, path):
+def savejson(obj, path, indent=None):
     import json
     with open(path, 'w') as f:
-        json.dump(obj, f)
+        json.dump(obj, f, indent=indent)
     return path 
     
 def replaceTabInPy(dirr='.'):
