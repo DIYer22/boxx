@@ -24,6 +24,8 @@ with withfun(exitFun=importYlthRequire, exception=True):
 #import skimage.data as sda
 from collections import OrderedDict
 from functools import wraps
+import matplotlib.pyplot as plt
+import skimage.data as sda
 
 #if 'torch' in sys.modules:
 #    del sys.modules[('torch')]
