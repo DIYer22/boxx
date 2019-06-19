@@ -448,11 +448,18 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
 def showImgLists(imgs,**kv):
     import matplotlib.pyplot as plt
     n = len(imgs)
-    if n == 4:
+    if hasattr(kv, "ncols"):
+        ncols = kv["ncols"]
+        if n > ncols:
+            showImgLists(imgs[:ncols], **kv)
+            showImgLists(imgs[ncols:], **kv)
+            return
+        del kv["ncols"]
+    elif n == 4:
         showImgLists(imgs[:2],**kv)
         showImgLists(imgs[2:],**kv)
         return
-    if n > 4:
+    elif n > 4:
         showImgLists(imgs[:3],**kv)
         showImgLists(imgs[3:],**kv)
         return
