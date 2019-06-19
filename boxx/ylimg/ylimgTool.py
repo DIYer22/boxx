@@ -268,6 +268,8 @@ def npa(array):
         support types in boxx.ylimg.ylimgTool.typesToNumpyFuns and boxx.ylimg.ylimgTool.tryToNumpyFunsForNpa
     '''
     if isinstance(array, np.ndarray):
+        if type(array) is not np.ndarray:
+            return np.array(array)
         return array
     
     typeNameForNpa = isinstancestr(array, tryToNumpyFunsForNpa)
@@ -517,6 +519,11 @@ def showb(*arr,**__kv):
     os.system(cmd)
 showb = FunAddMagicMethod(showb)
 
+
+imgExtNames = ['jpg', 'jpeg', 'png', 'gif', 'tif', 'bmp']
+def isImgFileName(fname):
+    return '.' in fname and fname.split('.')[-1].lower() in imgExtNames
+
 def shows(*imgs):
     '''图片展示分析工具  使用浏览器同步显示同一图像的不同数据表示 如不同通道的image,gt,resoult 
     支持放大缩小与拖拽
@@ -526,24 +533,54 @@ def shows(*imgs):
     imgs : list include path or np.ndarray 
         图片地址或图片np.ndarray 组成的list 要求所有图片宽高相同
     '''
-    def listToPathList(l, res=None):
+    
+    def _listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
+        '''
+        将 ndarray和list的混合结果树转换为 一维 img list
+        '''
         if res is None:
             res = []
         for x in l:
-            if isinstance(x,(list,tuple)):
-                listToPathList(x,res)
-            if isinstance(x,dict):
-                listToPathList(list(x.values()),res)
-            if isinstance(x,str):
-                res.append(x)
-            if isinstance(x,np.ndarray):
-                path = tmpYl + '/shows-%s.png'%len(glob.glob(tmpYl + '/shows-*.png'))
-                imsave(path,x)
-                res.append(path)
+            typeName = isinstancestr(x, typesToNumpyFuns)
+            if typeName:
+                ndarray = typesToNumpyFuns[typeName](x)
+                res.extend(doNumpy(ndarray))
+            elif isinstance(x,(list,tuple)):
+                _listToImgLists(x,res=res,doNumpy=doNumpy)
+            elif isinstance(x,dict):
+                _listToImgLists(list(x.values()),res=res,doNumpy=doNumpy)
+            elif isinstance(x,np.ndarray):
+                res.extend(doNumpy(x))
+            elif isinstance(x,str):
+                if os.path.isfile(x) and isImgFileName(x):
+                    res.append(x)
         return res
-    paths = listToPathList(imgs)
+    
+    
+    funs = [arg for arg in imgs[1:] if callable(arg)]
+    doNumpy = pipe(funs+[ndarrayToImgLists])
+    imgs = _listToImgLists(imgs,doNumpy=doNumpy)
+    
+    
+    showsDir = os.path.join(tmpYl, 'shows')
+    dirr = showsDir + '/shows-%s.html' % len(glob.glob(showsDir + '/shows-*.html'))
+    os.makedirs(dirr)
+    
+    paths = []
+    for idx, x in enumerate(imgs):
+        fname = '%s.png'%idx
+        imgp = os.path.join(dirr, fname)
+        if isinstance(x,str):
+            img = imread(x)
+            imsave(imgp, img)
+        else:
+            imsave(imgp, x)
+        paths.append(fname)
+    
+    htmlp = os.path.join(dirr, 'index.html')
     from .showImgsInBrowser import showImgsInBrowser
-    showImgsInBrowser(paths)
+    import boxx.g
+    showImgsInBrowser(paths, htmlp)
 shows = FunAddMagicMethod(shows)
 
 

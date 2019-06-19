@@ -3,7 +3,7 @@
 import os,glob
 from ..ylsys import tmpboxx
 
-def showImgsInBrowser(paths):
+def showImgsInBrowser(paths, htmlp=None):
     '''图片展示分析工具  使用浏览器同步显示图片的image,gt,resoult 等
     支持放大缩小与拖拽
     
@@ -12,11 +12,12 @@ def showImgsInBrowser(paths):
     paths : list of path
         图片地址组成的数组
     '''
-    paths = list(map(os.path.abspath,paths))
+#    paths = list(map(os.path.abspath,paths))
     html = getShowsHtml()
     s = 'srcs = [%s]'%(",".join(['"%s"'%p for p in paths]))
     html = html.replace('//replaceTagForPython',s.replace('\\',r'\\'))
-    htmlp = os.path.join(tmpboxx(), 'shows-%s.html') %len(glob.glob(os.path.join(tmpboxx(), 'shows-*.html')))
+    if not htmlp:
+        htmlp = os.path.join(tmpboxx(), 'shows-%s.html') %len(glob.glob(os.path.join(tmpboxx(), 'shows-*.html')))
     with open(htmlp,'w') as f:
         f.write(html)
     from boxx import browserOpen
