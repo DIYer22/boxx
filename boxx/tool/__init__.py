@@ -43,6 +43,8 @@ from .toolTools import (intround, increase, filterList, findints, randint, randf
 
 from .toolMarkdown import Markdown
 
+from .toolGui import ter, nau
+
 # Compatible with previous `boxx.glob` and `glob module`
 import glob as globModule
 glob = globModule.glob
