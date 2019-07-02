@@ -16,9 +16,9 @@ def startGnomeTerminal(dirr=None):
     if dirr is None:
         os.system('gnome-terminal ')
     elif os.path.isfile(dirr):
-        os.system('gnome-terminal  --working-directory %s'%os.path.dirname(dirr))
+        os.system('gnome-terminal  --working-directory %s'%os.path.abspath(os.path.dirname(dirr)))
     else:
-        os.system('gnome-terminal  --working-directory %s'%dirr)
+        os.system('gnome-terminal  --working-directory %s'%os.path.abspath(dirr))
         
 ter = FunAddMagicMethod(startGnomeTerminal)
 
