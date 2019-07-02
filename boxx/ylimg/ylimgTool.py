@@ -18,6 +18,7 @@ import os
 import glob
 import numpy as np
 import types
+import math
 from functools import reduce
 from collections import defaultdict
 from operator import add
@@ -120,7 +121,11 @@ def uint8(img):
 
 greyToRgb = lambda grey:grey.repeat(3).reshape(grey.shape+(3,)) 
 
-histEqualize = FunAddMagicMethod(equalize_hist)
+def histEqualize(img):
+    img = equalize_hist(img)
+    minn = img.min()
+    return (img-minn)/(img.max()-minn)
+histEqualize = FunAddMagicMethod(histEqualize)
 
 boolToIndex = lambda boolMa1d:np.arange(len(boolMa1d))[npa(boolMa1d).squeeze()>0]
 boolToIndex = FunAddMagicMethod(boolToIndex)
@@ -450,11 +455,15 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
 def showImgLists(imgs,**kv):
     import matplotlib.pyplot as plt
     n = len(imgs)
-    if hasattr(kv, "ncols"):
+    if "ncols" in kv:
         ncols = kv["ncols"]
-        if n > ncols:
+        if n >= 2*ncols:
             showImgLists(imgs[:ncols], **kv)
             showImgLists(imgs[ncols:], **kv)
+            return
+        elif n > ncols:
+            showImgLists(imgs[:math.ceil(n/2.)], **kv)
+            showImgLists(imgs[math.ceil(n/2.):], **kv)
             return
         del kv["ncols"]
     elif n == 4:
