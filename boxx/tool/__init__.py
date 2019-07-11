@@ -32,7 +32,7 @@ load_data = loadData
 
 from .toolSystem import (crun, performance, timeit, heatmap, getArgvDic, 
                          softInPath, makedirs, execmd, addPathToSys)
-from .toolSystem import importAllFunCode, impt, importByPath, tryImport, FakeModule, removeImportSelf,  removeimp
+from .toolSystem import importAllFunCode, impt, inpkg, importByPath, tryImport, FakeModule, removeImportSelf,  removeimp
 from .toolSystem import getMainFrame, getRootFrame, getFatherFrames#, exceptionHook
 
 from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,

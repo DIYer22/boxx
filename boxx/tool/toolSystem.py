@@ -5,6 +5,8 @@ import sys, os, time
 from ..ylsys import py2, tmpYl, sysi
 from ..ylcompat import isstr, beforImportPlt, ModuleNotFoundError
 
+from .toolIo import filename
+
 
 def importAllFunCode(mod=None):
     '''
@@ -78,17 +80,63 @@ class impt():
                 ind = sys.path.index(self.d)
                 assert sys.path.pop(ind)==self.d, 'impt sys.path error'
 
+
+class inpkg():
+    '''
+    Execute relative import under __name__ == '__main__' enviroment in a package.
+        
+    usage： 
+        using: 
+            >>> with inpkg():
+            >>>     form . import local_py
+            
+    Principle：
+        auto search and import "top level package". Then, temporary replace __name__ to "module name under top level package" during with statement
+        
+    Zh-cn: 
+        可以能直接运行包内含有 relative import code 的 py 文件
+    '''
+    def __init__(self, relpath='.'):
+        frame = sys._getframe(1)
+        self.frame = frame
+        self._file_ = frame.f_globals['__file__']
+        self._name_ = frame.f_globals['__name__']
+        self._package_ = self.frame.f_globals['__package__']
+        self.importTopLevelPackage = self._name_ == '__main__' or self._name_ == filename(self._file_)
+        
+    def findPackageRoot(self, ):
+        dirr  = self._file_
+        files = []
+        while len(dirr) > 1:
+            files.append(filename(dirr))
+            dirr = os.path.dirname(dirr)
+            _init_p = os.path.join(dirr, '__init__.py')
+            if not os.path.isfile(_init_p):
+                return dirr, files
+        raise Exception('Has __init__.py in root "/__init__.py"')
+        
+    def __enter__(self):
+        if self.importTopLevelPackage:
+            packageroot, files = self.findPackageRoot()
+            importByPath(os.path.join(packageroot, files[-1]))
+            self.frame.f_globals['__name__'] = '.'.join(files[::-1])
+            self.frame.f_globals['__package__'] = '.'.join(files[1:][::-1])
+            
+    def __exit__(self,*l):
+        if self.importTopLevelPackage:
+            self.frame.f_globals['__name__'] = self._name_
+            self.frame.f_globals['__package__'] = self._package_
+
+
 def importByPath(pyPath):
     '''
     import `.py` file by a python file path, return the py file as a moudle
 
     >>> module = importByPath('far/away.py')
-    
-    TODO 增加对 module 的支持
     '''
     from boxx import os, dirname, sys, withfun
     pyFile = pyPath
-    assert os.path.isfile(pyFile), pyFile
+    assert os.path.isfile(pyFile) or os.path.isdir(pyFile), pyFile
     dirr = dirname(pyFile)
     import importlib
     def exitFun():
