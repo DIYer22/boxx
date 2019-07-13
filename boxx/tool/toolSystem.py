@@ -49,7 +49,7 @@ class impt():
             >>> if __name__ == '__main__':
             >>>     import local_py
             >>> else:
-            >>>     form . import local_py
+            >>>     from . import local_py
             
     Principle：
         temporary add the relpath in sys.path during with statement
@@ -83,12 +83,14 @@ class impt():
 
 class inpkg():
     '''
+    inpkg = in package
+    
     Execute relative import under __name__ == '__main__' enviroment in a package.
         
     usage： 
         using: 
             >>> with inpkg():
-            >>>     form . import local_py
+            >>>     from . import local_py
             
     Principle：
         auto search and import "top level package". Then, temporary replace __name__ to "module name under top level package" during with statement
