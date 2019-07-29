@@ -7,15 +7,13 @@ from datetime import date
 from setuptools import setup, find_packages
 
 # --- import your package ---
-
-#import boxx as package
 packageName = 'boxx'
 
 pyPath = '%s/__init__.py'%packageName if os.path.isdir(packageName) else '%s.py'%packageName
 
 with open(pyPath) as f:
     lines = f.readlines()
-code = ''.join(filter(lambda l: l.startswith('__') and '=' in l, lines))
+code = ''.join(filter(lambda l: 'import ' not in l, lines))
 class Pack():
     pass
 package = Pack()
@@ -142,14 +140,11 @@ if __name__ == "__main__":
     except:
         print("'requirements.txt' not found!")
         REQUIRES = list()
-#    from boxx import *
-#    setup = dicto
-#    tree-setup(
     setup(
         name=PKG_NAME,
         description=SHORT_DESCRIPTION,
 #        long_description=LONG_DESCRIPTION,
-        long_description=SHORT_DESCRIPTION+'\nMore information on github: https://github.com/DIYer22/boxx',
+        long_description=SHORT_DESCRIPTION+'\nMore information on github: %s'%package.__github_url__,
         version=VERSION,
         author=AUTHOR,
         author_email=AUTHOR_EMAIL,
@@ -159,8 +154,8 @@ if __name__ == "__main__":
         include_package_data=INCLUDE_PACKAGE_DATA,
 #        package_data=PACKAGE_DATA,
         py_modules=PY_MODULES,
-        url='https://github.com/DIYer22/Box-X',
-        download_url='https://github.com/DIYer22/Box-X/archive/master.zip',
+        url=package.__github_url__,
+        download_url=package.__github_url__,
         classifiers=CLASSIFIERS,
         platforms=PLATFORMS,
         license=LICENSE,
