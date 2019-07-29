@@ -41,7 +41,7 @@ def findints(strr):
     '''
     if isinstance(strr,(list,tuple)):
         return list(map(findints, strr))
-    return list(map(int,re.findall(r"\d+\d*",strr)))
+    return list(map(int,re.findall(r"-?\d+\d*",strr)))
 
 def randint(maxx=100):
     return random.randint(0, maxx)
