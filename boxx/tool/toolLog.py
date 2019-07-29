@@ -938,6 +938,19 @@ config = dicto()
 cf = config
 boxxcf = dicto()
 
+def if_main_then_g_call():
+    '''
+    >>> mg() 
+    equl to      
+    >>> if __name__ == '__main__':
+    >>>     g()
+    '''
+    frame = sys._getframe(1)
+    _name_ = frame.f_globals['__name__']
+    if _name_ == '__main__':
+        g(1)
+mg = if_main_then_g_call
+
 def prettyClassFathers(obj):
     '''
     get object or type, return pretty str
