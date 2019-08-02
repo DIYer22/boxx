@@ -607,6 +607,10 @@ def __torchShape(x):
     else:
         s = "%s of %s @ %s"%(strnum(float(x)), x.type(), str(x.device))
     return colorFormat.r%s
+
+__numpy_struch_log_fun = lambda x:colorFormat.r%('%s%s'%
+                                    (str(x.shape).replace('L,','').replace('L',''),x.dtype))
+
 StructLogFuns = {
     'list':lambda x:colorFormat.b%('list  %d'%len(x)),
     'tuple':lambda x:colorFormat.b%('tuple %d'%len(x)),
@@ -620,9 +624,9 @@ StructLogFuns = {
     'collections.OrderedDict':lambda x:colorFormat.b%('OrderedDict  %s'%len(x)),
     'dictoSub':lambda x:colorFormat.b%('dictoSub  %s'%len(x)),
     
-    'numpy.ndarray':lambda x:colorFormat.r%('%s%s'%
-                                    (str(x.shape).replace('L,','').replace('L',''),x.dtype)),
-
+    'numpy.ndarray':__numpy_struch_log_fun,
+    'imageio.core.util.Array':__numpy_struch_log_fun,
+    
     'torch.Tensor':__torchShape,
     
     'torch.FloatTensor':__torchShape,
