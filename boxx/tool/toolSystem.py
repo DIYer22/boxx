@@ -103,7 +103,8 @@ class inpkg():
         self.frame = frame
         self._file_ = frame.f_globals['__file__']
         self._name_ = frame.f_globals['__name__']
-        self._package_ = self.frame.f_globals['__package__']
+        # NOTICE: second time %run will no '__package__' key
+        self._package_ = self.frame.f_globals.get('__package__', None)  
         self.importTopLevelPackage = self._name_ == '__main__' or self._name_ == filename(self._file_)
         
     def findPackageRoot(self):
@@ -127,7 +128,10 @@ class inpkg():
     def __exit__(self,*l):
         if self.importTopLevelPackage:
             self.frame.f_globals['__name__'] = self._name_
-            self.frame.f_globals['__package__'] = self._package_
+            if self._package_ is None:
+                self.frame.f_globals.pop('__package__')
+            else:
+                self.frame.f_globals['__package__'] = self._package_
 
 
 def importByPath(pyPath):
