@@ -949,6 +949,7 @@ def if_main_then_g_call():
     _name_ = frame.f_globals['__name__']
     if _name_ == '__main__':
         g(1)
+        return True
 mg = if_main_then_g_call
 
 def prettyClassFathers(obj):

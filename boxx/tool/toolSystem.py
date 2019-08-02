@@ -98,7 +98,7 @@ class inpkg():
     Zh-cn: 
         可以能直接运行包内含有 relative import code 的 py 文件
     '''
-    def __init__(self, relpath='.'):
+    def __init__(self):
         frame = sys._getframe(1)
         self.frame = frame
         self._file_ = frame.f_globals['__file__']
