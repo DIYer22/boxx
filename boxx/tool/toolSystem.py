@@ -106,8 +106,8 @@ class inpkg():
         self._package_ = self.frame.f_globals['__package__']
         self.importTopLevelPackage = self._name_ == '__main__' or self._name_ == filename(self._file_)
         
-    def findPackageRoot(self, ):
-        dirr  = self._file_
+    def findPackageRoot(self):
+        dirr  = os.path.abspath(self._file_)
         files = []
         while len(dirr) > 1:
             files.append(filename(dirr))
