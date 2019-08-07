@@ -939,17 +939,21 @@ cf = config
 boxxcf = dicto()
 
 def if_main_then_g_call():
-    '''
+    '''`mg` is short of if_main_then_g_call
+    Will transport `locals()` to Python interactive console when __name__ == '__main__'.
+    Then return  __name__ == '__main__'
+    
     >>> mg() 
-    equl to      
+    # equl to      
     >>> if __name__ == '__main__':
     >>>     g()
     '''
     frame = sys._getframe(1)
     _name_ = frame.f_globals['__name__']
-    if _name_ == '__main__':
+    is_main = _name_ == '__main__'
+    if is_main:
         g(1)
-        return True
+    return is_main
 mg = if_main_then_g_call
 
 def prettyClassFathers(obj):
