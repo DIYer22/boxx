@@ -415,13 +415,7 @@ def softInPath(softName):
     return False
 
 def makedirs(dirr, randomDelay=0.0001):
-    if os.path.isdir(dirr):
-        return dirr
-    from random import random
-    time.sleep(random()*randomDelay)
-    if os.path.isdir(dirr):
-        return dirr
-    os.makedirs(dirr)
+    os.makedirs(dirr, exist_ok=True)
     return dirr
 
 def execmd(cmd):
