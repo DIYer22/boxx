@@ -151,6 +151,17 @@ def validFilename(filename, replaceBy='_'):
     newName = re.sub(rstr, replaceBy, filename)
     return newName
 
+def first_exist_dir(*dirs):
+    """Input dirs and return the first exist dir.
+    If none dir exist, return First
+    """
+    if len(dirs) == 1 and isinstance(dirs[0], (list, tuple)):
+        dirs = dirs[0]
+    for dirr in dirs:
+        if os.path.isdir(dirr):
+            return dirr
+    return dirs[0]
+
 def loadjson(path):
     import json
     with open(path, 'r') as f:
