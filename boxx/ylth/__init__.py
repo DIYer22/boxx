@@ -163,7 +163,7 @@ t = th.from_numpy(r).float()
 if cuda:
     t = t.cuda()
 
-def batchToTensor(batch, device=0):
+def batchToTensor(batch, device=None):
     '''
     turn a dataloader's batch to tensor (from dpflow).
     support dict, list, tuple as a batch
@@ -172,7 +172,7 @@ def batchToTensor(batch, device=0):
         if isinstance(x, np.ndarray):
             x = torch.from_numpy(x)
         if isinstance(x, torch.Tensor):
-            x = x.to(device)
+            x = x.cuda() if device is None else x.to(device)
         return x
     if isinstance(batch, dict):
         return {
