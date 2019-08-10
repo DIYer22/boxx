@@ -43,9 +43,9 @@ def pipe(*funList):
         funList = funList[0]
     return reduce(lambda f1,f2:(lambda x:f2(f1(x))), funList, lambda x:x)
     
-def setTimeOut(fun, t=0):
+def setTimeout(fun, t=0):
     '''
-    same to setTimeOut in JavaScript
+    same to setTimeout in JavaScript
     '''
     from threading import Timer
     thread = Timer(t,fun)

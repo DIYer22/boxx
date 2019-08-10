@@ -35,7 +35,7 @@ from .toolSystem import (crun, performance, timeit, heatmap, getArgvDic,
 from .toolSystem import importAllFunCode, impt, inpkg, importByPath, tryImport, FakeModule, removeImportSelf,  removeimp
 from .toolSystem import getMainFrame, getRootFrame, getFatherFrames#, exceptionHook
 
-from .toolFunction import (getFunName, dynamicWraps, setTimeOut, pipe,
+from .toolFunction import (getFunName, dynamicWraps, setTimeout, pipe,
                            setInterval, multiThread, mapmp, mapmt, maptry, retry)
 
 from .toolTools import (intround, increase, filterList, findints, randint, randfloat, randchoice,
