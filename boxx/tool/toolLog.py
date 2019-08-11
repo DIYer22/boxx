@@ -12,6 +12,7 @@ from ..ylcompat import printf, unicode
 from ..ylcompat import istype
 
 import os,sys,time
+import ast
 import math
 import re
 from collections import defaultdict
@@ -933,6 +934,17 @@ class GlobalG(GlobalGCore):
         log = global_g_paras[id(self)].log
         transport = TransportToRootFrame(name,log)
         transport(v)
+
+    def __pow__(self, v):
+        ex = executing.Source.executing(sys._getframe(1))
+        op = ex.node.right
+        if not isinstance(op, ast.Name):
+            raise TypeError('Only variables can be transported directly')
+        self.__setattr__(op.id, v)
+
+    __sub__ = __truediv__ = __div__ = __mul__ = __add__ = __eq__ = __pow__
+
+
 g = GlobalG()
 gg = GlobalG(log=True)
 
