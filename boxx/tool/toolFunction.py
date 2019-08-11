@@ -63,7 +63,7 @@ def setInterval(fun, inter, maxTimes=None):
             maxTimes[0] -= 1
             if maxTimes[0] <= 0:
                 return 
-        setTimeOut(interFun, inter)
+        setTimeout(interFun, inter)
     interFun()
 
 from multiprocessing import Pool as PoolMp
@@ -239,7 +239,7 @@ class multiThread():
                 r = fun(*l,**kv)
             finally:
                 self.left += 1
-        self.l.append(setTimeOut(f))
+        self.l.append(setTimeout(f))
         if len(self.l)>100:
             self.l = self.l[-90:]
     f = lambda fun,*l,**kv:fun(*l,**kv) #用于测试单线程的性能
