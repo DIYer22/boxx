@@ -8,3 +8,5 @@ snakeviz
 fn
 pyopengl
 seaborn
+executing
+asttokens

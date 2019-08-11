@@ -3,6 +3,8 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
+import executing
+
 from .toolStructObj import addCall, dicto, FunAddMagicMethod, getfathers, typeNameOf, typestr
 from .toolSystem import getRootFrame, getFatherFrames
 from ..ylsys import py2
@@ -1170,7 +1172,11 @@ def generaPAndLc():
             else:
                 pass
 #                pblue('%s: %s'%(clf.p%'As pp by p', x))
-                print(x)
+                try:
+                    ex = executing.Source.executing(sys._getframe(1))
+                    print(ex.source.asttokens().get_text(ex.node.right), '=', x)
+                except:
+                    print(x)
             return x
         __sub__ = printt
         __lshift__ = printt
