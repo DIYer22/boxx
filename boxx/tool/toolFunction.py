@@ -16,6 +16,29 @@ def getFunName(fun):
         return fun.__name__
     return '[unkonw]'
 
+class SaveArguments:
+    """
+    Save Arguments in funcation and apply those arguments to fun
+    """
+    def __init__(self, *l, **kv):
+        self.l = l
+        self.kv = kv
+
+    def apply(self, function):
+        """
+        Apply the saved arguments to the function
+        """
+        return function(*self.l, **self.kv)
+
+    def __str__(self):
+        ls = ", ".join(map(str, self.l))
+        if len(self.l) and len(self.kv):
+            ls += ", "
+        kvs = ", ".join(["%s=%s" % (kv) for kv in self.kv.items()])
+        return "SaveArguments(%s)" % (ls + kvs)
+
+    __repr__ = __str__
+
 def dynamicWraps(func):
     '''
     decorator 动态规划 装饰器
