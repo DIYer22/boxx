@@ -65,7 +65,7 @@ if py2:
 else :
     from operator import truediv as div
 from fn import _ as x_
-x = x_
+# x = x_
 
 from functools import wraps
 
