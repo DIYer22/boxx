@@ -318,11 +318,24 @@ def getgrad0(m):
     return None if grad is None else grad.view(-1)[0]
 getpara, getpara0, getgrad, getgrad0 = map(FunAddMagicMethod, [getpara, getpara0, getgrad, getgrad0])
 
-def vizmodel(m, inputShape=None,group=None, ganNoise=False, batchn=2):
+def get_loss(model_output):
+    if isinstance(model_output, (list, tuple)):
+        loss = sum([i.sum() for i in model_output])
+        return loss
+    if isinstance(model_output, dict):
+        loss = sum([i.sum() for i in model_output.values()])
+        return loss
+    return model_output.sum()
+
+def vizmodel(m, inputShape=None,group=None, ganNoise=False, batchn=2, output=""):
     x = genModelInput(m, inputShape=inputShape,group=group, ganNoise=ganNoise, batchn=batchn)
     from torchviz import make_dot
     x.to(getpara(m))
-    graph = make_dot(m(x), params=dict(m.named_parameters()))
+    model_output = m(x)
+    loss = get_loss(model_output)
+    graph = make_dot(loss, params=dict(m.named_parameters()))
+    if output:
+        graph.render(output, format='png')
     return graph
 
 def flatten(t, dim=-1):
