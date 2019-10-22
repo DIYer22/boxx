@@ -23,7 +23,7 @@ from .toolStructObj import (dicToObj, dicto, typeNameOf, typestr, strMethodForDi
                             sliceInt, sliceLimit, ll, FunAddMagicMethod, mf, fnone, addCall,
                             setself, unfoldself, withfun, withattr, isinstancestr)
 
-from .toolIo import (getsize, getsizem, listdir, filename, openread, openwrite, validFilename,
+from .toolIo import (getsize, getsizem, listdir, filename, relfile, openread, openwrite, validFilename,
                     first_exist_dir, saveData, loadData, loadjson, savejson, fileJoinPath,  warn, 
                     replaceTabInPy, warn1time, BoxxException, BoxxWarning, OffScreenWarning,
                     Except, excep, getExcept, browserOpen)

@@ -43,6 +43,8 @@ def imread(fname, as_grey=False, plugin=None, flatten=None, **plugin_args):
     '''
     beforImportPlt()
     from skimage.io import imread
+    if flatten is None:
+        return imread(fname, as_grey, plugin, **plugin_args)
     return imread(fname, as_grey, plugin, flatten, **plugin_args)
 
 #class FakeSkimageData(types.ModuleType): # raise SystemError: nameless module when dir(sda)

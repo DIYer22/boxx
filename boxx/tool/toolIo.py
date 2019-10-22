@@ -112,6 +112,17 @@ def filename(path):
         filen = name[:name.rindex('.')]
     return filen
 
+def relfile(relative_path):
+    '''
+    Return a absolute version of a relative_path relative the __file__
+    '''
+    frame = sys._getframe(1)
+    if '__file__' not in frame.f_globals:
+        return relative_path
+    _file_ = frame.f_globals['__file__']
+    abspath = os.path.abspath(os.path.join(_file_, '..', relative_path))
+    return abspath
+
 def listdir(path=None):
     path = path or '.'
     return os.listdir(path)
