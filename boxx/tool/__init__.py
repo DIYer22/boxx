@@ -39,7 +39,8 @@ from .toolFunction import (getFunName, SaveArguments, dynamicWraps, setTimeout, 
                            setInterval, multiThread, mapmp, mapmt, maptry, retry)
 
 from .toolTools import (intround, increase, filterList, findints, randint, randfloat, randchoice,
-                       listdirWithFun, replaceAllInRoot, findinRoot, iscn, zipTar)
+                       listdirWithFun, replaceAllInRoot, findinRoot, iscn, zipTar,
+                       camel2snake, snake2camel)
 
 from .toolMarkdown import Markdown
 

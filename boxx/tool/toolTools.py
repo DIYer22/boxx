@@ -192,6 +192,24 @@ def zipTar(paths, tarp):
         for path in paths:
             tar.add(path, arcname=os.path.basename(path))
 
+def camel2snake(variable_name):
+    s = variable_name[0].lower()
+    for c in variable_name[1:]:
+        if c.isupper():
+            s += '_' + c.lower()
+        else:
+            s += c
+    return s
+
+def snake2camel(variable_name, lower_camel_case=False):
+    s = variable_name[0].lower() if lower_camel_case else variable_name[0].upper()
+    for idx, c in enumerate(variable_name[1:]):
+        if variable_name[idx] == '_':
+            s += c.upper()
+        elif c != '_':
+            s += c
+    return s
+
 if __name__ == "__main__":
      
     string=["A001.45，b5，6.45，8.82",'sd4 dfg77']
