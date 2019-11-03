@@ -493,14 +493,18 @@ def strnum(num, roundn=4):
         if np.isnan(num) or np.isinf(num):
             return str(num)
         raise e
-def percentStr(num, roundn=2):
+
+def percentStr(num, roundn=2, sign=False):
     '''
-    float to percent sign
+    float to percent string
     roundn mean round to percent
     '''
     num = round(num*100, roundn)
     tabn = (2 if num <10 else 1 )if num <100 else 0
-    return (' '*tabn+'%.'+str(roundn)+'f%%')%(num)
+    s = (' '*tabn+'%.'+str(roundn)+'f')%(num)
+    if sign:
+        s += "%"
+    return s
                
 def ignoreWarning():
     from warnings import filterwarnings
