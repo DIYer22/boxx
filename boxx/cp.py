@@ -78,7 +78,7 @@ def listdirWithFun(source='.', target='/tmp', __first=True):
         if isdir(target):
             target = pathjoin(target, basename(source))
         if not isdir(target):
-            os.makedirs(target)    
+            os.makedirs(target, exist_ok=True)    
         
 #    paths = [pathjoin(source, p) for p in os.listdir(source)]
     paths = os.listdir(source)
@@ -95,7 +95,7 @@ def listdirWithFun(source='.', target='/tmp', __first=True):
     for dirr in dirs:
         targetd = pathjoin(target, dirr)
         if not isdir(targetd):
-            os.makedirs(targetd)
+            os.makedirs(targetd, exist_ok=True)
         listdirWithFun(pathjoin(source, dirr), target=targetd, __first=False)
 
 if __name__ == '__main__':

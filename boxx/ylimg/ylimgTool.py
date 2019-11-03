@@ -98,7 +98,7 @@ def resize(img, arg2, interpolation=None):
         
     Parameters
     ----------
-    arg2: size or target ndarray
+    arg2: float, int, shape, ndarray, torch.Tensor
         the size or target ndarray 
         
     '''
@@ -108,7 +108,9 @@ def resize(img, arg2, interpolation=None):
             hw = arg2.shape[:2]
     elif typestr(arg2) in ['torch.Tensor']:
         hw = arg2.shape[-2:]
-    
+    elif isinstance(arg2, (float, int)):
+        hw = img.shape[:2] if isinstance(img, np.ndarray) else img.shape[-2:]
+        hw = [int(round(size * arg2)) for size in hw]
     if isinstance(img, np.ndarray):
         dst = warpResize(img, hw, interpolation=interpolation)
     elif typestr(img) in ['torch.Tensor']:
@@ -582,7 +584,7 @@ def shows(*imgs):
     
     showsDir = os.path.join(tmpYl, 'shows')
     dirr = showsDir + '/shows-%s.html' % len(glob.glob(showsDir + '/shows-*.html'))
-    os.makedirs(dirr)
+    os.makedirs(dirr, exist_ok=True)
     
     paths = []
     for idx, x in enumerate(imgs):

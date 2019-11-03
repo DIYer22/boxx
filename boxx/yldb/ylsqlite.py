@@ -25,7 +25,7 @@ class Sqlite():
         if not os.path.isfile(dbpath):
             dirr = os.path.dirname(dbpath)
             if not os.path.isdir(dirr) and dirr:
-                os.makedirs(dirr)
+                os.makedirs(dirr, exist_ok=True)
             self.exe(self.creatSql)
         
     def exe(self, sql, values=None):

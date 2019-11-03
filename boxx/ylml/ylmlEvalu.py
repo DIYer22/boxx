@@ -196,7 +196,7 @@ e = Evalu(accEvalu,
     def __makedirs(self):
         path = pathjoin(self.evaluDir,'npzs')
         if not os.path.isdir(path):
-            os.makedirs(path)
+            os.makedirs(path, exist_ok=True)
     def _log(self,s):
         if self.loged:
             log('%s'%s)

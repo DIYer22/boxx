@@ -88,7 +88,7 @@ def __noDisplayEnv():
         from .tool import increase, warn, OffScreenWarning
         showtmp = os.path.join(tmpboxx(), 'showtmp')
         if not os.path.isdir(showtmp):
-            os.makedirs(showtmp)
+            os.makedirs(showtmp, exist_ok=True)
         png = os.path.join(showtmp,'%d_show.png'%increase('showtmp'))
         warn('''os.environ["DISPLAY"] is not found
     plt.show() are redirect to plt.savefig("%s")'''%png, OffScreenWarning)

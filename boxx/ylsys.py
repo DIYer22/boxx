@@ -77,7 +77,7 @@ class __TmpboxxWithCall(str):
         dirr = os.path.join(self, dirName) if dirName else self
         
         if not os.path.isdir(dirr):
-            os.makedirs(dirr)
+            os.makedirs(dirr, exist_ok=True)
         return dirr
 tmpboxx = __TmpboxxWithCall(os.path.join(tmpYl,'boxxTmp/'))
 
