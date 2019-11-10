@@ -33,6 +33,26 @@ def loadnp(path='savenp_default.npz'):
     compress.close()
     return arr 
 
+def mapping_array(array, mapping, strict=True):
+    """Element-wise mapping array by a kv mapping
+    
+    Parameters
+    ----------
+    array : np.array
+        array that content are mapping's key 
+    mapping: dict, list, tuple .etc
+        a kv mapping struct
+    strict : bool, default True
+        if strict is False, when k not in mapping, will return k
+    """
+    ks, idx_array = np.unique(array, return_inverse=True)
+    if strict:
+        idx_to_v = np.array([mapping[k] for k in ks])
+    else:
+        idx_to_v = np.array([mapping[k] if k in mapping else k for k in ks])
+    mappinged_array = idx_to_v[idx_array.reshape(array.shape)]
+    return mappinged_array
+
 @interactivePlot    
 def __draw3dSurface(X,Y,Z):    
     import matplotlib.pyplot as plt

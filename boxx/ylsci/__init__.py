@@ -8,7 +8,7 @@ Math and Scientific Computing module
 from __future__ import unicode_literals
 
 from .ylnp import  e, pi, nan, inf, eps
-from .ylnp import getNumpyType
+from .ylnp import getNumpyType, mapping_array
 from .ylnp import savenp, loadnp, plot3dSurface, isNumpyType, testNumpyMultiprocessing
 
 from .ylvector import sin, cos, arccos, arctan, deg2rad, rad2deg
