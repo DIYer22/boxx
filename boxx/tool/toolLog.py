@@ -900,6 +900,8 @@ class GlobalGCore(object):
         d = global_g_paras[id(self)]
         log = d.log
         out(depth=deep+1, printt=log)
+        return True
+        
     def __del__(self):
         idd = id(self)
         if global_g_paras and idd in global_g_paras:
