@@ -66,7 +66,7 @@ class timeGap:
         return time.time() - self.begin
 
 TimeGapDic = {}
-def timegap(gap=10, key='boxx.default'):
+def timegap(gap=10, key='boxx.default', quickBegin=True):
     '''
     定时器 隔固定的一段时间 返回 当前轮数(True), use to log in loop
     This is light version of timeGap, for More Infomation help(timeGap)
@@ -80,7 +80,7 @@ def timegap(gap=10, key='boxx.default'):
     '''
     keyt = (gap, key)
     if keyt not in TimeGapDic:
-        TimeGapDic[keyt] = timeGap(gap)
+        TimeGapDic[keyt] = timeGap(gap, quickBegin=quickBegin)
     return TimeGapDic[keyt]()
 
 __logGapDic = {}
