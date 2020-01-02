@@ -163,6 +163,34 @@ t = th.from_numpy(r).float()
 if cuda:
     t = t.cuda()
 
+def recursive_func(func):
+    def inner_func(batch, device=None):
+        if isinstance(batch, dict):
+            return {k:inner_func(v) for k,v in batch.items()}
+        elif isinstance(batch, (list,tuple)):
+            return type(batch)([inner_func(x) for x in batch])
+        else:
+            return func(batch, device=device)
+    
+    return inner_func
+    
+def to_tensor(x, device=None): 
+    if isinstance(x, np.ndarray):
+        x = torch.from_numpy(x)
+    if isinstance(x, torch.Tensor):
+        x = x.cuda() if device is None else x.to(device)
+    return x
+
+batch_to_tensor = recursive_func(to_tensor)
+
+def to_numpy(x, device=None): 
+    if isinstance(x, torch.Tensor):
+        x = x.cpu().numpy()
+    return x
+
+batch_to_numpy = recursive_func(to_numpy)
+    
+
 def batchToTensor(batch, device=None):
     '''
     turn a dataloader's batch to tensor (from dpflow).
@@ -180,7 +208,7 @@ def batchToTensor(batch, device=None):
         }
     if isinstance(batch, (list, tuple)):
         return [to_tensor(v) for v in batch]
-    
+
 def batchToNumpy(batch):
     '''
     turn a dataloader's batch to numpy (for dpflow).
@@ -190,6 +218,7 @@ def batchToNumpy(batch):
         return {k: (v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for k,v in batch.items()}
     if isinstance(batch, (list,tuple)):
         return [(v.cpu()).numpy() if isinstance(v, torch.Tensor) else v   for v in batch]
+
 
 @wraps(torch.autograd.Variable)
 def var(t, *l,  **kv):
