@@ -273,6 +273,13 @@ class timeit():
         self.last = self.begin = time.time()
         self.log = isstr(name) or bool(name)
         self.key = name
+        self.log_str = name
+        if callable(name):
+            if "__qualname__" in dir(name):
+                self.log_str = name.__qualname__
+            elif "__name__" in dir(name):
+                self.log_str = name.__name__
+
     def __call__(self):
         '''返回时间差'''
         t = time.time()
@@ -291,7 +298,7 @@ class timeit():
             self.t = self()
         return strnum(self.t,6)
     def __str__(self):
-        s='\x1b[36m"%s" spend time: %s\x1b[0m'%(self.key, self.s)
+        s='\x1b[36m"%s" spend time: %s\x1b[0m'%(self.log_str, self.s)
         return s
     @property
     def p(self):
