@@ -15,6 +15,8 @@
  - [ ] add `from boxx.symbol import *` to do symbol computing
  
  - [ ] split General Python Tool as `mxx` which mean: "Mini boXX" or "Magic boX X"
+
+ - [ ] use `__qualname__` in  `prettyFrameLocation` and `prettyFrameStack`
  
 ## DONE
  - [x] update `boxx.tool.toolSystem.impt` 
