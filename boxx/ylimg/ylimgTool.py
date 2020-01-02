@@ -218,8 +218,12 @@ def __torchVar2Tensor(t):
         return t
 __torchToNumpy = lambda x:__torchVar2Tensor(x).numpy()
 __torchCudaToNumpy = lambda x:__torchVar2Tensor(x).cpu().numpy()
+__todense = lambda x:x.todense()
 
 typesToNumpyFuns = {
+    'scipy.sparse.csr.csr_matrix':__todense,
+    'scipy.sparse.coo.coo_matrix':__todense,
+    'scipy.sparse.csc.csc_matrix':__todense,
     'PIL.Image.Image':lambda x:np.array(x),
     'mxnet.ndarray.NDArray':lambda x:x.asnumpy(),
     
@@ -630,6 +634,9 @@ StructLogFuns = {
     
     'numpy.ndarray':__numpy_struch_log_fun,
     'imageio.core.util.Array':__numpy_struch_log_fun,
+    'scipy.sparse.csr.csr_matrix':lambda x:__numpy_struch_log_fun(x) + colorFormat.r%" of sparse.csr",
+    'scipy.sparse.coo.coo_matrix':lambda x:__numpy_struch_log_fun(x) + colorFormat.r%" of sparse.coo",
+    'scipy.sparse.csc.csc_matrix':lambda x:__numpy_struch_log_fun(x) + colorFormat.r%" of sparse.csc",
     
     'torch.Tensor':__torchShape,
     
