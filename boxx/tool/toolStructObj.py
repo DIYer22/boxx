@@ -419,45 +419,65 @@ class withfun():
             else:
                 self.exitFun()
 
-class withattr(withfun):
-    '''
+
+class withattr():
+    """
     set attr or item in `with statement`, after __exit__ the obj or dict will recovery like befor 
     
     Parameters
     ----------
     obj : obj or dict
         the thing that will change attr or item in with statement
-    attrs : dict
-        the attrs or items that will change during with statement
+    attrs_or_key : dict or str
+        dict: the attrs or items that will change during with statement
+        str: the key of the attr
+    value: anything, default None
+        when attrs_or_key is string(key), this arg as value
     
     Usage
     ----------
     
-    >>> with withattr(dict(), {'attr':'value'}) as d:
+    >>> with withattr(dict(), 'attr', 'value') as d:
     ...     print(d['attr'])
-    value
+    "value"
     >>> 'attr' in d
     False
     
-    ps. `withattr` will detecat whther the obj is dict, then choose setattr or setitem.
-    '''
-    def __init__(self, obj, attrs):
-        self.obj = obj
-        self.attrs = attrs
-        d = obj 
+    >>> with withattr(dict(), {'attr':'value'}) as d:
+    ...     print(d['attr'])
+    "value"
+    >>> 'attr' in d
+    False
         
-        sett = (lambda d, k, v: d.__setitem__(k, v)) if isinstance(obj, dict) else setattr
+    ps. `withattr` will detect whther the obj is dict, then choose setattr or setitem.
+    """
+
+    def __init__(self, obj, attrs_or_key, value=None):
+        self.obj = obj
+
+        if isinstance(attrs_or_key, str):
+            attrs = {attrs_or_key: value}
+        else:
+            attrs = attrs_or_key
+
+        d = obj
+
+        sett = (
+            (lambda d, k, v: d.__setitem__(k, v)) if isinstance(obj, dict) else setattr
+        )
         get = (lambda d, k: d[k]) if isinstance(obj, dict) else getattr
         pop = (lambda d, k: d.pop(k)) if isinstance(obj, dict) else delattr
         has = (lambda d, k: k in d) if isinstance(obj, dict) else hasattr
-        def enterFun():
+
+        def enter_func():
             self.old = {}
-            for k,v in attrs.items():
-                if has(d, k) :
+            for k, v in attrs.items():
+                if has(d, k):
                     self.old[k] = get(d, k)
                 sett(d, k, v)
             return d
-        def exitFun():
+
+        def exit_func():
             for k in attrs.keys():
                 pop(d, k)
             if isinstance(d, dict):
@@ -465,7 +485,13 @@ class withattr(withfun):
             else:
                 for k, v in self.old.items():
                     sett(d, k, v)
-        withfun.__init__(self,enterFun, exitFun)
+
+        self.enter_func = enter_func
+        self.exit_func = exit_func
+    def __enter__(self):
+        return self.enter_func()
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        return self.exit_func()
     
 def isinstancestr(obj, typeStrList):
     '''
