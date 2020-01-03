@@ -479,12 +479,10 @@ class withattr():
 
         def exit_func():
             for k in attrs.keys():
-                pop(d, k)
-            if isinstance(d, dict):
-                d.update(self.old)
-            else:
-                for k, v in self.old.items():
-                    sett(d, k, v)
+                if k in self.old:
+                    sett(d, k, self.old[k])
+                else:
+                    pop(d, k)
 
         self.enter_func = enter_func
         self.exit_func = exit_func
