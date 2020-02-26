@@ -14,16 +14,34 @@ import math
 import re
 from collections import defaultdict
 
-def localTimeStr():
+def _str_struct_time(t, st):
+    s = "%dy_%02dm_%02dd_%02dh_%02dm_%02d"%(st[:6])
+    s = s + ("%.5f"%(t%1))[1:] + "s"
+    return s
+    
+
+def localTimeStr(asctime=False):
     '''
+    get local time in string format like '2020y_02m_26d_04h_05m_41.38258s'
     获得本地时间(GM+8 北京时间)
     '''
-    return time.asctime( time.localtime(time.time()))
-def gmtTimeStr():
+    t = time.time()
+    local_struct_time = time.localtime(t)
+    
+    if asctime:
+        return time.asctime(local_struct_time)
+    return _str_struct_time(t, local_struct_time)
+
+def gmtTimeStr(asctime=False):
     '''
+    get GMT(global) time in string format like '2020y_02m_26d_04h_05m_41.38258s'
     获得gmt时间(GM0 格林威治时间)
     '''
-    return time.asctime(time.gmtime(time.time()))
+    t = time.time()
+    gmt_struct_time = time.gmtime(t)
+    if asctime:
+        return time.asctime(gmt_struct_time)
+    return _str_struct_time(t, gmt_struct_time)
 
 
 class timeGap:
