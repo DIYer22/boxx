@@ -226,6 +226,7 @@ typesToNumpyFuns = {
     'scipy.sparse.csc.csc_matrix':__todense,
     'PIL.Image.Image':lambda x:np.array(x),
     'mxnet.ndarray.NDArray':lambda x:x.asnumpy(),
+    'mxnet.ndarray.ndarray.NDArray':lambda x:x.asnumpy(),
     
     'torch.Tensor':__torchCudaToNumpy,
     
@@ -664,6 +665,7 @@ StructLogFuns = {
                                                        (len(x.dataset), x.batch_size, x.num_workers)),
     
     'mxnet.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
+    'mxnet.ndarray.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
     
     'pandas.core.frame.DataFrame':lambda x:clf.r%'DataFrame(col=%d, Index=[%s], dtype="%s")'%(x.shape[0], ', '.join(map(str,x.columns)), x.columns.dtype)
     }
