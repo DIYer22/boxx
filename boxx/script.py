@@ -4,9 +4,21 @@
 @author: DIYer22@github
 @mail: ylxx@live.com
 Created on Mon Mar  2 12:52:18 2020
+
+Make python script as easy to use as shell script.
+
+Usage:
+    python -m boxx.script '[print(i) for i in range(10)]'
+    
+    # add "tmp_" as prefix for all file in '.' 
+    python -m boxx.script '[mv(fname, "tmp_"+fname) for fname in ls()]'
+
+alias "ls, mv, ln, lns, cp, cpr" as funcation.
+
 """
 
 from boxx import *
+from boxx import listdir
 
 try:
     import cv2
@@ -15,6 +27,15 @@ except Exception:
     pass
 
 import sys
+import shutil
+from os import rename, link, symlink
+
+mv = rename
+ln = link
+lns = symlink
+cp = shutil.copy
+cpr = shutil.copytree
+ls = listdir
 
 
 class GetKey(dict):
@@ -33,7 +54,6 @@ context = GetKey(globals())
 
 if __name__ == "__main__":
     code = " ".join(sys.argv[1:])
-    # print("Input:", sys.argv[1:])
     print('Code: "%s"' % code)
     print()
 
