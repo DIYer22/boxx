@@ -664,8 +664,8 @@ StructLogFuns = {
     'torch.utils.data.dataloader.DataLoader':lambda x:(colorFormat.b%'DataLoader(len=%d, batch=%d, worker=%d)'%
                                                        (len(x.dataset), x.batch_size, x.num_workers)),
     
-    'mxnet.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
-    'mxnet.ndarray.ndarray.NDArray':lambda x:'mxnet.NDArray%s'%str(x.shape),
+    'mxnet.ndarray.NDArray':lambda x:colorFormat.r % '%s of mxnet.%s'%(str(x.shape), str(x.dtype)),
+    'mxnet.ndarray.ndarray.NDArray':lambda x:colorFormat.r % '%s of mxnet.%s'%(str(x.shape), str(x.dtype)),
     
     'pandas.core.frame.DataFrame':lambda x:clf.r%'DataFrame(col=%d, Index=[%s], dtype="%s")'%(x.shape[0], ', '.join(map(str,x.columns)), x.columns.dtype)
     }
