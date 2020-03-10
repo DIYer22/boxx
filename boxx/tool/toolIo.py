@@ -178,10 +178,18 @@ def loadjson(path):
     with open(path, 'r') as f:
         js = json.load(f)
     return js
+
 def savejson(obj, path, indent=None):
     import json
+    import numpy as np
+    
+    class NumpyEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, np.ndarray):
+                return obj.tolist()
+            return json.JSONEncoder.default(self, obj)
     with open(path, 'w') as f:
-        json.dump(obj, f, indent=indent)
+        json.dump(obj, f, indent=indent, cls=NumpyEncoder)
     return path 
     
 def replaceTabInPy(dirr='.'):
