@@ -14,13 +14,14 @@ import math
 import re
 from collections import defaultdict
 
-def _str_struct_time(t, st):
-    s = "%dy_%02dm_%02dd_%02dh_%02dm_%02d"%(st[:6])
-    s = s + ("%.5f"%(t%1))[1:] + "s"
+def _str_struct_time(t, st, int_sec=False):
+    s = "%d-%02d-%02d-%02d_%02d_%02d"%(st[:6])
+    if int_sec:
+        return s
+    s = s + ("%.5f"%(t%1))[1:]
     return s
-    
 
-def localTimeStr(asctime=False):
+def localTimeStr(int_sec=False, asctime=False):
     '''
     get local time in string format like '2020y_02m_26d_04h_05m_41.38258s'
     获得本地时间(GM+8 北京时间)
@@ -30,7 +31,7 @@ def localTimeStr(asctime=False):
     
     if asctime:
         return time.asctime(local_struct_time)
-    return _str_struct_time(t, local_struct_time)
+    return _str_struct_time(t, local_struct_time, int_sec)
 
 def gmtTimeStr(asctime=False):
     '''
