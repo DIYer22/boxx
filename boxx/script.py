@@ -28,9 +28,10 @@ except Exception:
 
 import sys
 import shutil
-from os import rename, link, symlink
+from os import rename, link, symlink, remove
 
 mv = rename
+rm = remove
 ln = link
 lns = symlink
 cp = shutil.copy
