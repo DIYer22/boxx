@@ -18,27 +18,26 @@ from ..ylcompat import py2
 rad2deg = lambda rad: rad / pi * 180
 deg2rad = lambda deg: deg / 180 * pi
 
-
-def degShift(trifun, inpIsAngle=True):
-    funForInfo = lambda: 0 if py2 else trifun
-
+# TODO mv to ylTriFun.py
+def degShift(triFun, arc=False):
+    funForInfo = lambda: 0 if py2 else triFun
     @wraps(funForInfo)
     def innerfun(inp):
-        if inpIsAngle:
+        if not arc:
             inp = deg2rad(inp)
-        r = trifun(inp)
-        if not inpIsAngle:
+        r = triFun(inp)
+        if arc:
             r = rad2deg(r)
         return r
-
     return innerfun
-
 
 sin = degShift(np.sin)
 cos = degShift(np.cos)
+tan = degShift(np.tan)
 
-arctan = degShift(np.arctan, False)
-arccos = degShift(np.arccos, False)
+arcsin = degShift(np.arcsin, arc=True)
+arccos = degShift(np.arccos, arc=True)
+arctan = degShift(np.arctan, arc=True)
 
 
 class Vector(np.ndarray):
