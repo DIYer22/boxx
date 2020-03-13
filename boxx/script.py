@@ -22,7 +22,7 @@ from boxx import listdir
 
 try:
     import cv2
-    from boxx.ylth import *
+    #from boxx.ylth import *
 except Exception:
     pass
 
@@ -53,9 +53,12 @@ class GetKey(dict):
 
 context = GetKey(globals())
 
-if __name__ == "__main__":
+def main():
     code = " ".join(sys.argv[1:])
     print('Code: "%s"' % code)
     print()
 
     exec(code, context, context)
+
+if __name__ == "__main__":
+    main()
