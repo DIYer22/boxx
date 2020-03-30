@@ -974,7 +974,7 @@ def if_main_then_g_call():
     >>>     g()
     '''
     frame = sys._getframe(1)
-    _name_ = frame.f_globals['__name__']
+    _name_ = frame.f_globals.get('__name__')
     is_main = _name_ == '__main__'
     if is_main:
         g(1)
