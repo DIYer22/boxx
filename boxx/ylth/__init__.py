@@ -380,7 +380,7 @@ def flatten(t, dim=-1):
 
 
 def hasnan(tensor):
-    return bool(torch.isnan(tensor).sum())
+    return not bool(torch.isfinite(tensor).all())
 
 def pthnan(pth='/home/dl/github/maskrcnn/output/mix_11/model_final.pth'):
     dic = torch.load(pth)

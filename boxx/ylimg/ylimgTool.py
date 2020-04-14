@@ -12,13 +12,12 @@ from ..ylsys import tmpYl, pyi, py2, sysi
 from ..ylsci.ylnp import isNumpyType
 from ..ylcompat import interactivePlot, beforImportPlt
 
-import skimage as sk
-from skimage.exposure import equalize_hist
 import os
 import glob
-import numpy as np
-import types
 import math
+import types
+import numpy as np
+import skimage as sk
 from functools import reduce
 from collections import defaultdict
 from operator import add
@@ -126,6 +125,7 @@ def uint8(img):
 greyToRgb = lambda grey:grey.repeat(3).reshape(grey.shape+(3,)) 
 
 def histEqualize(img):
+    from skimage.exposure import equalize_hist
     img = equalize_hist(img)
     minn = img.min()
     return (img-minn)/(img.max()-minn)
