@@ -535,7 +535,12 @@ def showb(*arr,**__kv):
         return 
     arr = arr[0]
     if isinstance(arr,np.ndarray):
-        path = tmpYl + 'tmp-%s.png'%len(glob.glob(tmpYl + 'tmp-*.png'))
+        if arr.ndim == 3 and arr.shape[-1] == 3:
+            path = tmpYl + 'tmp-%s.jpg'%len(glob.glob(tmpYl + 'tmp-*.jpg'))
+        else:
+            path = tmpYl + 'tmp-%s.png'%len(glob.glob(tmpYl + 'tmp-*.png'))
+        if arr.dtype == np.bool:
+            arr = np.uint8(arr) * 255
         imsave(path,arr)
         arr = path
     cmd = 'shotwell "%s" &'%arr
@@ -593,18 +598,17 @@ def shows(*imgs):
     
     paths = []
     for idx, x in enumerate(imgs):
-        fname = '%s.png'%idx
-        imgp = os.path.join(dirr, fname)
         if isinstance(x,str):
-            img = imread(x)
-            imsave(imgp, img)
+            x = imread(x)
+        if x.ndim == 3 and x.shape[-1] == 3:
+            fname = '%s.jpg'%idx
         else:
-            imsave(imgp, x)
+            fname = '%s.png'%idx
+        imgp = os.path.join(dirr, fname)
+        imsave(imgp, x)
         paths.append(fname)
-    
     htmlp = os.path.join(dirr, 'index.html')
     from .showImgsInBrowser import showImgsInBrowser
-    import boxx.g
     showImgsInBrowser(paths, htmlp)
 shows = FunAddMagicMethod(shows)
 
