@@ -102,7 +102,7 @@ def replaceAllInRoot(old, new, root='.', types='py'):
     listdirWithFun(root, replace)
 
 def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, re=None, 
-               exclude=['pyc', 'swp', 'swo', 'gz', 'whl']):
+               exclude=None):
     '''
     在root及子路径下的所有文件中 查找 pattern。存在 则打印出对应文件的那一行。
     
@@ -133,8 +133,11 @@ def findinRoot(pattern='', root='.', maxsize=1, types=None, var=None, up=None, r
         if not isinstance(types,(list,tuple)):
             types = [types]
         types = [t.replace('.', '') for t in types]
+    if exclude is None:
+        exclude = []
+    exclude += ['pyc', 'swp', 'swo', 'gz', 'whl', 'jpg', 'png', 'npz', 'bin']
     def intypes(path):
-        typee = '.' in path and path.split('.')[-1]
+        typee = '.' in path and path.split('.')[-1].lower()
         if types is None:
             return typee not in exclude
         return typee in types
