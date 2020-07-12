@@ -108,6 +108,8 @@ def resize(img, arg2, interpolation=None):
     elif typestr(arg2) in ['torch.Tensor']:
         hw = arg2.shape[-2:]
     elif isinstance(arg2, (float, int)):
+        if arg2 == 1:
+            return img
         hw = img.shape[:2] if isinstance(img, np.ndarray) else img.shape[-2:]
         hw = [int(round(size * arg2)) for size in hw]
     if isinstance(img, np.ndarray):
@@ -590,6 +592,8 @@ def shows(*imgs):
     funs = [arg for arg in imgs[1:] if callable(arg)]
     doNumpy = pipe(funs+[ndarrayToImgLists])
     imgs = _listToImgLists(imgs,doNumpy=doNumpy)
+    biggest_img = max(imgs, key=lambda x: x.shape[0]*x.shape[1] if isinstance(x, np.ndarray) else 0)
+    biggest_hw = biggest_img.shape[:2]
     
     
     showsDir = os.path.join(tmpYl, 'shows')
@@ -605,6 +609,10 @@ def shows(*imgs):
         else:
             fname = '%s.png'%idx
         imgp = os.path.join(dirr, fname)
+        if x.dtype == np.bool:
+            x = x * 255
+        if x.shape[:2] != biggest_hw:
+            x = resize(x, biggest_hw)
         imsave(imgp, x)
         paths.append(fname)
     htmlp = os.path.join(dirr, 'index.html')
