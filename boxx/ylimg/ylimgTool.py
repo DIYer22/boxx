@@ -72,7 +72,10 @@ def normalizing(arr):
     if isinstance(arr, np.ndarray) and not isNumpyType(arr, 'float'):
         arr = arr.astype(float)
     minn = arr.min()
-    return (arr-minn)/(arr.max() - minn)
+    maxx = arr.max()
+    if maxx == minn:
+        return arr/maxx
+    return (arr-minn)/(maxx-minn)
 normalizing = FunAddMagicMethod(normalizing)
 norma = normalizing
 
@@ -130,7 +133,10 @@ def histEqualize(img):
     from skimage.exposure import equalize_hist
     img = equalize_hist(img)
     minn = img.min()
-    return (img-minn)/(img.max()-minn)
+    maxx = img.max()
+    if maxx == minn:
+        return img
+    return (img-minn)/(maxx-minn)
 histEqualize = FunAddMagicMethod(histEqualize)
 
 boolToIndex = lambda boolMa1d:np.arange(len(boolMa1d))[npa(boolMa1d).squeeze()>0]
