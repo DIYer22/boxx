@@ -66,7 +66,7 @@ class impt():
     lock = Lock() # ensure work fine in multi threding
     def __init__(self, relpath='.'):
         frame = sys._getframe(1)
-        _file_ = frame.f_globals['__file__']
+        _file_ = frame.f_globals.get('__file__', "python_shell.py")
         dirr = os.path.dirname(_file_)
         self.d = os.path.abspath(os.path.join(dirr, relpath))
     def __enter__(self):

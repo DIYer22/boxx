@@ -106,8 +106,8 @@ def toCpu():
     torch.cuda.device = withh
     from boxx import fnone
     torch.cuda.set_device = fnone
-    torch.cuda.is_available = lambda :True
-    
+    torch.cuda.is_available = lambda : True
+    torch.cuda.device_count = lambda *l: 0
 
     th.cuda.LongTensor = th.LongTensor
     th.cuda.DoubleTensor = th.DoubleTensor
