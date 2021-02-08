@@ -1,6 +1,9 @@
 
 
 ## TODO
+ - [ ] investigate:
+    - https://github.com/laike9m/Cyberbrain
+    - https://github.com/gruns/icecream
 
  - [ ] add `block` funcation and `boxx.block` module: `python -m boxx.block  --gap .1 --delay 1  -- {python code to return bool}`
 
@@ -22,3 +25,7 @@
  - [x] update `boxx.tool.toolSystem.impt` 
 
  - [x] add `boxx.ylth.hasNan` funcation and module: `python -m boxx.ylth.hasNan checkpoint.pth` for nan, inf
+
+
+## Refrence
+
