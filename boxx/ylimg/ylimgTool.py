@@ -530,7 +530,7 @@ def show(*imgsAndFuns,**kv):
 show = FunAddMagicMethod(show)
 
 
-def showb(*arr,**__kv):
+def showb(*arr, png=False):
     '''
     use shotwell to show picture
     Parameters
@@ -543,7 +543,7 @@ def showb(*arr,**__kv):
         return 
     arr = arr[0]
     if isinstance(arr,np.ndarray):
-        if arr.ndim == 3 and arr.shape[-1] == 3:
+        if arr.ndim == 3 and arr.shape[-1] == 3 and not png:
             path = tmpYl + 'tmp-%s.jpg'%len(glob.glob(tmpYl + 'tmp-*.jpg'))
         else:
             path = tmpYl + 'tmp-%s.png'%len(glob.glob(tmpYl + 'tmp-*.png'))
@@ -562,7 +562,7 @@ imgExtNames = ['jpg', 'jpeg', 'png', 'gif', 'tif', 'bmp']
 def isImgFileName(fname):
     return '.' in fname and fname.split('.')[-1].lower() in imgExtNames
 
-def shows(*imgs):
+def shows(*imgs, png=False):
     '''图片展示分析工具  使用浏览器同步显示同一图像的不同数据表示 如不同通道的image,gt,resoult 
     支持放大缩小与拖拽
     
@@ -610,7 +610,7 @@ def shows(*imgs):
     for idx, x in enumerate(imgs):
         if isinstance(x,str):
             x = imread(x)
-        if x.ndim == 3 and x.shape[-1] == 3:
+        if x.ndim == 3 and x.shape[-1] == 3 and not png:
             fname = '%s.jpg'%idx
         else:
             fname = '%s.png'%idx
