@@ -136,13 +136,19 @@ class SystemInfo():
         from os.path import expanduser
         home = expanduser('~')
     gui = pyi.gui or display
-    if 0:
-        @property
-        def ip(self):
-            '''
-            TODO:
-            '''
-            return '127.0.0.1'
+    
+    @staticmethod
+    def ip_by_target_ip(target_ip="8.8.8.8"):
+        import socket
+    
+        return [
+            (s.connect((target_ip, 80)), s.getsockname()[0], s.close())
+            for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]
+        ][0][1]
+
+    @property
+    def ip(self):
+        return self.ip_by_target_ip()
     @property
     def user(self):
         import getpass
