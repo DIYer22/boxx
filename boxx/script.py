@@ -38,13 +38,13 @@ cp = shutil.copy
 cpr = shutil.copytree
 ls = listdir
 
-
+builtins_dict = __builtins__ if isinstance(__builtins__, dict) else __builtins__.__dict__
 class GetKey(dict):
     def __getitem__(self, k):
         if k in self:
             return dict.__getitem__(self, k)
-        elif k in __builtins__.__dict__:
-            return __builtins__.__dict__[k]
+        elif k in builtins_dict:
+            return builtins_dict[k]
         else:
             print('Set %s as string:"%s"' % (k, k))
             self[k] = k

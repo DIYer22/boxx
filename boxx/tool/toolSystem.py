@@ -63,7 +63,7 @@ class impt():
         在包内或 __name__ == '__main__' 都能直接导入文件.
     '''
     from multiprocessing import Lock
-    lock = Lock() # ensure work fine in multi threding
+    lock = Lock() # ensure work fine in multi-threading
     def __init__(self, relpath='.'):
         frame = sys._getframe(1)
         _file_ = frame.f_globals.get('__file__', "python_shell.py")
