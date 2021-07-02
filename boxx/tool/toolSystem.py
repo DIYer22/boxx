@@ -101,7 +101,7 @@ class inpkg():
     def __init__(self):
         frame = sys._getframe(1)
         self.frame = frame
-        self._file_ = frame.f_globals['__file__']
+        self._file_ = frame.f_globals['__file__'] if '__file__' in frame.f_globals else frame.f_code.co_filename
         self._name_ = frame.f_globals['__name__']
         # NOTICE: second time %run will no '__package__' key
         self._package_ = self.frame.f_globals.get('__package__', None)  
@@ -121,7 +121,8 @@ class inpkg():
     def __enter__(self):
         if self.importTopLevelPackage:
             packageroot, files = self.findPackageRoot()
-            importByPath(os.path.join(packageroot, files[-1]))
+            if len(files) > 1:
+                importByPath(os.path.join(packageroot, files[-1]))
             self.frame.f_globals['__name__'] = '.'.join(files[::-1])
             self.frame.f_globals['__package__'] = '.'.join(files[1:][::-1])
             
