@@ -52,8 +52,8 @@ def getShowsHtml():
       len= (x)=>x.length
       </script>
     </head>
-    <body style="margin:0;padding:0">
-    	<canvas id="canvas" width="" height="" style="top:0px;left:0px">
+    <body style="margin:0;padding:0; overflow:hidden;">
+    	<canvas id="canvas" width="" height="" style="top:0px; left:0px;">
     	</canvas>
     </body>
     <script>
