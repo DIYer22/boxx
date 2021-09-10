@@ -327,7 +327,11 @@ def heatmap(pathOrCode):
         .py文件路径或着python代码
     '''
     beforImportPlt()
-    from pyheat import PyHeat
+    try:
+        from pyheat import PyHeat
+    except ModuleNotFoundError as e:
+        print("Please pip install py-heat!")
+        raise e
     import matplotlib.pyplot as plt
     tmppath = 'code-tmp-pyheat-boxx.py'
     
