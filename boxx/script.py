@@ -38,6 +38,13 @@ cp = shutil.copy
 cpr = shutil.copytree
 ls = listdir
 
+def cat(*paths):
+    for path in paths:
+        if len(paths) > 1:
+            print("-"*5, path, "-"*5)
+        with open(path, 'r') as f:
+            print(f.read())
+
 builtins_dict = __builtins__ if isinstance(__builtins__, dict) else __builtins__.__dict__
 class GetKey(dict):
     def __getitem__(self, k):
