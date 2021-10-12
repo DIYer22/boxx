@@ -6,5 +6,5 @@ from . import ylmysql
 from . import ylsqlite
 
 
-from .yldf import df2dicts
+from .yldf import df2dicts, pd
 

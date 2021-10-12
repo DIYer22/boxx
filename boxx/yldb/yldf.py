@@ -6,6 +6,7 @@ tools for pandas
 """
 
 from __future__ import unicode_literals
+import pandas as pd
 
 def df2dicts(df, inculdeIndex=False):
     '''
@@ -26,7 +27,6 @@ def df2dicts(df, inculdeIndex=False):
 
 if __name__ == '__main__':
     pass
-    import pandas as pd
     df = pd.DataFrame({
                        0:list(range(5)),
                        1:list(range(10,15)),
