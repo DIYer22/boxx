@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals, print_function
+
 import time
+import inspect
 
 from ..ylsys import cpun, winYl
 from .toolStructObj import typestr
@@ -24,12 +26,13 @@ class SaveArguments:
         self.l = l
         self.kv = kv
 
-    def apply(self, function):
+    def apply(self, func):
         """
         Apply the saved arguments to the function
         """
-        return function(*self.l, **self.kv)
-
+        return func(*self.l, **self.kv)
+        
+    __call__ = apply
     def __str__(self):
         ls = ", ".join(map(str, self.l))
         if len(self.l) and len(self.kv):
@@ -38,6 +41,135 @@ class SaveArguments:
         return "SaveArguments(%s)" % (ls + kvs)
 
     __repr__ = __str__
+
+
+
+_NONE_TAG = []
+
+class FuncArgs:
+    """
+    Catch and manipulate function argments, for example::
+    
+        def func(a=None, b=None, c=None, *args, **kwargs):
+            print(a, b, c, args, kwargs)
+        fa = FuncArgs(func, "a1", b="b1", c=3.14,)
+        fa.apply(func)
+        fa.set_arg(0, 0)
+        fa.set_arg("b", "bb")
+        fa.set_arg(float, 2.71)
+        fa.apply(func)
+    """
+
+    class DummyBoundArguments:
+        def __init__(self, args, kwargs):
+            self.args = args
+            self.kwargs = kwargs
+
+        def find_argname(self, arg):
+            if isinstance(arg, (tuple, type)):
+                for idx, v in enumerate(self.args):
+                    if isinstance(v, arg):
+                        return idx
+                for k, v in self.kwargs.items():
+                    if isinstance(v, arg):
+                        return k
+            return arg
+
+        def op_arg(self, key, value=_NONE_TAG):
+            argname = self.find_argname(key)
+            if isinstance(argname, int):
+                if value is _NONE_TAG:
+                    return self.args[argname]
+                else:
+                    self.args = (
+                        self.args[:argname] + (value,) + self.args[argname + 1 :]
+                    )
+                    return
+            if isinstance(argname, str):
+                if value is _NONE_TAG:
+                    return self.kwargs[argname]
+                else:
+                    self.kwargs[argname] = value
+                    return
+
+        def __str__(self):
+            return "<DummyBoundArguments (args=%s, kwargs=%s)>" % (
+                self.args,
+                self.kwargs,
+            )
+
+    def __init__(self, func, *args, **kwargs):
+        if not callable(func):
+
+            def func(*args, **kwargs):
+                pass
+
+        self.func = func
+        try:
+            self.sig = inspect.signature(func)
+            # inspect.BoundArguments
+            self.ba = self.sig.bind(*args, **kwargs)
+            self.ba.apply_defaults()
+        except ValueError:
+            self.ba = self.DummyBoundArguments(args, kwargs)
+
+    def find_argname(self, arg):
+        if not hasattr(self, "sig"):
+            return self.ba.find_argname(arg)
+
+        if isinstance(arg, str):
+            argname = arg
+        elif isinstance(arg, int):
+            argname = list(self.sig.parameters.keys())[arg]
+        elif isinstance(arg, (tuple, type)):
+            # return first argname belong to arg type
+            for idx, _arg in enumerate(self.ba.args):
+                if isinstance(_arg, arg):
+                    argname = list(self.sig.parameters.keys())[idx]
+                    return argname
+            for k, _arg in self.ba.kwargs.items():
+                if isinstance(_arg, arg):
+                    return k
+        return argname
+
+    def set_arg(self, key, value):
+        if not hasattr(self, "sig"):
+            self.ba.op_arg(key, value)
+            return self
+        argname = self.find_argname(key)
+        self.ba.arguments[argname] = value
+        return self
+
+    def get_arg(self, key):
+        if not hasattr(self, "sig"):
+            return self.ba.op_arg(key)
+        argname = self.find_argname(key)
+        return self.ba.arguments[argname]
+
+    def apply(self, func=None):
+        if func is None:
+            func = self.func
+        return func(*self.ba.args, **self.ba.kwargs)
+
+    __call__ = apply
+
+    def __str__(self):
+        s = str(self.ba)
+        s = s.replace("BoundArguments ", "FuncArgs of " + self.func.__name__)
+        return s
+
+    __repr__ = __str__
+    @staticmethod
+    def test():
+        def func(a=None, b=None, c=None, *args, **kwargs):
+            print(a, b, c, args, kwargs)
+
+        fa = FuncArgs(func, "a1", b="b1", c=3.14,)
+        fa.apply(func)
+        fa.set_arg(0, 0)
+        fa.set_arg("b", "bb")
+        fa.set_arg(float, 2.71)
+        fa.apply(func)
 
 def dynamicWraps(func):
     '''
