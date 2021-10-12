@@ -87,7 +87,7 @@ __numpyTypeCache = dict()
 def getNumpyType(typee='int'):
     if typee in __numpyTypeCache:
         return __numpyTypeCache[typee]
-    finds = eval('('+', '.join(['np.'+mu for mu in filterList(typee, dir(np))])+')')
+    finds = eval('('+', '.join(['np.'+mu for mu in filterList(typee, dir(np))])+',)')
     types = [x for x in finds if type(x)==type]
     if typee == "str":
         types = tuple(types) + getNumpyType('unicode')

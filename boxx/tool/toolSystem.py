@@ -146,7 +146,7 @@ def importByPath(pyPath):
     assert os.path.isfile(pyFile) or os.path.isdir(pyFile), pyFile
     dirr = dirname(pyFile)
     import importlib
-    def exitFun():
+    def exitFun(*l):
         assert sys.path.pop(0)==dirr
     with withfun(lambda :sys.path.insert(0, dirr), exitFun):
         module = importlib.import_module(os.path.basename(pyFile).replace('.py',''))
