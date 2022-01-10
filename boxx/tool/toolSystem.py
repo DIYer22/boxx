@@ -370,8 +370,12 @@ def strIsInt(s):
 
 def strIsFloat(s):
     '''判断字符串是不是浮点'''
-    s = s.replace(' ','')
-    return s.count('.')==1 and strIsInt(s.replace('.',''))
+    try:
+        float(s)
+        return True
+    except:
+        return False
+
 def strToNum(s):
     ''' 若字符串是float or int 是则返回 数字 否则返回本身'''
     if strIsInt(s):
