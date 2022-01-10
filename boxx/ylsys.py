@@ -149,16 +149,22 @@ class SystemInfo():
     @property
     def ip(self):
         return self.ip_by_target_ip()
+
     @property
     def user(self):
-        import getpass
-        return getpass.getuser()
+        try:
+            import getpass
+            return getpass.getuser()
+        except KeyError:
+            return "unknow"
+            
     @property
     def host(self):
         import platform
         return platform.node()
     def __str__(self):
-        from boxx import strMethodForDiraAttrs
-        return strMethodForDiraAttrs(self)
+        attrs = {k:str(getattr(self, k)) for k in dir(self) 
+                 if not k.startswith('__') and not callable(getattr(self, k))}
+        return "\n".join(map(lambda items:"\t%s: %s"%items, attrs.items()))
     __repr__ = __str__
 sysi = SystemInfo()
