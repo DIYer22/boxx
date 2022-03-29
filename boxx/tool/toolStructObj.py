@@ -72,9 +72,17 @@ class sliceLimit():
     >>> sliceLimit(rr, True)[-1:2, ..., :1000]
     (slice(0, 2, None), Ellipsis, slice(None, 4, None))
     '''
-    def __init__(self, arr, returnSlice=False):
-        self.arr = arr
-        self.shape = arr.shape
+    def __init__(self, arr_or_shape, returnSlice=False):
+        import numpy as np
+        
+        if not isinstance(arr_or_shape, np.ndarray) or \
+        (arr_or_shape.ndim == 1 and arr_or_shape.size<=4):
+            shape = arr_or_shape
+            returnSlice = True
+        else:
+            self.arr = arr_or_shape
+            shape = arr_or_shape.shape
+        self.shape = shape
         self.returnSlice = returnSlice
     def getitem(self, index):
         shape = self.shape
