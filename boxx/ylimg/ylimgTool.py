@@ -562,7 +562,7 @@ imgExtNames = ['jpg', 'jpeg', 'png', 'gif', 'tif', 'bmp']
 def isImgFileName(fname):
     return '.' in fname and fname.split('.')[-1].lower() in imgExtNames
 
-def shows(*imgs, png=False):
+def shows(*imgs, png=False, coln=None):
     '''图片展示分析工具  使用浏览器同步显示同一图像的不同数据表示 如不同通道的image,gt,resoult 
     支持放大缩小与拖拽
     
@@ -623,7 +623,7 @@ def shows(*imgs, png=False):
         paths.append(fname)
     htmlp = os.path.join(dirr, 'index.html')
     from .showImgsInBrowser import showImgsInBrowser
-    showImgsInBrowser(paths, htmlp)
+    showImgsInBrowser(paths, htmlp, coln=coln)
 shows = FunAddMagicMethod(shows)
 
 

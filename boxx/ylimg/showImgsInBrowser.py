@@ -3,7 +3,7 @@
 import os,glob
 from ..ylsys import tmpboxx
 
-def showImgsInBrowser(paths, htmlp=None):
+def showImgsInBrowser(paths, htmlp=None, coln=None):
     '''图片展示分析工具  使用浏览器同步显示图片的image,gt,resoult 等
     支持放大缩小与拖拽
     
@@ -15,6 +15,16 @@ def showImgsInBrowser(paths, htmlp=None):
 #    paths = list(map(os.path.abspath,paths))
     html = getShowsHtml()
     s = 'srcs = [%s]'%(",".join(['"%s"'%p for p in paths]))
+    if coln is None:
+        # if len(paths) in (0, 1, 2, 4):
+        coln = 1
+        if len(paths) >= 2:
+            coln = 2
+        if len(paths) == 3 or len(paths) > 4:
+            coln = 3
+        if len(paths) >= 12:
+            coln = 4
+    s += "; coln = %s" % int(coln)
     html = html.replace('//replaceTagForPython',s.replace('\\',r'\\'))
     if not htmlp:
         htmlp = os.path.join(tmpboxx(), 'shows-%s.html') %len(glob.glob(os.path.join(tmpboxx(), 'shows-*.html')))
@@ -65,16 +75,16 @@ def getShowsHtml():
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         var n = len(srcs)
-        bys = int(n/bxs)+Boolean(n%bxs)
-        if(bys<=bxs){
+        bys = int(n/coln)+Boolean(n%coln)
+        if(bys<=coln){
           canvas.height = window.innerHeight;
         }else(
-          canvas.height = window.innerWidth*bys/bxs
+          canvas.height = window.innerWidth*bys/coln
         )
         var w=canvas.width
         var h=canvas.height
 
-        sw = w/bxs
+        sw = w/coln
         sh = h/bys
         flash();
     }
@@ -97,7 +107,7 @@ def getShowsHtml():
         }
         drawImage(src,bx,by)
         bx += 1
-        if(bx==bxs){
+        if(bx==coln){
           by+=1
           bx=0
         }
@@ -185,8 +195,8 @@ def getShowsHtml():
     fy = .5
 
     var srcs = []
+    coln = 2
     //replaceTagForPython
-    bxs = 2
 
     resizeCanvas()
     view.mouseBegin()
@@ -200,9 +210,9 @@ def getShowsHtml():
     // var con3 = gui.add(window, 'fy',0.,1.0).listen();
     // con2.onFinishChange = con3.onFinishChange = con.onFinishChange
 
-    var con4 = gui.add(window, 'bxs',1,5).step(1).listen();
+    var con4 = gui.add(window, 'coln',1,5).step(1).listen();
     con4.onChange ( function(v){
-      bxs = int(v)
+      coln = int(v)
       resizeCanvas()
     })
     </script>
