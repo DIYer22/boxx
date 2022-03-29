@@ -44,6 +44,12 @@ def gmtTimeStr(asctime=False):
         return time.asctime(gmt_struct_time)
     return _str_struct_time(t, gmt_struct_time)
 
+def time_str_to_stamp(time_str):
+    new_time_str = time_str.replace("-", "_")[:19]
+    stamp = time.mktime(time.strptime(new_time_str, "%Y_%m_%d_%H_%M_%S"))
+    if '.' in time_str:
+        stamp += float(time_str[19:])
+    return stamp
 
 class timeGap:
     '''
