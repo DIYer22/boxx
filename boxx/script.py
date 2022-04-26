@@ -16,7 +16,7 @@ Usage:
 alias "ls, mv, ln, lns, cp, cpr" as funcation.
 
 """
-
+import boxx
 from boxx import *
 from boxx import listdir
 
@@ -26,6 +26,7 @@ try:
 except Exception:
     pass
 
+import os
 import sys
 import shutil
 from os import rename, link, symlink, remove
@@ -34,9 +35,24 @@ mv = rename
 rm = remove
 ln = link
 lns = symlink
-cp = shutil.copy
-cpr = shutil.copytree
-ls = listdir
+copy = shutil.copy
+copytree = shutil.copytree
+
+def sh(cmd):
+    return boxx.execmd(cmd).strip().split()
+bash = sh
+
+def ls(path=".", a=False):
+    cmd = 'ls "' + path + '"' + (' -a ' if a else '')
+    return sh(cmd)
+
+def cp(src, dst):
+    cmd = 'cp -r "' if os.path.isdir(src) else 'cp "'
+    cmd += src + '" "' + dst + '"'
+    return sh(cmd)
+
+cpr = cp
+
 
 def cat(*paths):
     for path in paths:
@@ -61,11 +77,16 @@ class GetKey(dict):
 context = GetKey(globals())
 
 def main():
-    code = " ".join(sys.argv[1:])
-    print('Code: "%s"' % code)
-    print()
+    if len(sys.argv) <= 1:
+        import IPython
 
-    exec(code, context, context)
+        IPython.embed()
+    else:
+        code = " ".join(sys.argv[1:])
+        print('Code: "%s"' % code)
+        print()
+    
+        exec(code, context, context)
 
 if __name__ == "__main__":
     main()
