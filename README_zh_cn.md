@@ -260,7 +260,6 @@ jupyter notebook
  * I develop **`boxx`** in [Spyder IDE](https://github.com/spyder-ide/spyder), [Spyder](https://github.com/spyder-ide/spyder) is a awesome Scientific Python Development Environment with Powerful [**Qt-IPython**](https://github.com/jupyter/qtconsole)
  * `performance` is supported by [SnakeViz](https://jiffyclub.github.io/snakeviz/)
  * `heatmap` is supported by [csurfer/pyheat](https://github.com/csurfer/pyheat)
- * `boox.x_` is supported by [Fn.py: enjoy FP in Python](https://github.com/kachayev/fn.py)
 
 
 

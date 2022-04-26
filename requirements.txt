@@ -4,6 +4,5 @@ matplotlib
 pandas
 imageio
 snakeviz
-fn
 pyopengl
 seaborn
