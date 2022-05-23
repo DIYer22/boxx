@@ -434,7 +434,7 @@ def makedirs(dirr, randomDelay=0.0001):
     os.makedirs(dirr, exist_ok=True)
     return dirr
 
-def execmd(cmd):
+def execmd(cmd, split=False):
     '''
     execuld cmd and reutrn str(stdout)
     '''
@@ -442,6 +442,8 @@ def execmd(cmd):
         if not py2:
             stream = stream._stream
         s = stream.read()
+    if split:
+        return s.strip().split('\n')
     return s
 
 def addPathToSys(_file_, pathToJoin='.'):
