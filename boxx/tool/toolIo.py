@@ -179,7 +179,7 @@ def loadjson(path):
         js = json.load(f)
     return js
 
-def savejson(obj, path, indent=None):
+def savejson(obj, path=None, indent=None):
     import json
     import numpy as np
     
@@ -188,6 +188,8 @@ def savejson(obj, path, indent=None):
             if isinstance(obj, (np.ndarray, np.number)):
                 return obj.tolist()
             return json.JSONEncoder.default(self, obj)
+    if path is None:
+        return json.dumps(obj, indent=indent, cls=NumpyEncoder).encode("utf-8")
     with open(path, 'w') as f:
         json.dump(obj, f, indent=indent, cls=NumpyEncoder)
     return path 
