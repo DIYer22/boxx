@@ -18,13 +18,39 @@ alias "ls, mv, ln, lns, cp, cpr" as funcation.
 """
 import boxx
 from boxx import *
-from boxx import listdir
+from os import *
+from os.path import *
 
-try:
-    import cv2
-    #from boxx.ylth import *
-except Exception:
-    pass
+
+_tmp_list_as_None = []
+class DictCouldSetAttr(dict):
+    def __setattr__(self, name, value):
+        self[name] = value
+        return value
+
+    set = __setattr__
+    
+    def __getattr__(self, name):
+        if name in self:
+            return self[name]
+        return super().__getattribute__(name)
+    
+    def __call__(self, value=_tmp_list_as_None):
+        """Store one tmp var by call
+        >>> print(tmp('tmp_value1'), tmp(), tmp('tmp_value2'), tmp())
+        tmp_value1 tmp_value1 tmp_value2 tmp_value2
+        """
+        if value is _tmp_list_as_None:
+            if not len(_tmp_list_as_None):
+                raise ValueError("Please register tmp value by `tmp(value)` first!")
+            return _tmp_list_as_None[-1]
+        else:
+            _tmp_list_as_None.clear()
+            _tmp_list_as_None.append(value)
+            return value
+
+d = tmp = DictCouldSetAttr()
+
 
 import os
 import sys
@@ -69,8 +95,12 @@ class GetKey(dict):
         elif k in builtins_dict:
             return builtins_dict[k]
         else:
-            print('Set %s as string:"%s"' % (k, k))
-            self[k] = k
+            try:
+                print('try import %s' % (k,))
+                self[k] = __import__(k)
+            except ModuleNotFoundError as e:
+                if e.name != k:
+                    raise e
             return dict.__getitem__(self, k)
 
 
@@ -78,6 +108,8 @@ context = GetKey(globals())
 
 def main():
     if len(sys.argv) <= 1:
+        __file__ = os.path.abspath('temp.py')
+
         import IPython
 
         IPython.embed()
