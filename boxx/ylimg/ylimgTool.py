@@ -1201,8 +1201,7 @@ def getDefaultColorList(colorNum=None, includeBackGround=None,uint8=False):
         colorNum -= 1
     
     if colorNum <= 12:
-        colors = getHsvColors(6, 1, 2)
-        
+        colors = getHsvColors(2, 3, 3)
     elif colorNum <= 20:
         colors = __color10+[(c[0],1.0,.5) for c in __color10]
     elif colorNum <= 30:
