@@ -67,6 +67,9 @@ def loadCoco(jsp):
 def cropMinAreaRect(img, rect, borderValue=None):
     import cv2
     # rotate img
+    rect = [(int(rect[0][0]),int(rect[0][1])),
+            (int(rect[1][0]),int(rect[1][1])),
+            int(rect[2])]
     angle = rect[2]
     rows,cols = img.shape[0], img.shape[1]
     M = cv2.getRotationMatrix2D((cols/2,rows/2),angle,1)
@@ -207,7 +210,7 @@ class Bbox():
             deg = 0
         
         pm = p0 + vx/2. + vy/2.
-        rect = (pm, (w, h), deg)
+        rect = (tuple(pm.tolist()), (w.tolist(), h.tolist()), deg)
         img_croped = cropMinAreaRect(img, rect, borderValue=(0,0,0,0))
         return (img_croped)
     @staticmethod
