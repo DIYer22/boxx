@@ -34,16 +34,19 @@ def showImgsInBrowser(paths, htmlp=None, coln=None):
     browserOpen(htmlp)
 
 def getShowsHtml():
+    # TODO: 
+    """
+        - support scale by pixel and scale by max(hw) for different image size
+        - independent as .html and support ?imgs=[]&coln=3
+    """
+    
     return '''
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>boxx.shows image</title>
-      <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
-
+      <title>boxx.shows(images)</title>
       <script src="https://cdn.bootcss.com/dat-gui/0.6.5/dat.gui.js"></script>
-      <!-- <script src="./leiYangFuns.js"></script> -->
       <style>
       </style>
       <script>
@@ -68,7 +71,7 @@ def getShowsHtml():
     </body>
     <script>
     canvas = document.getElementById('canvas')
-    var ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d');
 
     window.addEventListener("resize", resizeCanvas, false);
 
@@ -95,17 +98,31 @@ def getShowsHtml():
       if (busy){
         return
       }
+      ctx.imageSmoothingEnabled = isSmooth
       var tag = roundTag
       busy = 1
       var bx=0
       var by=0
-      for (var src of srcs) {
+      for (var src_idx of Array(coln*bys).keys()) {
         if (roundTag!=tag){
           busy=0;
           flash()
           return
         }
-        drawImage(src,bx,by)
+        if(isRoll){
+          old = src_idx
+          sourceBx = (bx-rollx)%coln
+          if(sourceBx<0){sourceBx += coln}
+          sourceBy = (by-rolly)%bys
+          if(sourceBy<0){sourceBy += bys}
+          src_idx = sourceBy * coln + sourceBx
+                }
+        if (src_idx < srcs.length){
+                var src = srcs[src_idx]
+                drawImage(src,bx,by)
+        }else{
+            ctx.clearRect(bx*sw,by*sh,sw,sh);
+            }
         bx += 1
         if(bx==coln){
           by+=1
@@ -193,15 +210,19 @@ def getShowsHtml():
     scale = -1
     fx = .5
     fy = .5
+    rollx = 1
+    rolly = 0
+    isRoll = false
+    isSmooth = false
 
     var srcs = []
     coln = 2
     //replaceTagForPython
-
+    
     resizeCanvas()
     view.mouseBegin()
     var gui = new dat.GUI();
-    var con = gui.add(window, 'scale',-10,5).listen();
+    var con = gui.add(window, 'scale',-10,5).listen().name('scale 🖱wheel');
     con.onChange( (v)=>{
         flash()
     })
@@ -214,10 +235,75 @@ def getShowsHtml():
     con4.onChange ( function(v){
       coln = int(v)
       resizeCanvas()
-    })
+    }).name('colN ⌨️123')
+    
+    gui.add(window,'isRoll').listen().onChange(()=>{
+        flash()
+        }).name('isRoll ⌨space')
+    gui.add(window,'rollx', -srcs.length, srcs.length).step(1).listen().onChange(()=>{
+        flash()
+        }).name('rollX ⌨️AD')
+    gui.add(window,'rolly', -srcs.length, srcs.length).step(1).listen().onChange(()=>{
+        flash()
+        }).name('rollY ⌨️WS')
+    
+    gui.add(window,'isSmooth').listen().onChange(()=>{
+        flash()
+        })
+    
+    document.onkeydown=(e)=>{
+        var e = e || window.event;
+        //console.log(e)
+        if(e.key == " "){
+                isRoll = !isRoll
+                flash()
+                }
+        if("aA".includes(e.key)){
+                rollx -= 1
+                flash()
+                }
+        if("dD".includes(e.key)){
+                rollx += 1
+                flash()
+                }
+        if("wW".includes(e.key)){
+                rolly += 1
+                flash()
+                }
+        if("sS".includes(e.key)){
+                rolly -= 1
+                flash()
+                }
+        if("1".includes(e.key)){
+                coln = 1
+                resizeCanvas()
+                }
+        if("2".includes(e.key)){
+                coln = 2
+                resizeCanvas()
+                }
+        if("3".includes(e.key)){
+                coln = 3
+                resizeCanvas()
+                }
+        if("4".includes(e.key)){
+                coln = 4
+                resizeCanvas()
+                }
+        if("5".includes(e.key)){
+                coln = 5
+                resizeCanvas()
+                }
+        if("6".includes(e.key)){
+                coln = 6
+                resizeCanvas()
+                }
+        }
     </script>
     </html>
 
     '''
 if __name__ == '__main__':
+    # test code
+    # img=imread('../../test/imgForTest/Lenna.jpg');shows([img, img.mean(-1), img//3, r])
     pass
