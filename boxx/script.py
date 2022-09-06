@@ -24,7 +24,13 @@ from builtins import *
 
 
 _tmp_list_as_None = []
-class DictCouldSetAttr(dict):
+class CacheVar(dict):
+    def __init__(self, name="cache"):
+        super().__init__()
+        self.__mxscript_cache_call_value__ = _tmp_list_as_None
+        self.__mxscript_cache_name__ = name
+
+
     def __setattr__(self, name, value):
         self[name] = value
         return value
@@ -42,15 +48,19 @@ class DictCouldSetAttr(dict):
         tmp_value1 tmp_value1 tmp_value2 tmp_value2
         """
         if value is _tmp_list_as_None:
-            if not len(_tmp_list_as_None):
-                raise ValueError("Please register tmp value by `tmp(value)` first!")
-            return _tmp_list_as_None[-1]
+            if self.__mxscript_cache_call_value__ is _tmp_list_as_None:
+                raise ValueError(f"Please register {self.__mxscript_cache_name__} value by `{self.__mxscript_cache_name__}(value)` first!")
+            return self.__mxscript_cache_call_value__
         else:
-            _tmp_list_as_None.clear()
-            _tmp_list_as_None.append(value)
+            self.__mxscript_cache_call_value__ = value
             return value
 
-d = tmp = DictCouldSetAttr()
+d = CacheVar("d")
+tmp = CacheVar("tmp")
+cache = CacheVar("cache")
+cache1 = CacheVar("cache1")
+cache2 = CacheVar("cache2")
+cache3 = CacheVar("cache3")
 
 
 import os
@@ -79,7 +89,7 @@ def cp(src, dst):
     return sh(cmd)
 
 cpr = cp
-
+# TODO cp cpr support oss
 
 def cat(*paths):
     for path in paths:
