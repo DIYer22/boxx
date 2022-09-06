@@ -210,7 +210,7 @@ def getShowsHtml():
     scale = -1
     fx = .5
     fy = .5
-    rollx = 1
+    rollx = -1
     rolly = 0
     isRoll = false
     isSmooth = false
@@ -239,7 +239,7 @@ def getShowsHtml():
     
     gui.add(window,'isRoll').listen().onChange(()=>{
         flash()
-        }).name('isRoll ⌨space')
+        }).name('isRoll ⌨space/Z')
     gui.add(window,'rollx', -srcs.length, srcs.length).step(1).listen().onChange(()=>{
         flash()
         }).name('rollX ⌨️AD')
@@ -251,12 +251,20 @@ def getShowsHtml():
         flash()
         })
     
+    HOLDING_KEYS = {}
     document.onkeydown=(e)=>{
         var e = e || window.event;
         //console.log(e)
         if(e.key == " "){
                 isRoll = !isRoll
                 flash()
+                }
+        if("zZ".includes(e.key)){
+                if (!HOLDING_KEYS["z"]){
+                    HOLDING_KEYS["z"]=true
+                    isRoll = !isRoll
+                    flash()
+                    }
                 }
         if("aA".includes(e.key)){
                 rollx -= 1
@@ -299,9 +307,17 @@ def getShowsHtml():
                 resizeCanvas()
                 }
         }
+    
+    document.onkeyup=(e)=>{
+        var e = e || window.event;
+        if("zZ".includes(e.key)){
+                isRoll = !isRoll
+                flash()
+                HOLDING_KEYS["z"]=false
+                }
+        }
     </script>
     </html>
-
     '''
 if __name__ == '__main__':
     # test code
