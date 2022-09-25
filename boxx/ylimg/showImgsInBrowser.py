@@ -36,8 +36,12 @@ def showImgsInBrowser(paths, htmlp=None, coln=None):
 def getShowsHtml():
     # TODO: 
     """
-        - support scale by pixel and scale by max(hw) for different image size
-        - independent as .html and support ?imgs=[]&coln=3
+    - middle mouse button move left right to rescale and +/- to rescale 
+    - support scale by pixel and scale by max(hw) for different image size
+    - independent as .html and support ?imgs=[]&coln=3
+    - gif mode with time gap=1
+    - download/copy img jpg (if gif mode, copy gif)
+    - support touch screen to move and scale
     """
     
     return '''
@@ -180,9 +184,10 @@ def getShowsHtml():
             e.preventDefault()
             var x = e.clientX-xBegin
             var y = e.clientY-yBegin
-            fx = fxBegin - x/sca/imgw
+            var speed = 2
+            fx = fxBegin - x/sca/imgw*speed
             fx = min([1,max([0,fx])])
-            fy = fyBegin - y/sca/imgh
+            fy = fyBegin - y/sca/imgh*speed
             fy = min([1,max([0,fy])])
             flash()
         },
