@@ -114,7 +114,10 @@ def resize(img, arg2, interpolation=None):
         if arg2 == 1:
             return img
         hw = img.shape[:2] if isinstance(img, np.ndarray) else img.shape[-2:]
-        hw = [int(round(size * arg2)) for size in hw]
+        if isinstance(arg2, (float)) or arg2 <= 5:
+            hw = [int(round(size * arg2)) for size in hw]
+        else:
+            hw = [int(round(size * arg2 / max(hw))) for size in hw]
     if isinstance(img, np.ndarray):
         dst = warpResize(img, hw, interpolation=interpolation)
     elif typestr(img) in ['torch.Tensor']:
