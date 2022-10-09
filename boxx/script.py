@@ -126,7 +126,11 @@ def main():
         IPython.embed()
     else:
         code = " ".join(sys.argv[1:])
-        print('Code: "%s"' % code)
+        if "\\n" in code:
+            code = code.replace('\\n', '\n')
+            print('Code: """\n%s\n"""' % code)
+        else:
+            print('Code: "%s"' % code)
         print()
     
         exec(code, context, context)
