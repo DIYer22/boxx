@@ -126,8 +126,8 @@ def main():
         IPython.embed()
     else:
         code = " ".join(sys.argv[1:])
-        if "\\n" in code:
-            code = code.replace('\\n', '\n')
+        if ";\\n" in code: # support multi line
+            code = code.replace(';\\n', ';\n')
             print('Code: """\n%s\n"""' % code)
         else:
             print('Code: "%s"' % code)
