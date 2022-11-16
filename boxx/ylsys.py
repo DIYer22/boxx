@@ -66,6 +66,9 @@ elif winYl:
     homeYl = os.path.expanduser("~")
     tmpYl = os.getenv('TMP') + '\\'
 
+if "MXX_TMP_DIR" in os.environ:
+    tmpYl = os.environ["MXX_TMP_DIR"]
+
 class __TmpboxxWithCall(str):
     '''
     the tmp dir for boxx 
