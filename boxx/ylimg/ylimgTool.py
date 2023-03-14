@@ -471,28 +471,30 @@ def listToImgLists(l, res=None,doNumpy=ndarrayToImgLists):
                 listToImgLists(seq,res=res,doNumpy=doNumpy)
     return res
 
+def _split_and_show(imgs, titles, split: int, **kv):
+    showImgLists(imgs[:split], titles=titles[:split], **kv)
+    showImgLists(imgs[split:], titles=titles[split:], **kv)
+
 @interactivePlot
 def showImgLists(imgs,**kv):
     import matplotlib.pyplot as plt
     n = len(imgs)
+    titles = kv.pop("titles",[])
+
     if "ncols" in kv:
         ncols = kv["ncols"]
         if n >= 2*ncols:
-            showImgLists(imgs[:ncols], **kv)
-            showImgLists(imgs[ncols:], **kv)
+            _split_and_show(imgs, titles, split=ncols, **kv)
             return
         elif n > ncols:
-            showImgLists(imgs[:math.ceil(n/2.)], **kv)
-            showImgLists(imgs[math.ceil(n/2.):], **kv)
+            _split_and_show(imgs, titles, split=math.ceil(n/2.), **kv)
             return
         del kv["ncols"]
     elif n == 4:
-        showImgLists(imgs[:2],**kv)
-        showImgLists(imgs[2:],**kv)
+        _split_and_show(imgs, titles, split=2, **kv)
         return
     elif n > 4:
-        showImgLists(imgs[:3],**kv)
-        showImgLists(imgs[3:],**kv)
+        _split_and_show(imgs, titles, split=3, **kv)
         return
     if "figsize" in kv:
         figsize = kv.pop("figsize")
@@ -503,6 +505,7 @@ def showImgLists(imgs,**kv):
     axes = [axes] if n==1 else axes
     for img in imgs:
         axes[count].imshow(img,**kv)
+        axes[count].set_title(titles[count] if count < len(titles) else "")
         count += 1
     plt.show()
     
