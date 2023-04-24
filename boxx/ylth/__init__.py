@@ -84,6 +84,24 @@ def tryLoad(self, state_dict, strict=True):
         rawModule(self, para, strict)
 
 
+rawDataLoader = th.utils.data.DataLoader
+
+
+try:
+    from typing import TypeVar, Generic
+    
+    T_co = TypeVar('T_co', covariant=True)
+    
+    class DataLoaderForCPU(rawDataLoader, Generic[T_co]):
+        def __init__(self, *l, **kv):
+            rawDataLoader.__init__(self, *l, **kv)
+            self.pin_memory = False
+except:
+    class DataLoaderForCPU(rawDataLoader):
+        def __init__(self, *l, **kv):
+            rawDataLoader.__init__(self, *l, **kv)
+            self.pin_memory = False
+
 def toCpu():
     cudaAttri = lambda self, *l, **kv: self
     nn.Module.cuda = cudaAttri
@@ -125,7 +143,6 @@ def toCpu():
     th.cuda.CharTensor = th.CharTensor
     th.cuda.FloatTensor = th.FloatTensor
 
-    rawDataLoader = th.utils.data.DataLoader
     #    def warp(f):
     #        @wraps(f)
     #        def DataLoader(*l, **kv):
@@ -135,10 +152,6 @@ def toCpu():
     #            return r
     #        return DataLoader
 
-    class DataLoaderForCPU(rawDataLoader):
-        def __init__(self, *l, **kv):
-            rawDataLoader.__init__(self, *l, **kv)
-            self.pin_memory = False
 
     th.utils.data.DataLoader = DataLoaderForCPU
 
