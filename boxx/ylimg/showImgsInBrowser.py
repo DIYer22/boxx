@@ -27,7 +27,7 @@ def showImgsInBrowser(paths, htmlp=None, coln=None):
     s += "; coln = %s" % int(coln)
     html = html.replace('//replaceTagForPython',s.replace('\\',r'\\'))
     if not htmlp:
-        htmlp = os.path.join(tmpboxx(), 'shows-%s.html') %len(glob.glob(os.path.join(tmpboxx(), 'shows-*.html')))
+        htmlp = os.path.join(tmpboxx(), 'shows-%03d.html') %len(glob.glob(os.path.join(tmpboxx(), 'shows-*.html')))
     with open(htmlp,'w') as f:
         f.write(html)
     from boxx import browserOpen
@@ -260,6 +260,9 @@ def getShowsHtml():
     document.onkeydown=(e)=>{
         var e = e || window.event;
         //console.log(e)
+        if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey){
+                return
+                }
         if(e.key == " "){
                 isRoll = !isRoll
                 flash()
