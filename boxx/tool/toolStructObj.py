@@ -410,13 +410,15 @@ class withfun():
         No parameter function
     exitFun : function, default None
         No parameter function or parameter are (exc_type, exc_value, exc_traceback)
-    exception : bool, default True
+    exception : bool, default None
         Whether send (exc_type, exc_value, exc_traceback) to exitFun
     '''
-    def __init__(self, enterFun=None, exitFun=None, exception=True):
+    def __init__(self, enterFun=None, exitFun=None, exception=None):
         self.enterFun = enterFun
         self.exitFun = exitFun
         self.exception = exception
+        if exception is None and self.exitFun:
+            self.exception = len(inspect.getargspec(self.exitFun).args) == 3
     def __enter__(self):
         if self.enterFun:
             return self.enterFun()

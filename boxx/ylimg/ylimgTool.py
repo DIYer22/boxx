@@ -119,7 +119,12 @@ def resize(img, arg2, interpolation=None):
         else:
             hw = [int(round(size * arg2 / max(hw))) for size in hw]
     if isinstance(img, np.ndarray):
+        is_bool8 = img.dtype == np.bool8
+        if is_bool8:
+            img = np.uint8(img)
         dst = warpResize(img, hw, interpolation=interpolation)
+        if is_bool8:
+            dst = np.bool8(dst)
     elif typestr(img) in ['torch.Tensor']:
         interpolation =  interpolation or 'nearest'
         from torch import nn
