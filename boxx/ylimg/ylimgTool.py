@@ -614,7 +614,7 @@ def shows(*imgs, png=False, coln=None):
     
     
     showsDir = os.path.join(tmpYl, 'shows')
-    dirr = showsDir + '/shows-%s.html' % len(glob.glob(showsDir + '/shows-*.html'))
+    dirr = showsDir + '/shows-%03d.html' % len(glob.glob(showsDir + '/shows-*.html'))
     os.makedirs(dirr, exist_ok=True)
     
     paths = []
