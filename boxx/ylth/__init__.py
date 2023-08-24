@@ -73,7 +73,7 @@ else:
 
 def tryLoad(self, state_dict, strict=True):
     try:
-        rawModule(self, state_dict, strict)
+        return rawModule(self, state_dict, strict)
     except (KeyError, RuntimeError):
         print(
             "\x1b[31m%s\x1b[0m"
@@ -81,7 +81,7 @@ def tryLoad(self, state_dict, strict=True):
         )
         para = state_dict
         para = OrderedDict([(k.replace("module.", ""), v) for k, v in para.items()])
-        rawModule(self, para, strict)
+        return rawModule(self, para, strict)
 
 
 rawDataLoader = th.utils.data.DataLoader
@@ -161,9 +161,22 @@ def toCpu():
         return rawThLoad(*l, **(kv.update({"map_location": "cpu"}) or kv))
 
     torch.load = torchLoad
-
+    
+    raw_load_state_dict = nn.Module.load_state_dict
+    def load_state_dict(self, state_dict, *l,
+                        strict= True, **kv):
+        startswith_module_rate = lambda dic:sum([key.startswith("module.") for key in dic])/len(dic)
+        
+        
+        if (startswith_module_rate(state_dict) == 1 and 
+            startswith_module_rate(self.state_dict()) < .25):
+            state_dict = {k.replace("module.",""):v for k, v in state_dict.items()}
+        return raw_load_state_dict(self, state_dict, *l,
+                            strict=strict, **kv)
+            
+            
     nn.Module.load_state_dict = tryLoad
-    torch.nn.modules.module.Module.load_state_dict = tryLoad
+    torch.nn.modules.module.Module.load_state_dict = load_state_dict
 
 
 usecpu = (not cuda and usecuda == "auto") or not usecuda
