@@ -558,7 +558,7 @@ def showb(*arr, png=False):
             path = tmpYl + 'tmp-%s.jpg'%len(glob.glob(tmpYl + 'tmp-*.jpg'))
         else:
             path = tmpYl + 'tmp-%s.png'%len(glob.glob(tmpYl + 'tmp-*.png'))
-        if arr.dtype == np.bool:
+        if arr.dtype == np.bool8:
             arr = np.uint8(arr) * 255
         imsave(path,arr)
         arr = path
@@ -626,7 +626,7 @@ def shows(*imgs, png=False, coln=None):
         else:
             fname = '%s.png'%idx
         imgp = os.path.join(dirr, fname)
-        if x.dtype == np.bool:
+        if x.dtype == np.bool8:
             x = x * 255
         if x.shape[:2] != biggest_hw:
             x = resize(x, biggest_hw)
