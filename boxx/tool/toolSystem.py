@@ -68,7 +68,7 @@ class impt():
         frame = sys._getframe(1)
         _file_ = frame.f_globals.get('__file__', "python_shell.py")
         dirr = os.path.dirname(_file_)
-        self.d = os.path.abspath(os.path.join(dirr, relpath))
+        self.d = os.path.abspath(os.path.join(dirr, os.path.expanduser(relpath)))
     def __enter__(self):
         with self.lock:
             sys.path.insert(0, self.d)
