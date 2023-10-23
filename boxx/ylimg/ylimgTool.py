@@ -804,7 +804,13 @@ def tree(seq,maxprint=50,deep=None,logLen=45,printf=log,leafColor='\x1b[31m%s\x1
         s = colorFormat.r%"【%s】"%e.__repr__()
     s = s.replace('\n','↳')
 #    printf ''.join(__leftStr)+u'├── '+tounicode(k)+': '+s
-    printf('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(__key),s))
+    try:  # Support tree({t:r})
+        str_key = discribOfInstance(__key, MAX_LEN=logLen)
+    except Exception as e:
+        str_key = colorFormat.r%"【%s】"%e.__repr__()
+    str_key = str_key.replace('\n','↳')
+        
+    printf('%s%s %s: %s'%(''.join(__leftStr), '└──' if __islast else '├──',tounicode(str_key),s))
     
     unfold = unfoldAble(seq)
     if unfold is False :
