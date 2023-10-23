@@ -123,13 +123,18 @@ class FuncArgs:
             argname = list(self.sig.parameters.keys())[arg]
         elif isinstance(arg, (tuple, type)):
             # return first argname belong to arg type
+            type_names = []  # 
             for idx, _arg in enumerate(self.ba.args):
+                type_names.append(getattr(type(_arg), "__name__", "#"))
                 if isinstance(_arg, arg):
                     argname = list(self.sig.parameters.keys())[idx]
                     return argname
             for k, _arg in self.ba.kwargs.items():
+                type_names.append(getattr(type(_arg), "__name__", "#"))
                 if isinstance(_arg, arg):
                     return k
+            # __import__("IPython").embed()
+            raise AssertionError("None of args's type%s belong to target type %s" % (type_names, str(arg), ))
         return argname
 
     def set_arg(self, key, value):
