@@ -397,6 +397,7 @@ def getArgvDic(argvTest=None):
         `--k v` 将以{k: v}形式存放在dic中
         `--tag` 将以{k: True}形式存放在dic中
     '''
+    # TODO support --key=value
     from .toolLog import  pred
     argv = sys.argv
     if argvTest:
