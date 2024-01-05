@@ -107,7 +107,14 @@ def toCpu():
     nn.Module.cuda = cudaAttri
     Variable.cuda = cudaAttri
     torch.Tensor.cuda = cudaAttri
-    torch.Tensor.to = cudaAttri
+    rawTo = torch.Tensor.to
+    def to(self, device=None, *args, **kwargs):
+        if isinstance(device, (str, torch.device)):
+            device = "cpu"
+        return rawTo(self, device, *args, **kwargs)
+        
+    torch.Tensor.to = to
+    torch.Tensor.is_cuda = True
 
     #    class FakeDataParallel(torch.nn.DataParallel):
     #        def __init__(self, x):
@@ -132,6 +139,7 @@ def toCpu():
 
     torch.cuda.set_device = fnone
     torch.cuda.is_available = lambda: True
+    torch.cuda.is_bf16_supported = lambda : False
     torch.cuda.device_count = lambda *l: 0
 
     th.cuda.LongTensor = th.LongTensor
