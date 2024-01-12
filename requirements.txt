@@ -6,3 +6,5 @@ imageio
 snakeviz
 pyopengl
 seaborn
+executing
+asttokens
