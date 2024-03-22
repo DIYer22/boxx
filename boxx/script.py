@@ -76,7 +76,7 @@ copy = shutil.copy
 copytree = shutil.copytree
 
 def sh(cmd):
-    return boxx.execmd(cmd).strip().split()
+    return boxx.execmd(cmd).strip().split('\n')
 bash = sh
 
 def ls(path=".", a=False):
