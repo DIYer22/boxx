@@ -190,8 +190,8 @@ def savejson(obj, path=None, indent=None):
             return json.JSONEncoder.default(self, obj)
     if path is None:
         return json.dumps(obj, indent=indent, cls=NumpyEncoder).encode("utf-8")
-    with open(path, 'w') as f:
-        json.dump(obj, f, indent=indent, cls=NumpyEncoder)
+    with open(path, 'w', encoding="utf-8") as f:
+        json.dump(obj, f, indent=indent, cls=NumpyEncoder, ensure_ascii=False)
     return path 
     
 def replaceTabInPy(dirr='.'):
