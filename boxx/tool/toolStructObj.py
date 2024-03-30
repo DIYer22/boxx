@@ -418,7 +418,7 @@ class withfun():
         self.exitFun = exitFun
         self.exception = exception
         if exception is None and self.exitFun:
-            self.exception = len(inspect.getargspec(self.exitFun).args) == 3
+            self.exception = len(inspect.signature(self.exitFun).parameters) == 3
     def __enter__(self):
         if self.enterFun:
             return self.enterFun()
