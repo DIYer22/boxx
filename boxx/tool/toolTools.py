@@ -36,7 +36,7 @@ def filterList(key, strs):
     return list(filter((lambda strr: key in strr),strs))
 
 def findints(strr):
-    '''
+    r'''
     返回字符串或字符串列表中的所有整数 ,r"\d+\d*"
     '''
     if isinstance(strr,(list,tuple)):

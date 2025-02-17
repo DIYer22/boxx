@@ -163,10 +163,9 @@ def decolor(colored):
     '''
     remove color of str
     '''
-    pa = re.compile('\x1b\[3[0-9]m|\x1b\[0m')
-    new = pa.sub('', colored)
-    new = pa.sub('', new)
-    return new
+    # The regex pattern matches codes such as "\x1b[3Xm" and "\x1b[0m"
+    pattern = re.compile(r'\x1b\[3[0-9]m|\x1b\[0m')
+    return pattern.sub('', colored)
 
 def tounicode(strr):
     '''
