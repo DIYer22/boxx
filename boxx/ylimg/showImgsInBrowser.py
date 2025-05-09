@@ -50,7 +50,7 @@ def getShowsHtml():
     <head>
       <meta charset="UTF-8">
       <title>boxx.shows(images)</title>
-      <script src="https://cdn.bootcss.com/dat-gui/0.6.5/dat.gui.js"></script>
+      <script src="https://unpkg.com/dat.gui@0.7.9/build/dat.gui.min.js"></script>
       <style>
       </style>
       <script>
